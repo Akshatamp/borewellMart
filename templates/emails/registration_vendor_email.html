@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Registration Submitted - BorewellMart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1565C0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box.warning {
+            background-color: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .info-box.warning strong {
+            color: #856404;
+        }
+        .info-box strong {
+            color: #1565C0;
+        }
+        .feature-list {
+            margin: 25px 0;
+        }
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #1565C0;
+            color: white !important;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 25px 0;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #0D47A1;
+        }
+        .steps {
+            margin: 25px 0;
+        }
+        .step {
+            display: flex;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        .step-number {
+            background-color: #1565C0;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #1565C0;
+            text-decoration: none;
+        }
+        .contact-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Vendor Registration Submitted</h1>
+            <p>Your Business Profile is Under Review</p>
+        </div>
+
+        <div class="content">
+            <p class="welcome-text">Dear <strong>{{ user.username }}</strong>,</p>
+
+            <p>Thank you for registering your business <strong>{{ company_name }}</strong> with <strong>BorewellMart</strong>! Your vendor profile has been submitted successfully and is currently under review.</p>
+
+            <div class="info-box warning">
+                <p><strong>⚠️ Verification Pending:</strong></p>
+                <p>Your profile is currently being reviewed by our team. You will receive another email once your account is verified and approved. This process typically takes 1-2 business days.</p>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Registration Details:</strong></p>
+                <p>Company Name: {{ company_name }}<br>
+                Username: {{ user.username }}<br>
+                Email: {{ user.email }}</p>
+            </div>
+
+            <h3>What Happens Next?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div><strong>Review:</strong> Our team reviews your business details and credentials</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div><strong>Verification:</strong> We verify your business information and certifications</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div><strong>Approval:</strong> Once approved, you'll receive access to your vendor dashboard</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div><strong>Go Live:</strong> Your business will be visible to customers seeking services</div>
+                </div>
+            </div>
+
+            <h3>Benefits After Approval:</h3>
+            <ul class="feature-list">
+                <li>📊 <strong>Vendor Dashboard:</strong> Manage your services, bookings, and customer enquiries</li>
+                <li>📅 <strong>Booking Management:</strong> Accept and manage service requests from customers</li>
+                <li>💬 <strong>Enquiry Responses:</strong> Provide detailed quotes and respond to customer enquiries</li>
+                <li>⭐ <strong>Build Reputation:</strong> Collect reviews and build your business credibility</li>
+                <li>🎯 <strong>Targeted Exposure:</strong> Reach customers actively looking for your services</li>
+            </ul>
+
+            <p style="margin-top: 25px;">While waiting for approval, you can:</p>
+            <ul>
+                <li>Prepare your service catalog and pricing</li>
+                <li>Gather high-quality images of your work for your gallery</li>
+                <li>Review our vendor guidelines and best practices</li>
+            </ul>
+
+            <div style="text-align: center;">
+                <a href="{{ frontend_url }}" class="cta-button">Visit BorewellMart</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated email from BorewellMart. Please do not reply to this email.</p>
+            <div class="contact-info">
+                <p>Questions? Contact us at <a href="mailto:vendors@borewellmart.com">vendors@borewellmart.com</a></p>
+                <p>© {% now "Y" %} BorewellMart. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}Create New Plan - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Create New Plan</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="plan_type" class="font-weight-bold">Plan Type *</label>
+                            <select class="form-control" id="plan_type" name="plan_type" required>
+                                <option value="">-- Select Plan Type --</option>
+                                {% for value, label in plan_types %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Choose the type of plan you want to create</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="plan_name" class="font-weight-bold">Plan Name *</label>
+                            <input type="text" class="form-control" id="plan_name" name="plan_name" placeholder="e.g., Monthly Premium Plan" required>
+                            <small class="form-text text-muted">Enter a custom name for your plan</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price" class="font-weight-bold">Price (₹) *</label>
+                            <input type="number" class="form-control" id="price" name="price" placeholder="1000" step="0.01" min="0" required>
+                            <small class="form-text text-muted">Plan subscription price</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="start_date" class="font-weight-bold">Start Date *</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                    <small class="form-text text-muted">When the plan becomes active</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="end_date" class="font-weight-bold">End Date *</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                    <small class="form-text text-muted">When the plan expires</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="font-weight-bold">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe your plan features and benefits..."></textarea>
+                            <small class="form-text text-muted">List the features and benefits included in this plan</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> You will receive notifications 7 days, 3 days, and 1 day before your plan expires.
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-save"></i> Create Plan
+                            </button>
+                            <a href="{% url 'vendor_plans' %}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum end date to start date
+    document.getElementById('start_date').addEventListener('change', function() {
+        document.getElementById('end_date').min = this.value;
+    });
+
+    // Validate end date on form submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const startDate = new Date(document.getElementById('start_date').value);
+        const endDate = new Date(document.getElementById('end_date').value);
+        
+        if (endDate <= startDate) {
+            e.preventDefault();
+            alert('End date must be after start date!');
+        }
+    });
+</script>
+{% endblock %}

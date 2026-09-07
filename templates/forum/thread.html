@@ -1,0 +1,726 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}{{ thread.title }} - BorewellMart Forum{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #0284C7;
+        --secondary-color: #06B6D4;
+        --primary-dark: #0369a1;
+        --primary-light: #06B6D4;
+    }
+
+    .thread-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 2.5rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .thread-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .post-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        background: white;
+    }
+
+    .original-post {
+        border-left: 5px solid var(--primary-color);
+    }
+
+    .reply-post {
+        border-left: 4px solid #e0e0e0;
+    }
+
+    .best-answer-post {
+        border-left: 5px solid #10b981;
+        background: linear-gradient(to right, rgba(16, 185, 129, 0.05), transparent);
+    }
+
+    .best-answer-badge {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .verified-badge {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .user-avatar-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-avatar-small {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .avatar-placeholder-small {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .post-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .post-content {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #dee2e6;
+        background: white;
+        color: #495057;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .action-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    .action-btn.voted {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .action-btn.voted:hover {
+        background: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: white;
+    }
+
+    .reply-form {
+        border: 2px dashed #dee2e6;
+        border-radius: 16px;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.02), rgba(16, 185, 129, 0.02));
+    }
+
+    .thread-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .tag-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        background: rgba(6, 182, 212, 0.1);
+        color: var(--primary-color);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .thread-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .thread-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .solved-badge-header {
+        background: rgba(16, 185, 129, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .closed-badge-header {
+        background: rgba(107, 114, 128, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .thread-stats-bar {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        background: rgba(6, 182, 212, 0.05);
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .thread-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #495057;
+        font-size: 0.875rem;
+    }
+
+    .thread-stat i {
+        color: var(--primary-color);
+    }
+
+    .sidebar-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .sidebar-card-header {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(16, 185, 129, 0.05));
+        padding: 1rem;
+        border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+    }
+
+    .sidebar-card-header h6 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sidebar-card-body {
+        padding: 1rem;
+    }
+
+    .info-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .related-thread {
+        display: block;
+        text-decoration: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .related-thread:hover {
+        background: rgba(6, 182, 212, 0.05);
+        transform: translateX(5px);
+    }
+
+    .related-thread-title {
+        font-weight: 600;
+        color: #212529;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .related-thread-meta {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Override breadcrumb styles for forum pages */
+    .thread-header .breadcrumb,
+    .thread-header .breadcrumb-item a,
+    .thread-header .breadcrumb-item.active {
+        background: transparent !important;
+        color: white !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .thread-header .breadcrumb-item a:hover {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    @media (max-width: 768px) {
+        .thread-header {
+            padding: 2rem 0;
+        }
+
+        .post-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-avatar-large {
+            width: 45px;
+            height: 45px;
+        }
+
+        .thread-stats-bar {
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Thread Header -->
+<div class="thread-header">
+    <div class="container position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'forum_home' %}" class="text-white">Forum</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'forum_category' thread.category.slug %}" class="text-white">{{ thread.category.name }}</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Thread</li>
+            </ol>
+        </nav>
+
+        <h1 class="display-6 fw-bold mb-3">{{ thread.title }}</h1>
+
+        <div class="thread-badges">
+            {% if thread.status == 'solved' %}
+                <span class="thread-badge solved-badge-header">
+                    <i class="fas fa-check-circle me-1"></i>SOLVED
+                </span>
+            {% endif %}
+            {% if thread.status == 'closed' %}
+                <span class="thread-badge closed-badge-header">
+                    <i class="fas fa-lock me-1"></i>CLOSED
+                </span>
+            {% endif %}
+            {% if thread.is_pinned %}
+                <span class="thread-badge" style="background: rgba(255, 255, 255, 0.2); color: white;">
+                    <i class="fas fa-thumbtack me-1"></i>PINNED
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Thread Stats Bar -->
+            <div class="thread-stats-bar">
+                <div class="thread-stat">
+                    <i class="fas fa-eye"></i>
+                    <span>{{ thread.views }} Views</span>
+                </div>
+                <div class="thread-stat">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span>{{ thread.like_count }} Likes</span>
+                </div>
+                <div class="thread-stat">
+                    <i class="fas fa-reply"></i>
+                    <span>{{ thread.reply_count }} Replies</span>
+                </div>
+                <div class="thread-stat">
+                    <i class="far fa-clock"></i>
+                    <span>{{ thread.created_at|timesince }} ago</span>
+                </div>
+            </div>
+
+            <!-- Original Post -->
+            <div class="post-card original-post">
+                <div class="card-body p-4">
+                    <div class="d-flex gap-3 mb-3">
+                        <div class="flex-shrink-0">
+                            {% if thread.author.userprofile.profile_image %}
+                                <img src="{{ thread.author.userprofile.profile_image.url }}" alt="{{ thread.author.username }}" class="user-avatar-large">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    {{ thread.author.username|first|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div>
+                                    <h5 class="mb-0">{{ thread.author.username }}</h5>
+                                    {% if thread.author.vendor.verification_status == 'verified' %}
+                                        <span class="verified-badge">
+                                            <i class="fas fa-check-circle me-1"></i>Verified Vendor
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div class="post-meta text-end">
+                                    <div>Asked {{ thread.created_at|timesince }} ago</div>
+                                    {% if thread.author.userprofile.city %}
+                                        <div><i class="fas fa-map-marker-alt me-1"></i>{{ thread.author.userprofile.city }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-content mb-4">
+                        {{ thread.content|linebreaks }}
+                    </div>
+
+                    {% if thread.tags %}
+                        <div class="thread-tags mb-3">
+                            {% for tag in thread.tags.all %}
+                                <span class="tag-badge">{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="post-actions">
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'forum_vote' %}" class="mb-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="thread_id" value="{{ thread.id }}">
+                                <input type="hidden" name="vote_type" value="up">
+                                <button type="submit" class="action-btn {% if user_has_voted %}voted{% endif %}">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>{{ thread.like_count }}</span>
+                                </button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="action-btn">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>{{ thread.like_count }}</span>
+                            </a>
+                        {% endif %}
+
+                        <a href="#reply-form" class="action-btn">
+                            <i class="fas fa-reply"></i>
+                            <span>Reply</span>
+                        </a>
+
+                        {% if user == thread.author or user.is_staff %}
+                            <a href="{% url 'forum_edit_thread' thread.slug %}" class="action-btn">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit</span>
+                            </a>
+                            <a href="{% url 'forum_delete_thread' thread.slug %}" class="action-btn" style="color: #dc3545; border-color: #dc3545;" onclick="return confirm('Delete this thread and all replies?')">
+                                <i class="fas fa-trash"></i>
+                                <span>Delete</span>
+                            </a>
+                        {% endif %}
+
+                        {% if user.is_staff and thread.status != 'solved' %}
+                            <form method="POST" action="{% url 'forum_mark_solved' thread.slug %}" class="mb-0">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn" style="border-color: #10b981; color: #10b981;" onclick="return confirm('Mark this thread as solved?')">
+                                    <i class="fas fa-check"></i>
+                                    <span>Mark Solved</span>
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if user.is_staff %}
+                            {% if thread.status != 'closed' %}
+                                <form method="POST" action="{% url 'forum_close_thread' thread.slug %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn" onclick="return confirm('Close this thread?')">
+                                        <i class="fas fa-lock"></i>
+                                        <span>Close</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{% url 'forum_reopen_thread' thread.slug %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn">
+                                        <i class="fas fa-unlock"></i>
+                                        <span>Reopen</span>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replies -->
+            <div class="section-title">
+                <i class="fas fa-comments text-primary"></i>Answers ({{ thread.reply_count }})
+            </div>
+
+            {% for post in posts %}
+                <div class="post-card {% if post.is_best_answer %}best-answer-post{% else %}reply-post{% endif %}">
+                    <div class="card-body p-4">
+                        {% if post.is_best_answer %}
+                            <div class="best-answer-badge mb-3">
+                                <i class="fas fa-star"></i>
+                                Best Answer
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                {% if post.author.userprofile.profile_image %}
+                                    <img src="{{ post.author.userprofile.profile_image.url }}" alt="{{ post.author.username }}" class="user-avatar-small">
+                                {% else %}
+                                    <div class="avatar-placeholder-small">
+                                        {{ post.author.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <h6 class="mb-0">{{ post.author.username }}</h6>
+                                        {% if post.author.vendor.verification_status == 'verified' %}
+                                            <span class="verified-badge">
+                                                <i class="fas fa-check-circle me-1"></i>Verified Vendor
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="post-meta text-end">
+                                        <div>Answered {{ post.created_at|timesince }} ago</div>
+                                        {% if post.author.userprofile.city %}
+                                            <div><i class="fas fa-map-marker-alt me-1"></i>{{ post.author.userprofile.city }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-content mb-3">
+                            {{ post.content|linebreaks }}
+                        </div>
+
+                        <div class="post-actions">
+                            {% if user.is_authenticated %}
+                                <form method="POST" action="{% url 'forum_vote' %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                                    <input type="hidden" name="vote_type" value="up">
+                                    <button type="submit" class="action-btn">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span>Helpful ({{ post.helpful_votes_count }})</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>Helpful ({{ post.helpful_votes_count }})</span>
+                                </a>
+                            {% endif %}
+
+                            {% if user == thread.author and not post.is_best_answer and thread.status == 'open' %}
+                                <form method="POST" action="{% url 'forum_mark_best_answer' post.id %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn" style="border-color: #f59e0b; color: #f59e0b;" onclick="return confirm('Mark this as the best answer?')">
+                                        <i class="fas fa-star"></i>
+                                        <span>Mark as Best</span>
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if user == post.author or user.is_staff %}
+                                <a href="{% url 'forum_edit_post' post.id %}" class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Edit</span>
+                                </a>
+                                <a href="{% url 'forum_delete_post' post.id %}" class="action-btn" style="color: #dc3545; border-color: #dc3545;" onclick="return confirm('Delete this reply?')">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Delete</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="card post-card">
+                    <div class="card-body text-center py-5">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: rgba(6, 182, 212, 0.1);">
+                            <i class="fas fa-comment-slash fa-2x text-muted"></i>
+                        </div>
+                        <h5 class="text-muted mb-2">No Answers Yet</h5>
+                        <p class="text-muted">Be the first to answer this question!</p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Reply Form -->
+            {% if user.is_authenticated and thread.status == 'open' %}
+                <div class="reply-form mt-4" id="reply-form">
+                    <h5 class="mb-3">
+                        <i class="fas fa-reply me-2"></i>Your Answer
+                    </h5>
+                    <form method="POST" action="{% url 'forum_reply' thread.slug %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <textarea name="content" class="form-control" rows="5" placeholder="Write your detailed answer here. Be helpful and specific..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Post Answer
+                        </button>
+                    </form>
+                </div>
+            {% elif thread.status == 'closed' %}
+                <div class="alert alert-info mt-4" style="border-radius: 12px;">
+                    <i class="fas fa-lock me-2"></i>This thread is closed and no longer accepts new answers.
+                </div>
+            {% else %}
+                <div class="alert alert-info mt-4" style="border-radius: 12px;">
+                    <i class="fas fa-sign-in-alt me-2"></i>Please <a href="{% url 'login' %}">login</a> to post an answer.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Thread Info -->
+            <div class="card sidebar-card">
+                <div class="sidebar-card-header">
+                    <h6>
+                        <i class="fas fa-info-circle text-primary"></i>Thread Info
+                    </h6>
+                </div>
+                <div class="sidebar-card-body">
+                    <div class="info-item">
+                        <div class="info-label">Category</div>
+                        <div class="info-value">
+                            <a href="{% url 'forum_category' thread.category.slug %}" class="text-decoration-none text-primary">
+                                <i class="fas fa-folder me-1"></i>{{ thread.category.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Started by</div>
+                        <div class="info-value">{{ thread.author.username }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Last activity</div>
+                        <div class="info-value">{{ thread.updated_at|timesince }} ago</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            {% if thread.status == 'solved' %}
+                                <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                    <i class="fas fa-check-circle me-1"></i>{{ thread.status|title }}
+                                </span>
+                            {% elif thread.status == 'closed' %}
+                                <span class="badge" style="background: rgba(107, 114, 128, 0.1); color: #6c757d;">
+                                    <i class="fas fa-lock me-1"></i>{{ thread.status|title }}
+                                </span>
+                            {% else %}
+                                <span class="badge" style="background: rgba(6, 182, 212, 0.1); color: var(--primary-color);">
+                                    <i class="fas fa-clock me-1"></i>{{ thread.status|title }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Threads -->
+            {% if related_threads %}
+            <div class="card sidebar-card">
+                <div class="sidebar-card-header">
+                    <h6>
+                        <i class="fas fa-link text-primary"></i>Related Questions
+                    </h6>
+                </div>
+                <div class="sidebar-card-body">
+                    {% for related in related_threads %}
+                        <a href="{% url 'forum_thread' related.slug %}" class="related-thread text-decoration-none">
+                            <div class="related-thread-title">{{ related.title|truncatewords:10 }}</div>
+                            <div class="related-thread-meta">
+                                <i class="fas fa-reply me-1"></i>{{ related.reply_count }} answers
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

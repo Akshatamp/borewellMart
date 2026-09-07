@@ -1,0 +1,176 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}Edit Reply - BorewellMart Forum{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #0284C7;
+        --secondary-color: #06B6D4;
+        --primary-dark: #0369a1;
+        --primary-light: #06B6D4;
+    }
+
+    .edit-post-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .edit-post-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .form-container {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(16, 185, 129, 0.05));
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+    }
+
+    .form-section {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
+    }
+
+    .original-post {
+        background: rgba(6, 182, 212, 0.05);
+        border-left: 4px solid var(--primary-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .original-post-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .original-post-content {
+        font-size: 0.875rem;
+        color: #495057;
+    }
+
+    @media (max-width: 768px) {
+        .form-section {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Override breadcrumb styles */
+    .edit-post-header .breadcrumb,
+    .edit-post-header .breadcrumb-item a,
+    .edit-post-header .breadcrumb-item.active {
+        background: transparent !important;
+        color: white !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .edit-post-header .breadcrumb-item a:hover {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Edit Post Header -->
+<div class="edit-post-header">
+    <div class="container position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'forum_home' %}">Forum</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'forum_thread' post.thread.slug %}">{{ post.thread.title|truncatewords:5 }}</a></li>
+                <li class="breadcrumb-item active">Edit Reply</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 fw-bold">
+            <i class="fas fa-edit me-2"></i>Edit Your Reply
+        </h1>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card form-container">
+                <div class="form-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pen me-2"></i>Edit Your Answer
+                    </h5>
+                </div>
+
+                <form method="POST" class="form-section">
+                    {% csrf_token %}
+
+                    <!-- Original Post Reference -->
+                    <div class="original-post">
+                        <div class="original-post-label">
+                            <i class="fas fa-quote-left me-1"></i>Original Question
+                        </div>
+                        <div class="original-post-content">
+                            {{ post.thread.content|truncatewords:30 }}
+                        </div>
+                    </div>
+
+                    <!-- Current Content -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Your Answer *
+                        </label>
+                        <textarea name="content" class="form-control" rows="10" placeholder="Write your detailed answer here. Be helpful and specific..." required>{{ form.content.value|default:post.content }}</textarea>
+                        {% if form.content.errors %}
+                            <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="{% url 'forum_thread' post.thread.slug %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

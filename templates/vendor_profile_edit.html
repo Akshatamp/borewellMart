@@ -1,0 +1,354 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}Edit Vendor Profile - BorewellMart{% endblock %}
+{% block page_title %}Edit Profile{% endblock %}
+{% block page_subtitle %}Update your business information and preferences{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #eee;
+        background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+        border-radius: 12px 12px 0 0;
+    }
+
+    .section-header h6 {
+        margin: 0;
+        color: #2E7D32;
+        font-weight: 600;
+    }
+
+    .section-header i {
+        margin-right: 8px;
+    }
+
+    .section-body {
+        padding: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        padding: 10px 15px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #2E7D32;
+        box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
+    }
+
+    .image-upload-box {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: #f8f9fa;
+        transition: all 0.3s;
+    }
+
+    .image-upload-box:hover {
+        border-color: #2E7D32;
+        background: #f0f7f1;
+    }
+
+    .image-upload-box input[type="file"] {
+        display: none;
+    }
+
+    .image-upload-box label {
+        cursor: pointer;
+        margin: 0;
+        color: #6c757d;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #1B5E20 0%, #0d3810 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn-secondary {
+        border-radius: 8px;
+        padding: 12px 30px;
+    }
+
+    .rating-input-group {
+        position: relative;
+    }
+
+    .rating-stars {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffc107;
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h2 class="fw-bold" style="color: #2E7D32;">
+                        <i class="fas fa-user-edit me-2"></i>Edit Vendor Profile
+                    </h2>
+                    <p class="text-muted mb-0">Update your business information and preferences</p>
+                </div>
+                <a href="{% url 'vendor_dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Basic Information Section -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h6><i class="fas fa-building"></i>Basic Information</h6>
+            </div>
+            <div class="section-body">
+                <div class="row">
+                    <div class="col-md-8 mb-4">
+                        <label for="{{ form.company_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-company me-1"></i>Company Name *
+                        </label>
+                        {{ form.company_name }}
+                        {% if form.company_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.company_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="{{ form.rating.id_for_label }}" class="form-label">
+                            <i class="fas fa-star me-1"></i>Rating (0-5)
+                        </label>
+                        <div class="rating-input-group">
+                            {{ form.rating }}
+                            <span class="rating-stars">★</span>
+                        </div>
+                        {% if form.rating.errors %}
+                            <div class="text-danger small mt-1">{{ form.rating.errors }}</div>
+                        {% else %}
+                            <small class="text-muted">Enter value between 0.0 and 5.0</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">
+                            <i class="fas fa-envelope me-1"></i>Email *
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">
+                            <i class="fas fa-phone me-1"></i>Phone *
+                        </label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.upi_id.id_for_label }}" class="form-label">
+                            <i class="fas fa-qrcode me-1"></i>UPI ID (for QR Code Payments)
+                        </label>
+                        {{ form.upi_id }}
+                        {% if form.upi_id.errors %}
+                            <div class="text-danger small mt-1">{{ form.upi_id.errors }}</div>
+                        {% else %}
+                            <small class="text-muted">Enter your UPI ID (e.g., vendor@upi). Customers can scan QR code to pay you directly.</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.city.id_for_label }}" class="form-label">
+                            <i class="fas fa-map-marker-alt me-1"></i>City *
+                        </label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                            <div class="text-danger small mt-1">{{ form.city.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.experience.id_for_label }}" class="form-label">
+                            <i class="fas fa-clock me-1"></i>Experience (Years) *
+                        </label>
+                        {{ form.experience }}
+                        {% if form.experience.errors %}
+                            <div class="text-danger small mt-1">{{ form.experience.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Images Section -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h6><i class="fas fa-images"></i>Business Images</h6>
+            </div>
+            <div class="section-body">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-image me-1"></i>Company Logo
+                        </label>
+                        <div class="image-upload-box">
+                            <label for="{{ form.logo.id_for_label }}">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                <p class="mb-0">Click to upload logo</p>
+                                <small class="text-muted">Recommended: 200x200px</small>
+                            </label>
+                            {{ form.logo }}
+                            {% if form.logo.errors %}
+                                <div class="text-danger small mt-2">{{ form.logo.errors }}</div>
+                            {% endif %}
+                            {% if form.instance.logo %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Current: <img src="{{ form.instance.logo.url }}" alt="Logo" height="30"></small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-image me-1"></i>Cover Image
+                        </label>
+                        <div class="image-upload-box">
+                            <label for="{{ form.cover_image.id_for_label }}">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                <p class="mb-0">Click to upload cover</p>
+                                <small class="text-muted">Recommended: 1200x400px</small>
+                            </label>
+                            {{ form.cover_image }}
+                            {% if form.cover_image.errors %}
+                                <div class="text-danger small mt-2">{{ form.cover_image.errors }}</div>
+                            {% endif %}
+                            {% if form.instance.cover_image %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Current: <img src="{{ form.instance.cover_image.url }}" alt="Cover" height="30"></small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location & Documents Section -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h6><i class="fas fa-map-marker-alt"></i>Location & Documents</h6>
+            </div>
+            <div class="section-body">
+                <div class="mb-4">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">
+                        <i class="fas fa-location-dot me-1"></i>Business Address *
+                    </label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger small mt-1">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.license_number.id_for_label }}" class="form-label">
+                            <i class="fas fa-certificate me-1"></i>License Number
+                        </label>
+                        {{ form.license_number }}
+                        {% if form.license_number.errors %}
+                            <div class="text-danger small mt-1">{{ form.license_number.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.certifications.id_for_label }}" class="form-label">
+                            <i class="fas fa-award me-1"></i>Certifications
+                        </label>
+                        {{ form.certifications }}
+                        {% if form.certifications.errors %}
+                            <div class="text-danger small mt-1">{{ form.certifications.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Enter certifications separated by commas</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Options Section -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h6><i class="fas fa-cogs"></i>Service Options</h6>
+            </div>
+            <div class="section-body">
+                <div class="form-check form-switch ps-0">
+                    <input type="checkbox" class="form-check-input" id="{{ form.is_emergency_available.id_for_label }}"
+                           name="{{ form.is_emergency_available.name }}" {% if form.is_emergency_available.value %}checked{% endif %}
+                           style="width: 50px; height: 26px;">
+                    <label class="form-check-label ms-3" for="{{ form.is_emergency_available.id_for_label }}" style="cursor: pointer;">
+                        <strong>24×7 Emergency Service Available</strong>
+                        <p class="text-muted small mb-0">Enable this option if you provide emergency borewell services</p>
+                    </label>
+                    {% if form.is_emergency_available.errors %}
+                        <div class="text-danger small mt-1">{{ form.is_emergency_available.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-save me-2"></i>Update Profile
+                </button>
+            </div>
+            <div class="col-md-6">
+                <a href="{% url 'vendor_dashboard' %}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

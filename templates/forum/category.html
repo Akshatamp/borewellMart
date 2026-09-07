@@ -1,0 +1,487 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}{% if category == 'all' %}All Discussions{% else %}{{ category.name }}{% endif %} - BorewellMart Forum{% endblock %}
+
+{% block extra_css %}
+<style>
+    .forum-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 2rem 2rem;
+    }
+
+    .thread-card {
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .thread-card:hover {
+        border-left-color: var(--secondary-color);
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .thread-card.solved {
+        border-left-color: #28a745;
+    }
+
+    .thread-card.unanswered {
+        border-left-color: #ffc107;
+    }
+
+    .solved-badge {
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .unanswered-badge {
+        background: #ffc107;
+        color: #333;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .pinned-badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .thread-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .thread-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .thread-stats {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .thread-stats span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .verified-badge {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: white;
+        padding: 0.125rem 0.5rem;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-tab {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #dee2e6;
+        background: white;
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    .filter-tab:hover, .filter-tab.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .tag-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        background: rgba(0,198,255,0.1);
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        margin: 0.25rem;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .thread-stats {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .thread-card {
+            padding: 1rem !important;
+        }
+    }
+
+    /* Override breadcrumb styles for forum pages */
+    .forum-hero .breadcrumb,
+    .forum-hero .breadcrumb-item a,
+    .forum-hero .breadcrumb-item.active {
+        background: transparent !important;
+        color: white !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .forum-hero .breadcrumb-item a:hover {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Category Header -->
+<div class="forum-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'forum_home' %}" class="text-white">Forum</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">{{ category.name|default:"All Discussions" }}</li>
+                    </ol>
+                </nav>
+                <h1 class="display-6 fw-bold mb-2">
+                    {% if category.icon %}
+                        <i class="fas fa-{{ category.icon }} me-2"></i>
+                    {% endif %}
+                    {{ category.name|default:"All Discussions" }}
+                </h1>
+                {% if category.description %}
+                    <p class="mb-0">{{ category.description }}</p>
+                {% endif %}
+            </div>
+            <div class="col-md-4 text-md-end">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'forum_create_thread' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-plus me-2"></i>Ask Question
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login to Ask
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Search & Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search in this category..." value="{{ request.GET.q }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="filter-tabs">
+                        <a href="?filter=newest{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-tab {% if filter == 'newest' or not filter %}active{% endif %}">
+                            <i class="fas fa-clock me-1"></i>Newest
+                        </a>
+                        <a href="?filter=popular{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-tab {% if filter == 'popular' %}active{% endif %}">
+                            <i class="fas fa-fire me-1"></i>Most Viewed
+                        </a>
+                        <a href="?filter=solved{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-tab {% if filter == 'solved' %}active{% endif %}">
+                            <i class="fas fa-check-circle me-1"></i>Solved
+                        </a>
+                        <a href="?filter=unsolved{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-tab {% if filter == 'unsolved' %}active{% endif %}">
+                            <i class="fas fa-question-circle me-1"></i>Unanswered
+                        </a>
+                        <a href="?filter=nearby{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-tab {% if filter == 'nearby' %}active{% endif %}">
+                            <i class="fas fa-map-marker-alt me-1"></i>Near Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threads List -->
+            {% if threads %}
+                {% for thread in threads %}
+                    <div class="thread-card {% if thread.status == 'solved' %}solved{% endif %} {% if thread.reply_count == 0 %}unanswered{% endif %} p-3">
+                        <div class="d-flex gap-3">
+                            <div class="flex-shrink-0">
+                                {% if thread.author.userprofile.profile_image %}
+                                    <img src="{{ thread.author.userprofile.profile_image.url }}" alt="{{ thread.author.username }}" class="user-avatar">
+                                {% else %}
+                                    <div class="user-avatar d-flex align-items-center justify-content-center bg-primary text-white">
+                                        {{ thread.author.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1">
+                                        <a href="{% url 'forum_thread' thread.slug %}" class="thread-title text-decoration-none text-dark">
+                                            {{ thread.title }}
+                                        </a>
+                                        <div class="mt-1">
+                                            {% if thread.is_pinned %}
+                                                <span class="pinned-badge me-1">
+                                                    <i class="fas fa-thumbtack me-1"></i>Pinned
+                                                </span>
+                                            {% endif %}
+                                            {% if thread.status == 'solved' %}
+                                                <span class="solved-badge">
+                                                    <i class="fas fa-check-circle me-1"></i>SOLVED
+                                                </span>
+                                            {% endif %}
+                                            {% if thread.reply_count == 0 %}
+                                                <span class="unanswered-badge">
+                                                    <i class="fas fa-exclamation-circle me-1"></i>Unanswered
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted small mb-2">
+                                    {{ thread.content|truncatewords:20 }}
+                                </p>
+
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                    <div class="thread-meta">
+                                        <span class="me-3">
+                                            <strong>{{ thread.author.username }}</strong>
+                                            {% if thread.author.vendor.verification_status == 'verified' %}
+                                                <span class="verified-badge ms-1">
+                                                    <i class="fas fa-check-circle me-1"></i>Verified Vendor
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                        {% if thread.author.userprofile.city %}
+                                            <span class="me-3">
+                                                <i class="fas fa-map-marker-alt me-1"></i>{{ thread.author.userprofile.city }}
+                                            </span>
+                                        {% endif %}
+                                        <span>
+                                            <i class="far fa-clock me-1"></i>{{ thread.updated_at|timesince }} ago
+                                        </span>
+                                    </div>
+                                    <div class="thread-stats">
+                                        <span>
+                                            <i class="fas fa-thumbs-up"></i>
+                                            {{ thread.like_count }}
+                                        </span>
+                                        <span>
+                                            <i class="fas fa-reply"></i>
+                                            {{ thread.reply_count }} Replies
+                                        </span>
+                                        <span>
+                                            <i class="fas fa-eye"></i>
+                                            {{ thread.views }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {% if thread.tags %}
+                                    <div class="mt-2">
+                                        {% for tag in thread.tags %}
+                                            <span class="tag-badge">{{ tag }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if threads.has_other_pages %}
+                    <div class="pagination-container">
+                        <nav aria-label="Thread pagination">
+                            <ul class="pagination">
+                                {% if threads.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ threads.previous_page_number }}&filter={{ filter }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in threads.paginator.page_range %}
+                                    {% if threads.number == page_num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% elif page_num > threads.number|add:'-3' and page_num < threads.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_num }}&filter={{ filter }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if threads.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ threads.next_page_number }}&filter={{ filter }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="card text-center p-5">
+                    <i class="fas fa-comments fa-4x text-muted mb-3"></i>
+                    <h4>No discussions found</h4>
+                    <p class="text-muted mb-4">
+                        {% if request.GET.q %}
+                            No threads match your search criteria. Try different keywords or filters.
+                        {% else %}
+                            Be the first to start a discussion in this category!
+                        {% endif %}
+                    </p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'forum_create_thread' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Ask Question
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Ask
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Category Stats -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-bar me-2 text-primary"></i>Category Stats
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Questions:</span>
+                        <strong>{{ threads.paginator.count|default:threads|length }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Solved:</span>
+                        <strong class="text-success">{{ solved_count }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Unanswered:</span>
+                        <strong class="text-warning">{{ unanswered_count }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Categories -->
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-folder me-2 text-primary"></i>Other Categories
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% for cat in other_categories %}
+                        {% if cat.slug != category.slug %}
+                            <a href="{% url 'forum_category' cat.slug %}" class="d-flex justify-content-between align-items-center text-decoration-none text-dark mb-3">
+                                <div>
+                                    <i class="fas fa-{{ cat.icon|default:'folder' }} me-2 text-muted"></i>
+                                    {{ cat.name }}
+                                </div>
+                                <span class="badge bg-secondary">{{ cat.thread_count }}</span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Button -->
+{% if user.is_authenticated %}
+    <a href="{% url 'forum_create_thread' %}" class="ask-question-btn" title="Ask Question">
+        <i class="fas fa-plus"></i>
+    </a>
+{% endif %}
+
+<style>
+    .ask-question-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        font-size: 1.5rem;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .ask-question-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 768px) {
+        .ask-question-btn {
+            width: 50px;
+            height: 50px;
+            bottom: 1rem;
+            right: 1rem;
+        }
+    }
+</style>
+{% endblock %}

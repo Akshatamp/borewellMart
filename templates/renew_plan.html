@@ -1,0 +1,112 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}Renew Plan - {{ plan.plan_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Renew Plan: {{ plan.plan_name }}</h1>
+
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Current Plan Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="text-muted">Plan Name</label>
+                            <p class="h5">{{ plan.plan_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted">Price</label>
+                            <p class="h5">₹{{ plan.price }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="text-muted">Original Validity</label>
+                            <p class="h5">{{ plan.start_date }} to {{ plan.end_date }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted">Current Status</label>
+                            <p class="h5">
+                                {% if plan.is_expired %}
+                                    <span class="badge badge-danger">Expired</span>
+                                {% else %}
+                                    <span class="badge badge-success">Active</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">New Plan Validity</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="start_date" class="font-weight-bold">New Start Date *</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                    <small class="form-text text-muted">When the renewed plan becomes active</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="end_date" class="font-weight-bold">New End Date *</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                    <small class="form-text text-muted">When the renewed plan expires</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> <strong>Important:</strong> A new plan will be created with the specified dates. The old plan will be marked as cancelled.
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="fas fa-bell"></i> <strong>Notifications:</strong> You will receive notifications 7 days, 3 days, and 1 day before the new plan expires.
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block btn-lg">
+                                <i class="fas fa-redo"></i> Renew Plan
+                            </button>
+                            <a href="{% url 'plan_detail' plan.id %}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum end date to start date
+    document.getElementById('start_date').addEventListener('change', function() {
+        document.getElementById('end_date').min = this.value;
+    });
+
+    // Validate end date on form submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const startDate = new Date(document.getElementById('start_date').value);
+        const endDate = new Date(document.getElementById('end_date').value);
+        
+        if (endDate <= startDate) {
+            e.preventDefault();
+            alert('End date must be after start date!');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,928 @@
+{
+  "vendors": [
+    {
+      "company_name": "Hubli Aqua Borewell Services",
+      "location": "Hubli",
+      "specialization": "Complete borewell solutions for domestic and agricultural needs",
+      "services": [
+        "borewell_drilling_residential_borewell_drilling",
+        "borewell_drilling_agricultural_borewell_drilling",
+        "submersible_pumps_and_motors_pump_installation",
+        "borewell_drilling_hydrogeological_survey"
+      ],
+      "established_year": 2010,
+      "phone": "9876543210",
+      "email": "hubliaqua@borewell.com",
+      "address": "Vidyanagar, Hubli - 580021",
+      "experience": 14,
+      "license_number": "BWL-KAR-2010-001"
+    },
+    {
+      "company_name": "North Karnataka Drilling Works",
+      "location": "Dharwad",
+      "specialization": "Deep borewell drilling specialists for hard rock areas",
+      "services": [
+        "borewell_drilling_residential_borewell_drilling",
+        "borewell_drilling_agricultural_borewell_drilling",
+        "borewell_drilling_commercial_borewell_drilling",
+        "borewell_drilling_industrial_borewell_drilling"
+      ],
+      "established_year": 2008,
+      "phone": "9876543211",
+      "email": "northkar@drilling.com",
+      "address": "KC Extension, Dharwad - 580008",
+      "experience": 16,
+      "license_number": "BWL-KAR-2008-015"
+    },
+    {
+      "company_name": "Bangalore Precision Borewells",
+      "location": "Bangalore",
+      "specialization": "Urban borewell solutions with advanced technology",
+      "services": [
+        "borewell_drilling_hydrogeological_survey",
+        "borewell_drilling_borewell_site_survey",
+        "borewell_drilling_residential_borewell_drilling",
+        "borewell_cleaning_water_yield_improvement"
+      ],
+      "established_year": 2012,
+      "phone": "9876543212",
+      "email": "blrprecision@borewell.com",
+      "address": "BTM Layout, Bangalore - 560068",
+      "experience": 12,
+      "license_number": "BWL-KAR-2012-025"
+    },
+    {
+      "company_name": "Belagavi Borewell Masters",
+      "location": "Belagavi",
+      "specialization": "Traditional and modern borewell techniques",
+      "services": [
+        "borewell_drilling_residential_borewell_drilling",
+        "borewell_equipment_dealers_pumps_openwell_pumps",
+        "borewell_recharge_recharge_pit_construction",
+        "borewell_cleaning_water_yield_improvement"
+      ],
+      "established_year": 2005,
+      "phone": "9876543213",
+      "email": "belagavimaster@borewell.com",
+      "address": "Camp Area, Belagavi - 590001",
+      "experience": 19,
+      "license_number": "BWL-KAR-2005-008"
+    },
+    {
+      "company_name": "Coastal Water Solutions",
+      "location": "Mangalore",
+      "specialization": "Coastal region borewell and water solutions",
+      "services": [
+        "water_testing_and_analysis_drinking_water_testing",
+        "borewell_repair_and_maintenance_borewell_restoration",
+        "borewell_cleaning_water_yield_improvement"
+      ],
+      "established_year": 2014,
+      "phone": "9876543214",
+      "email": "coastalwater@borewell.com",
+      "address": "Hampankatta, Mangalore - 575001",
+      "experience": 10,
+      "license_number": "BWL-KAR-2014-032"
+    },
+    {
+      "company_name": "Mysuru Agri Aqua Services",
+      "location": "Mysuru",
+      "specialization": "Agricultural water management and irrigation systems",
+      "services": [
+        "irrigation_services_drip_irrigation",
+        "irrigation_services_sprinkler_irrigation",
+        "pumps_and_motors_solar_pumps"
+      ],
+      "established_year": 2009,
+      "phone": "9876543215",
+      "email": "mysuruagri@borewell.com",
+      "address": "Saraswathipuram, Mysuru - 570009",
+      "experience": 15,
+      "license_number": "BWL-KAR-2009-012"
+    },
+    {
+      "company_name": "Vijayapura Solar & Irrigation Co",
+      "location": "Vijayapura",
+      "specialization": "Solar-powered farming and irrigation solutions",
+      "services": [
+        "pumps_and_motors_solar_pumps",
+        "irrigation_services_drip_irrigation",
+        "irrigation_services_farm_pipeline_installation"
+      ],
+      "established_year": 2016,
+      "phone": "9876543225",
+      "email": "vijayapurasolar@agri.com",
+      "address": "TB Dam Road, Vijayapura - 586101",
+      "experience": 8,
+      "license_number": "AGR-KAR-2016-045"
+    },
+    {
+      "company_name": "Raichur Cotton Belt Irrigation",
+      "location": "Raichur",
+      "specialization": "Irrigation solutions for cotton and agricultural farms",
+      "services": [
+        "irrigation_services_sprinkler_irrigation",
+        "irrigation_services_micro_irrigation",
+        "water_management_water_distribution_systems",
+        "irrigation_services_irrigation_automation"
+      ],
+      "established_year": 2011,
+      "phone": "9876543226",
+      "email": "raichurcotton@irrigation.com",
+      "address": "Station Road, Raichur - 584101",
+      "experience": 13,
+      "license_number": "AGR-KAR-2011-028"
+    },
+    {
+      "company_name": "Kalaburagi Deep Drilling Experts",
+      "location": "Kalaburagi",
+      "specialization": "Deep drilling for arid region agricultural needs",
+      "services": [
+        "borewell_drilling_residential_borewell_drilling"
+      ],
+      "established_year": 2007,
+      "phone": "9876543227",
+      "email": "kalaburagideep@borewell.com",
+      "address": "S.B. Temple Road, Kalaburagi - 585101",
+      "experience": 17,
+      "license_number": "BWL-KAR-2007-019"
+    },
+    {
+      "company_name": "Bidar Groundwater & Survey",
+      "location": "Bidar",
+      "specialization": "Groundwater survey and assessment services",
+      "services": [
+        "borewell_cleaning_water_yield_improvement",
+        "borewell_drilling_borewell_site_survey",
+        "borewell_drilling_hydrogeological_survey"
+      ],
+      "established_year": 2013,
+      "phone": "9876543228",
+      "email": "bidarsurvey@groundwater.com",
+      "address": "Choubara, Bidar - 584401",
+      "experience": 11,
+      "license_number": "SRV-KAR-2013-051"
+    },
+    {
+      "company_name": "Ballari Industrial Water Solutions",
+      "location": "Ballari",
+      "specialization": "Industrial and agricultural water management",
+      "services": [
+        "borewell_drilling_industrial_borewell_drilling",
+        "water_management_water_storage_tanks",
+        "water_management_water_distribution_systems"
+      ],
+      "established_year": 2010,
+      "phone": "9876543229",
+      "email": "ballariindustrial@water.com",
+      "address": "Gandhi Nagar, Ballari - 583101",
+      "experience": 14,
+      "license_number": "IND-KAR-2010-037"
+    },
+    {
+      "company_name": "Shivamogga Areca Plantation Services",
+      "location": "Shivamogga",
+      "specialization": "Water solutions for areca and plantation crops",
+      "services": [
+        "irrigation_services_drip_irrigation",
+        "irrigation_services_sprinkler_irrigation",
+        "irrigation_services_farm_pipeline_installation",
+        "irrigation_services_irrigation_automation"
+      ],
+      "established_year": 2012,
+      "phone": "9876543230",
+      "email": "shivamoggaareca@irrigation.com",
+      "address": "Market Road, Shivamogga - 577201",
+      "experience": 12,
+      "license_number": "AGR-KAR-2012-041"
+    },
+    {
+      "company_name": "Dharwad Pump & Motors",
+      "location": "Dharwad",
+      "specialization": "Pump installation, repair and motor rewinding",
+      "services": [
+        "submersible_pumps_and_motors_pump_installation",
+        "submersible_pumps_and_motors_pump_repair",
+        "submersible_pumps_and_motors_motor_rewinding",
+        "borewell_equipment_dealers_pumps_openwell_pumps"
+      ],
+      "established_year": 2006,
+      "phone": "9876543217",
+      "email": "dharwadpump@motors.com",
+      "address": "KCC Bank Road, Dharwad - 580001",
+      "experience": 18,
+      "license_number": "PMP-KAR-2006-022"
+    },
+    {
+      "company_name": "Bangalore Smart Irrigation",
+      "location": "Bangalore",
+      "specialization": "IoT-based precision irrigation and automation",
+      "services": [
+        "irrigation_services_irrigation_automation",
+        "irrigation_services_irrigation_automation",
+        "borewell_cleaning_water_yield_improvement",
+        "irrigation_services_irrigation_automation"
+      ],
+      "established_year": 2018,
+      "phone": "9876543218",
+      "email": "blrsmart@irrigation.com",
+      "address": "Whitefield, Bangalore - 560066",
+      "experience": 6,
+      "license_number": "IOT-KAR-2018-067"
+    },
+    {
+      "company_name": "Mangalore Quality Water Labs",
+      "location": "Mangalore",
+      "specialization": "Water quality testing and analysis services",
+      "services": [
+        "water_testing_and_analysis_drinking_water_testing",
+        "water_testing_and_analysis_drinking_water_testing",
+        "water_testing_and_analysis_drinking_water_testing",
+        "water_testing_and_analysis_agricultural_water_testing"
+      ],
+      "established_year": 2015,
+      "phone": "9876543220",
+      "email": "mangalorelabs@water.com",
+      "address": "PVS Circle, Mangalore - 575003",
+      "experience": 9,
+      "license_number": "LAB-KAR-2015-058"
+    },
+    {
+      "company_name": "Vijayapura Farm Pond Specialists",
+      "location": "Vijayapura",
+      "specialization": "Farm pond construction and water storage",
+      "services": [
+        "water_management_water_storage_tanks",
+        "water_management_water_distribution_systems",
+        "borewell_recharge_recharge_pit_construction"
+      ],
+      "established_year": 2014,
+      "phone": "9876543233",
+      "email": "vijayapurafarm@pond.com",
+      "address": "Athani Road, Vijayapura - 586102",
+      "experience": 10,
+      "license_number": "FARM-KAR-2014-048"
+    },
+    {
+      "company_name": "Raichur Solar Energy Systems",
+      "location": "Raichur",
+      "specialization": "Solar pump and irrigation solutions",
+      "services": [
+        "pumps_and_motors_solar_pumps"
+      ],
+      "established_year": 2017,
+      "phone": "9876543232",
+      "email": "raichursolar@energy.com",
+      "address": "Railway Station Road, Raichur - 584102",
+      "experience": 7,
+      "license_number": "SLR-KAR-2017-062"
+    },
+    {
+      "company_name": "Kalaburagi Casing & Pipes",
+      "location": "Kalaburagi",
+      "specialization": "Borewell casing and pipe installation services",
+      "services": [
+        "borewell_equipment_dealers_pipes_and_accessories_casing_pipes",
+        "borewell_equipment_dealers_pipes_and_accessories_casing_pipes",
+        "borewell_repair_and_maintenance_borewell_casing_repair",
+        "pipeline_and_plumbing_services_hdpe_pipe_installation"
+      ],
+      "established_year": 2009,
+      "phone": "9876543234",
+      "email": "kalaburagicasing@pipes.com",
+      "address": "Sedam Road, Kalaburagi - 585102",
+      "experience": 15,
+      "license_number": "CAS-KAR-2009-031"
+    },
+    {
+      "company_name": "Bidar Open Well Experts",
+      "location": "Bidar",
+      "specialization": "Traditional open well construction and restoration",
+      "services": [
+        "borewell_equipment_dealers_pumps_openwell_pumps",
+        "borewell_repair_and_maintenance_borewell_restoration",
+        "borewell_repair_and_maintenance_borewell_blockage_removal",
+        "borewell_cleaning_water_yield_improvement"
+      ],
+      "established_year": 2004,
+      "phone": "9876543235",
+      "email": "bidaropenwell@traditional.com",
+      "address": "Mantri Tank, Bidar - 584402",
+      "experience": 20,
+      "license_number": "OWL-KAR-2004-005"
+    },
+    {
+      "company_name": "Hubli Emergency Borewell Services",
+      "location": "Hubli",
+      "specialization": "24/7 emergency borewell repair and maintenance",
+      "services": [
+        "submersible_pumps_and_motors_pump_repair",
+        "submersible_pumps_and_motors_motor_rewinding",
+        "borewell_repair_and_maintenance_borewell_casing_repair",
+        "borewell_repair_and_maintenance_borewell_restoration"
+      ],
+      "established_year": 2011,
+      "phone": "9876543236",
+      "email": "hubliemergency@borewell.com",
+      "address": "Keshwapur, Hubli - 580022",
+      "experience": 13,
+      "license_number": "EMR-KAR-2011-029",
+      "is_emergency_available": true
+    },
+    {
+      "company_name": "Belagavi Geophysical Survey",
+      "location": "Belagavi",
+      "specialization": "Scientific groundwater survey and site selection",
+      "services": [
+        "borewell_drilling_hydrogeological_survey",
+        "borewell_drilling_borewell_site_survey",
+        "borewell_drilling_hydrogeological_survey",
+        "borewell_drilling_borewell_site_survey"
+      ],
+      "established_year": 2013,
+      "phone": "9876543237",
+      "email": "belagavisurvey@geo.com",
+      "address": "Khanapur Road, Belagavi - 590002",
+      "experience": 11,
+      "license_number": "GEO-KAR-2013-054"
+    },
+    {
+      "company_name": "Karnataka Seed Corporation",
+      "location": "Bangalore",
+      "specialization": "Quality seed suppliers for all crops",
+      "services": [
+        "agri_input_dealers_seed_dealers_hybrid_seeds",
+        "agri_input_dealers_seed_dealers_vegetable_seeds",
+        "agri_input_dealers_seed_dealers_fruit_seeds",
+        "agri_input_dealers_seed_dealers_grain_seeds",
+        "agri_input_dealers_seed_dealers_fodder_seeds",
+        "agri_input_dealers_seed_dealers_organic_seeds"
+      ],
+      "established_year": 2010,
+      "phone": "9876543401",
+      "email": "karnatakaseeds@corp.com",
+      "address": "VK Building, Bangalore - 560001",
+      "experience": 14,
+      "license_number": "SEED-KAR-2010-001"
+    },
+    {
+      "company_name": "Raichur Cotton Seed Dealers",
+      "location": "Raichur",
+      "specialization": "Cotton and commercial crop seeds",
+      "services": [
+        "agri_input_dealers_seed_dealers_hybrid_seeds",
+        "agri_input_dealers_seed_dealers_grain_seeds",
+        "agri_input_dealers_seed_dealers_vegetable_seeds"
+      ],
+      "established_year": 2012,
+      "phone": "9876543402",
+      "email": "raichurcotton@seeds.com",
+      "address": "APMC Yard, Raichur - 584101",
+      "experience": 12,
+      "license_number": "COT-KAR-2012-002"
+    },
+    {
+      "company_name": "Green Earth Fertilizers",
+      "location": "Dharwad",
+      "specialization": "Complete fertilizer solutions",
+      "services": [
+        "agri_input_dealers_fertilizer_dealers_urea",
+        "agri_input_dealers_fertilizer_dealers_dap",
+        "agri_input_dealers_fertilizer_dealers_npk_fertilizers",
+        "agri_input_dealers_fertilizer_dealers_potash",
+        "agri_input_dealers_fertilizer_dealers_micronutrients",
+        "agri_input_dealers_fertilizer_dealers_organic_fertilizers",
+        "agri_input_dealers_fertilizer_dealers_bio_fertilizers"
+      ],
+      "established_year": 2008,
+      "phone": "9876543403",
+      "email": "greenearth@fertilizers.com",
+      "address": "Industrial Area, Dharwad - 580008",
+      "experience": 16,
+      "license_number": "FERT-KAR-2008-003"
+    },
+    {
+      "company_name": "Crop Care Solutions",
+      "location": "Belagavi",
+      "specialization": "Crop protection and pest management",
+      "services": [
+        "agri_input_dealers_crop_protection_dealers_insecticides",
+        "agri_input_dealers_crop_protection_dealers_fungicides",
+        "agri_input_dealers_crop_protection_dealers_herbicides",
+        "agri_input_dealers_crop_protection_dealers_weedicides",
+        "agri_input_dealers_crop_protection_dealers_plant_growth_regulators",
+        "agri_input_dealers_crop_protection_dealers_bio_pesticides"
+      ],
+      "established_year": 2009,
+      "phone": "9876543404",
+      "email": "cropcare@protection.com",
+      "address": "Market Road, Belagavi - 590001",
+      "experience": 15,
+      "license_number": "CROP-KAR-2009-004"
+    },
+    {
+      "company_name": "Drip Irrigation Systems India",
+      "location": "Hubli",
+      "specialization": "Drip and sprinkler irrigation equipment",
+      "services": [
+        "agri_input_dealers_irrigation_dealers_drip_irrigation_kits",
+        "borewell_equipment_dealers_pipes_and_accessories_hdpe_pipes",
+        "agri_input_dealers_irrigation_dealers_pvc_pipes",
+        "agri_input_dealers_irrigation_dealers_valves_and_fittings",
+        "agri_input_dealers_irrigation_dealers_filters"
+      ],
+      "established_year": 2011,
+      "phone": "9876543405",
+      "email": "dripsystems@irrigation.com",
+      "address": "Keshwapur, Hubli - 580022",
+      "experience": 13,
+      "license_number": "DRIP-KAR-2011-005"
+    },
+    {
+      "company_name": "Farm Tools & Equipment Hub",
+      "location": "Shivamogga",
+      "specialization": "Farm tools and equipment",
+      "services": [
+        "agri_input_dealers_farm_tool_dealers_hand_tools",
+        "agri_input_dealers_farm_tool_dealers_power_tools",
+        "agri_input_dealers_farm_tool_dealers_sprayers",
+        "agri_input_dealers_farm_tool_dealers_pumps",
+        "agri_input_dealers_farm_tool_dealers_garden_equipment"
+      ],
+      "established_year": 2013,
+      "phone": "9876543406",
+      "email": "farmtools@equipment.com",
+      "address": "Market Road, Shivamogga - 577201",
+      "experience": 11,
+      "license_number": "TOOLS-KAR-2013-006"
+    },
+    {
+      "company_name": "Dairy & Livestock Supplies",
+      "location": "Hassan",
+      "specialization": "Dairy farming and livestock inputs",
+      "services": [
+        "agri_input_dealers_animal_and_dairy_inputs_cattle_feed",
+        "agri_input_dealers_animal_and_dairy_inputs_poultry_feed",
+        "agri_input_dealers_animal_and_dairy_inputs_mineral_mixtures",
+        "agri_input_dealers_animal_and_dairy_inputs_veterinary_medicines",
+        "agri_input_dealers_animal_and_dairy_inputs_dairy_equipment"
+      ],
+      "established_year": 2010,
+      "phone": "9876543407",
+      "email": "dairysupplies@livestock.com",
+      "address": "Main Road, Hassan - 573201",
+      "experience": 14,
+      "license_number": "DAIRY-KAR-2010-007"
+    },
+    {
+      "company_name": "Agri Machinery Rental Services",
+      "location": "Kalaburagi",
+      "specialization": "Farm equipment on rent",
+      "services": [
+        "farm_equipment_rental_tractor",
+        "farm_equipment_rental_rotavator",
+        "farm_equipment_rental_cultivator",
+        "farm_equipment_rental_seed_drill",
+        "farm_equipment_rental_harvester",
+        "farm_equipment_rental_sprayer",
+        "farm_equipment_rental_power_tiller"
+      ],
+      "established_year": 2015,
+      "phone": "9876543408",
+      "email": "agrirental@machinery.com",
+      "address": "Station Road, Kalaburagi - 585101",
+      "experience": 9,
+      "license_number": "RENT-KAR-2015-008"
+    },
+    {
+      "company_name": "Soil Testing & Advisory Center",
+      "location": "Mysuru",
+      "specialization": "Soil testing and crop advisory",
+      "services": [
+        "agricultural_services_soil_testing",
+        "agricultural_services_land_preparation",
+        "agricultural_services_crop_advisory",
+        "agricultural_services_farm_consultation",
+        "agricultural_services_pest_and_disease_management",
+        "agricultural_services_fertilizer_recommendation"
+      ],
+      "established_year": 2014,
+      "phone": "9876543409",
+      "email": "soiltest@advisory.com",
+      "address": "Saraswathipuram, Mysuru - 570009",
+      "experience": 10,
+      "license_number": "SOIL-KAR-2014-009"
+    },
+    {
+      "company_name": "Farm Infrastructure Builders",
+      "location": "Bangalore",
+      "specialization": "Greenhouse and farm structures",
+      "services": [
+        "farm_infrastructure_greenhouse",
+        "farm_infrastructure_polyhouse",
+        "farm_infrastructure_shade_net",
+        "farm_infrastructure_farm_fencing",
+        "farm_infrastructure_water_tanks",
+        "farm_infrastructure_farm_roads"
+      ],
+      "established_year": 2012,
+      "phone": "9876543410",
+      "email": "farminfra@builders.com",
+      "address": "Yelahanka, Bangalore - 560064",
+      "experience": 12,
+      "license_number": "INFRA-KAR-2012-010"
+    },
+    {
+      "company_name": "Agri Marketplace Hub",
+      "location": "Bangalore",
+      "specialization": "Agriculture marketplace - new equipment",
+      "services": [
+        "agriculture_marketplace_seeds",
+        "agriculture_marketplace_fertilizers",
+        "agriculture_marketplace_pesticides",
+        "agriculture_marketplace_irrigation_equipment",
+        "agriculture_marketplace_farm_machinery",
+        "agriculture_marketplace_farm_tools",
+        "agriculture_marketplace_solar_equipment"
+      ],
+      "established_year": 2018,
+      "phone": "9876543411",
+      "email": "agrimarketplace@hub.com",
+      "address": "K_R_Market, Bangalore - 560053",
+      "experience": 6,
+      "license_number": "MKT-KAR-2018-011"
+    },
+    {
+      "company_name": "Second Hand Agri Equipment",
+      "location": "Mandya",
+      "specialization": "Used agricultural equipment marketplace",
+      "services": [
+        "second-hand_agriculture_equipment_used_tractors",
+        "second-hand_agriculture_equipment_used_rotavators",
+        "second-hand_agriculture_equipment_used_harvesters",
+        "second-hand_agriculture_equipment_used_seed_drills",
+        "second-hand_agriculture_equipment_used_cultivators",
+        "second-hand_agriculture_equipment_used_power_tillers",
+        "second-hand_agriculture_equipment_used_sprayers",
+        "second-hand_agriculture_equipment_used_pumps",
+        "second-hand_agriculture_equipment_used_irrigation_systems"
+      ],
+      "established_year": 2016,
+      "phone": "9876543412",
+      "email": "usedagri@equipment.com",
+      "address": "Industrial Area, Mandya - 571401",
+      "experience": 8,
+      "license_number": "USED-KAR-2016-012"
+    },
+    {
+      "company_name": "Water Management Systems",
+      "location": "Hubli",
+      "specialization": "Rainwater harvesting and farm water management",
+      "services": [
+        "water_management_rainwater_harvesting",
+        "water_management_farm_pond_development",
+        "water_management_water_storage_tanks",
+        "water_management_water_distribution_systems",
+        "water_management_water_quality_testing"
+      ],
+      "established_year": 2013,
+      "phone": "9876543413",
+      "email": "watermgmt@systems.com",
+      "address": "Vidyanagar, Hubli - 580021",
+      "experience": 11,
+      "license_number": "WATER-KAR-2013-013"
+    },
+    {
+      "company_name": "Agricultural Pumps & Motors",
+      "location": "Belagavi",
+      "specialization": "Agricultural pumps and motors",
+      "services": [
+        "pumps_and_motors_agricultural_pumps",
+        "pumps_and_motors_solar_pumps",
+        "pumps_and_motors_pump_installation",
+        "pumps_and_motors_pump_repair",
+        "submersible_pumps_and_motors_motor_rewinding",
+        "borewell_equipment_dealers_electrical_control_panels"
+      ],
+      "established_year": 2009,
+      "phone": "9876543414",
+      "email": "agripumps@motors.com",
+      "address": "Camp Area, Belagavi - 590001",
+      "experience": 15,
+      "license_number": "AGPUMP-KAR-2009-014"
+    },
+    {
+      "company_name": "Borewell Pumps & Motors Hub",
+      "location": "Hubli",
+      "specialization": "Complete borewell pump and motor solutions",
+      "services": [
+        "borewell_equipment_dealers_pumps_submersible_pumps",
+        "borewell_equipment_dealers_pumps_openwell_pumps",
+        "borewell_equipment_dealers_pumps_monoblock_pumps",
+        "borewell_equipment_dealers_motors_submersible_motors",
+        "borewell_equipment_dealers_motors_surface_motors"
+      ],
+      "established_year": 2010,
+      "phone": "9876543501",
+      "email": "borewellpumps@hub.com",
+      "address": "Industrial Area, Hubli - 580022",
+      "experience": 14,
+      "license_number": "PUMP-KAR-2010-101"
+    },
+    {
+      "company_name": "Pipes & Fittings World",
+      "location": "Dharwad",
+      "specialization": "Pipes and fittings for borewells",
+      "services": [
+        "borewell_equipment_dealers_pipes_and_accessories_hdpe_pipes",
+        "borewell_equipment_dealers_pipes_and_accessories_pvc_pipes",
+        "borewell_equipment_dealers_pipes_and_accessories_gi_pipes",
+        "borewell_equipment_dealers_pipes_and_accessories_casing_pipes",
+        "borewell_equipment_dealers_pipes_and_accessories_column_pipes"
+      ],
+      "established_year": 2011,
+      "phone": "9876543502",
+      "email": "pipesworld@fittings.com",
+      "address": "KC Extension, Dharwad - 580008",
+      "experience": 13,
+      "license_number": "PIPE-KAR-2011-102"
+    },
+    {
+      "company_name": "Electrical Control Systems",
+      "location": "Bangalore",
+      "specialization": "Electrical panels and controls",
+      "services": [
+        "borewell_equipment_dealers_electrical_starter_panels",
+        "borewell_equipment_dealers_electrical_control_panels",
+        "borewell_equipment_dealers_electrical_pump_controllers",
+        "borewell_equipment_dealers_electrical_cables",
+        "borewell_equipment_dealers_electrical_capacitors"
+      ],
+      "established_year": 2012,
+      "phone": "9876543503",
+      "email": "electrical@controls.com",
+      "address": "Peenya Industrial Area, Bangalore - 560058",
+      "experience": 12,
+      "license_number": "ELEC-KAR-2012-103"
+    },
+    {
+      "company_name": "Borewell Accessories Hub",
+      "location": "Belagavi",
+      "specialization": "Borewell accessories and fittings",
+      "services": [
+        "borewell_equipment_dealers_borewell_accessories_bore_caps",
+        "borewell_equipment_dealers_borewell_accessories_clamps",
+        "borewell_equipment_dealers_borewell_accessories_valves",
+        "borewell_equipment_dealers_borewell_accessories_pipe_fittings",
+        "borewell_equipment_dealers_borewell_accessories_cable_guards"
+      ],
+      "established_year": 2013,
+      "phone": "9876543504",
+      "email": "borewellaccess@hub.com",
+      "address": "Market Road, Belagavi - 590001",
+      "experience": 11,
+      "license_number": "ACCESS-KAR-2013-104"
+    },
+    {
+      "company_name": "Complete Borewell Solutions",
+      "location": "Hubli",
+      "specialization": "Complete borewell cleaning and maintenance",
+      "services": [
+        "borewell_cleaning_air_compressor_cleaning",
+        "borewell_cleaning_bore_flushing",
+        "borewell_cleaning_sand_removal",
+        "borewell_cleaning_silt_removal",
+        "borewell_cleaning_mud_removal",
+        "borewell_cleaning_borewell_camera_inspection",
+        "borewell_cleaning_water_yield_improvement"
+      ],
+      "established_year": 2009,
+      "phone": "9876543505",
+      "email": "borewellclean@services.com",
+      "address": "Keshwapur, Hubli - 580022",
+      "experience": 15,
+      "license_number": "CLEAN-KAR-2009-105"
+    },
+    {
+      "company_name": "Borewell Repair & Maintenance Experts",
+      "location": "Dharwad",
+      "specialization": "Borewell restoration and repair",
+      "services": [
+        "borewell_repair_and_maintenance_borewell_restoration",
+        "borewell_repair_and_maintenance_borewell_casing_repair",
+        "borewell_repair_and_maintenance_borewell_leakage_repair",
+        "borewell_repair_and_maintenance_borewell_blockage_removal",
+        "borewell_repair_and_maintenance_water_flow_restoration",
+        "borewell_repair_and_maintenance_periodic_maintenance",
+        "borewell_repair_and_maintenance_borewell_health_inspection"
+      ],
+      "established_year": 2010,
+      "phone": "9876543506",
+      "email": "borewellrepair@experts.com",
+      "address": "KC Extension, Dharwad - 580008",
+      "experience": 14,
+      "license_number": "REPAIR-KAR-2010-106"
+    },
+    {
+      "company_name": "Deep Drilling Specialists",
+      "location": "Kalaburagi",
+      "specialization": "Borewell deepening and re-boring",
+      "services": [
+        "borewell_deepening_and_re-boring_borewell_deepening",
+        "borewell_deepening_and_re-boring_re-boring",
+        "borewell_deepening_and_re-boring_casing_pipe_extension",
+        "borewell_deepening_and_re-boring_yield_improvement",
+        "borewell_deepening_and_re-boring_borewell_rehabilitation"
+      ],
+      "established_year": 2011,
+      "phone": "9876543507",
+      "email": "deepdrill@specialists.com",
+      "address": "S.B. Temple Road, Kalaburagi - 585101",
+      "experience": 13,
+      "license_number": "DEEP-KAR-2011-107"
+    },
+    {
+      "company_name": "Groundwater Recharge Solutions",
+      "location": "Mysuru",
+      "specialization": "Borewell recharge and groundwater management",
+      "services": [
+        "borewell_recharge_recharge_pit_construction",
+        "borewell_recharge_recharge_shaft_installation",
+        "borewell_recharge_rainwater_recharge_system",
+        "borewell_recharge_recharge_bore_construction",
+        "borewell_recharge_groundwater_recharge_solutions",
+        "borewell_recharge_recharge_filter_installation"
+      ],
+      "established_year": 2012,
+      "phone": "9876543508",
+      "email": "recharge@groundwater.com",
+      "address": "Saraswathipuram, Mysuru - 570009",
+      "experience": 12,
+      "license_number": "RECHARGE-KAR-2012-108"
+    },
+    {
+      "company_name": "Submersible Pump Services",
+      "location": "Bangalore",
+      "specialization": "Pump installation, repair and replacement",
+      "services": [
+        "submersible_pumps_and_motors_pump_installation",
+        "submersible_pumps_and_motors_pump_repair",
+        "submersible_pumps_and_motors_pump_replacement",
+        "submersible_pumps_and_motors_pump_pulling_and_reinstallation",
+        "submersible_pumps_and_motors_motor_installation",
+        "submersible_pumps_and_motors_motor_repair",
+        "submersible_pumps_and_motors_motor_rewinding",
+        "submersible_pumps_and_motors_pump_capacity_upgrade"
+      ],
+      "established_year": 2013,
+      "phone": "9876543509",
+      "email": "pumpservices@submersible.com",
+      "address": "BTM Layout, Bangalore - 560068",
+      "experience": 11,
+      "license_number": "SUBPUMP-KAR-2013-109"
+    },
+    {
+      "company_name": "Borewell Electrical Works",
+      "location": "Hubli",
+      "specialization": "Borewell electrical systems",
+      "services": [
+        "borewell_electrical_services_starter_panel_installation",
+        "borewell_electrical_services_control_panel_installation",
+        "borewell_electrical_services_borewell_wiring",
+        "borewell_electrical_services_cable_replacement",
+        "borewell_electrical_services_earthing",
+        "borewell_electrical_services_electrical_fault_diagnosis",
+        "borewell_electrical_services_generator_connection",
+        "borewell_electrical_services_automatic_pump_controller_installation"
+      ],
+      "established_year": 2014,
+      "phone": "9876543510",
+      "email": "borewell@electrical.com",
+      "address": "Vidyanagar, Hubli - 580021",
+      "experience": 10,
+      "license_number": "BLELEC-KAR-2014-110"
+    },
+    {
+      "company_name": "Pipeline & Plumbing Services",
+      "location": "Dharwad",
+      "specialization": "Pipeline installation and plumbing",
+      "services": [
+        "pipeline_and_plumbing_services_hdpe_pipe_installation",
+        "pipeline_and_plumbing_services_pvc_pipe_installation",
+        "pipeline_and_plumbing_services_gi_pipe_installation",
+        "pipeline_and_plumbing_services_underground_pipeline",
+        "pipeline_and_plumbing_services_water_distribution_pipeline",
+        "pipeline_and_plumbing_services_valve_installation",
+        "pipeline_and_plumbing_services_pipe_leakage_repair",
+        "pipeline_and_plumbing_services_pipeline_replacement"
+      ],
+      "established_year": 2011,
+      "phone": "9876543511",
+      "email": "pipeline@plumbing.com",
+      "address": "KC Extension, Dharwad - 580008",
+      "experience": 13,
+      "license_number": "PIPELINE-KAR-2011-111"
+    },
+    {
+      "company_name": "Water Testing Laboratories",
+      "location": "Mangalore",
+      "specialization": "Complete water testing and analysis",
+      "services": [
+        "water_testing_and_analysis_drinking_water_testing",
+        "water_testing_and_analysis_agricultural_water_testing",
+        "water_testing_and_analysis_tds_testing",
+        "water_testing_and_analysis_ph_testing",
+        "water_testing_and_analysis_water_quality_analysis",
+        "water_testing_and_analysis_laboratory_testing",
+        "water_testing_and_analysis_water_purity_consultation"
+      ],
+      "established_year": 2015,
+      "phone": "9876543512",
+      "email": "watertest@laboratory.com",
+      "address": "PVS Circle, Mangalore - 575003",
+      "experience": 9,
+      "license_number": "LABTEST-KAR-2015-112"
+    },
+    {
+      "company_name": "Equipment Rental Hub",
+      "location": "Hubli",
+      "specialization": "Borewell equipment rental services",
+      "services": [
+        "borewell_equipment_rental_drilling_rig_rental",
+        "borewell_equipment_rental_air_compressor_rental",
+        "borewell_equipment_rental_borewell_camera_rental",
+        "borewell_equipment_rental_generator_rental",
+        "borewell_equipment_rental_pipe_lifting_equipment_rental",
+        "borewell_equipment_rental_crane_rental",
+        "borewell_equipment_rental_dewatering_pump_rental"
+      ],
+      "established_year": 2016,
+      "phone": "9876543513",
+      "email": "equipmentrental@hub.com",
+      "address": "Keshwapur, Hubli - 580022",
+      "experience": 8,
+      "license_number": "RENTAL-KAR-2016-113"
+    },
+    {
+      "company_name": "Second Hand Borewell Equipment",
+      "location": "Belagavi",
+      "specialization": "Used borewell equipment marketplace",
+      "services": [
+        "second-hand_borewell_equipment_used_drilling_rigs",
+        "second-hand_borewell_equipment_used_air_compressors",
+        "second-hand_borewell_equipment_used_mud_pumps",
+        "second-hand_borewell_equipment_used_drill_rods",
+        "second-hand_borewell_equipment_used_borewell_cameras",
+        "second-hand_borewell_equipment_used_pipe_handling_equipment",
+        "second-hand_borewell_equipment_used_water_tankers"
+      ],
+      "established_year": 2017,
+      "phone": "9876543514",
+      "email": "usedborewell@equipment.com",
+      "address": "Camp Area, Belagavi - 590001",
+      "experience": 7,
+      "license_number": "USEDBW-KAR-2017-114"
+    },
+    {
+      "company_name": "Emergency Borewell Services 24/7",
+      "location": "Hubli",
+      "specialization": "Round the clock emergency borewell services",
+      "services": [
+        "emergency_borewell_services_emergency_pump_breakdown",
+        "emergency_borewell_services_no_water_in_borewell",
+        "emergency_borewell_services_pump_stuck_in_borewell",
+        "emergency_borewell_services_cable_breakage",
+        "emergency_borewell_services_borewell_collapse_assistance",
+        "emergency_borewell_services_emergency_technician_visit",
+        "emergency_borewell_services_24x7_support"
+      ],
+      "established_year": 2015,
+      "phone": "9876543515",
+      "email": "emergency@24x7.com",
+      "address": "Keshwapur, Hubli - 580022",
+      "experience": 9,
+      "license_number": "EMER-KAR-2015-115",
+      "is_emergency_available": true
+    },
+    {
+      "company_name": "Annual Maintenance Contracts",
+      "location": "Bangalore",
+      "specialization": "Complete AMC services for borewells",
+      "services": [
+        "annual_maintenance_contract_(amc)_annual_borewell_maintenance",
+        "annual_maintenance_contract_(amc)_pump_inspection",
+        "annual_maintenance_contract_(amc)_motor_inspection",
+        "annual_maintenance_contract_(amc)_electrical_inspection",
+        "annual_maintenance_contract_(amc)_pipeline_inspection",
+        "annual_maintenance_contract_(amc)_preventive_maintenance",
+        "annual_maintenance_contract_(amc)_scheduled_servicing"
+      ],
+      "established_year": 2014,
+      "phone": "9876543516",
+      "email": "amc@borewell.com",
+      "address": "BTM Layout, Bangalore - 560068",
+      "experience": 10,
+      "license_number": "AMC-KAR-2014-116"
+    }
+  ]
+}

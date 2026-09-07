@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ blog.title }} - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'blog_list' %}">Knowledge Center</a></li>
+            <li class="breadcrumb-item active">{{ blog.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <span class="badge bg-primary mb-3">{{ blog.get_category_display }}</span>
+            
+            <h1 class="mb-4">{{ blog.title }}</h1>
+            
+            <p class="text-muted mb-4">
+                <i class="fas fa-user me-2"></i>{{ blog.author.username }}
+                <i class="fas fa-calendar ms-3 me-2"></i>{{ blog.created_at|date:"F d, Y" }}
+            </p>
+            
+            <div class="blog-content">
+                {{ blog.content|linebreaks }}
+            </div>
+            
+            <div class="mt-5">
+                <a href="{% url 'blog_list' %}" class="btn btn-secondary">Back to Articles</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Vendors Section -->
+    <section class="py-5 mt-5" style="background: var(--section);">
+        <div class="container-fluid">
+            <h2 class="text-center mb-2">Featured Providers</h2>
+            <p class="text-center mb-5" style="color: var(--light-text);">Top-rated Agri and borewell service providers</p>
+            <div class="row">
+                {% for vendor in featured_vendors %}
+                    <div class="col-md-4 col-lg-2 mb-4">
+                        <div class="card text-center p-3" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold mb-2" style="font-size: 13px;">{{ vendor.company_name }}</h5>
+                                <div class="d-flex justify-content-center gap-1 mb-2 flex-wrap">
+                                    {% if vendor.verification_status == 'verified' %}
+                                        <span class="badge bg-success" style="font-size: 9px;"><i class="fas fa-check-circle"></i></span>
+                                    {% endif %}
+                                    <span class="badge bg-info" style="font-size: 9px;"><i class="fas fa-map-marker-alt"></i> {{ vendor.city.name }}</span>
+                                    <span class="badge bg-warning" style="font-size: 9px;"><i class="fas fa-star"></i> {{ vendor.rating }}</span>
+                                    {% if vendor.is_emergency_available %}
+                                        <span class="badge bg-danger" style="font-size: 9px;"><i class="fas fa-exclamation-triangle"></i> 24×7</span>
+                                    {% endif %}
+                                </div>
+                                <p class="card-text text-muted mb-2" style="font-size: 11px;">
+                                    <i class="fas fa-cogs me-1"></i>{{ vendor.services_count }} Services
+                                </p>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{% url 'vendor_detail' vendor.id %}" class="btn btn-primary btn-sm" style="font-size: 10px; padding: 0.25rem 0.5rem;">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'vendor_list' %}" class="btn btn-primary">View All Providers</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card:hover {
+        transform: translateY(-10px) !important;
+        border-top: 4px solid #D97706 !important;
+    }
+</style>
+{% endblock %}

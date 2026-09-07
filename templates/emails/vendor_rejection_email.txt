@@ -1,0 +1,42 @@
+Update on Your Vendor Application - BorewellMart
+
+Dear {{ vendor.user.username }},
+
+We regret to inform you that your vendor application could not be approved at this time.
+
+After careful review, we found some issues with your application that need to be addressed.
+
+APPLICATION DETAILS:
+-------------------
+Company Name: {{ vendor.company_name }}
+Email: {{ vendor.email }}
+Phone: {{ vendor.phone }}
+
+POSSIBLE REASONS FOR REJECTION:
+-------------------------------
+- Incomplete or incorrect business information provided
+- Invalid license number or missing certifications
+- Contact details could not be verified
+- Business location is outside our service area
+- Previously suspended or flagged account
+- Insufficient experience in the industry
+
+WHAT YOU CAN DO:
+---------------
+1. Review Your Application: Check all information for accuracy
+2. Update Documentation: Ensure all certificates and licenses are valid
+3. Reapply: Submit a new application with corrected information
+4. Contact Support: Reach out if you believe this was an error
+
+If you believe there has been a mistake or would like more information about why your application was rejected, please don't hesitate to contact our support team.
+
+We appreciate your interest in joining BorewellMart and hope to work with you in the future.
+
+Visit BorewellMart: {{ frontend_url }}
+
+Best regards,
+The BorewellMart Vendor Team
+
+---
+This is an automated email. Please do not reply to this email.
+© {% now "Y" %} BorewellMart. All rights reserved.

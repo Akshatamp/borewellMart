@@ -1,0 +1,483 @@
+{% extends "vendor_base.html" %}
+
+{% block title %}Complete Registration Payment - BorewellMart{% endblock %}
+{% block nav_payment %}active{% endblock %}
+{% block page_title %}Payment{% endblock %}
+{% block page_subtitle %}Registration fee and payment details{% endblock %}
+
+{% block extra_css %}
+<style>
+.payment-option input[type="radio"]:checked + label {
+    background-color: #e7f3ff;
+    border: 2px solid #0d6efd;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.payment-option {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.payment-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.razorpay-payment-button {
+    display: none !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-credit-card me-2"></i>Complete Your Registration</h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if payment_completed %}
+                        <!-- Payment Completed Alert -->
+                        <div class="alert alert-success mb-4">
+                            <h5><i class="fas fa-check-circle me-2"></i>Payment Completed Successfully</h5>
+                            <p class="mb-0">
+                                Your registration payment of <strong>₹{{ payment.paid_amount|default:payment.amount }}</strong> has been completed successfully.
+                                {% if vendor.verification_status == 'verified' %}
+                                    Your account is verified and you can access the dashboard.
+                                {% else %}
+                                    Your account is pending admin verification. You will be able to access the dashboard once approved.
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <!-- Payment Details Summary -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Payment Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td class="fw-bold">Transaction ID:</td>
+                                        <td>{{ payment.transaction_id|default:"N/A" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Payment Date:</td>
+                                        <td>{{ payment.payment_date|date:"Y-m-d H:i" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Amount Paid:</td>
+                                        <td class="text-success fw-bold">₹{{ payment.paid_amount|default:payment.amount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Payment Method:</td>
+                                        <td>{{ payment.get_payment_method_display|default:"Razorpay" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Payment Status:</td>
+                                        <td><span class="badge bg-success">{{ payment.get_status_display }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Verification Status:</td>
+                                        <td>
+                                            {% if vendor.verification_status == 'verified' %}
+                                                <span class="badge bg-success">Verified</span>
+                                            {% elif vendor.verification_status == 'pending' %}
+                                                <span class="badge bg-warning">Pending Verification</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ vendor.get_verification_status_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        {% if vendor.verification_status == 'verified' %}
+                        <div class="text-center">
+                            <a href="{% url 'vendor_dashboard' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- Payment Required Alert -->
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="fas fa-info-circle me-2"></i>Choose Your Plan</h5>
+                            <p class="mb-0">
+                                Thank you for registering with BorewellMart! Select a plan that suits your business needs.
+                                After successful payment, your account will be reviewed by our admin team and verified within 24-48 hours.
+                            </p>
+                        </div>
+
+                        <!-- Vendor Details Summary -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Your Registration Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td class="fw-bold">Company Name:</td>
+                                        <td>{{ vendor.company_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Email:</td>
+                                        <td>{{ vendor.user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Phone:</td>
+                                        <td>{{ vendor.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">City:</td>
+                                        <td>{{ vendor.city.name }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Plans -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="payment-option card h-100">
+                                    <input type="radio" name="plan" id="plan-basic" value="999" class="d-none" checked>
+                                    <label for="plan-basic" class="card-body h-100 mb-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <h6 class="text-primary fw-bold">Basic</h6>
+                                            <h4 class="fw-bold mb-1">₹999</h4>
+                                            <small class="text-muted">/ 1 Month</small>
+                                            <hr class="my-3">
+                                            <h6 class="text-start small">Basic Vendor Listing</h6>
+                                            <ul class="list-unstyled text-start small mt-2">
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>1 Product/Service Listing</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Email Support</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Featured Placement</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Priority Leads</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Social Media Promotion</li>
+                                            </ul>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="payment-option card h-100">
+                                    <input type="radio" name="plan" id="plan-advanced" value="4999" class="d-none">
+                                    <label for="plan-advanced" class="card-body h-100 mb-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <h6 class="text-warning fw-bold">Advanced</h6>
+                                            <h4 class="fw-bold mb-1">₹4999</h4>
+                                            <small class="text-muted">/ 6 Months</small>
+                                            <hr class="my-3">
+                                            <h6 class="text-start small">Priority Vendor Listing</h6>
+                                            <ul class="list-unstyled text-start small mt-2">
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Up to 5 Products/Services</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Email & Phone Support</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Basic Featured Placement</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Priority Leads</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Social Media Promotion</li>
+                                            </ul>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="payment-option card h-100">
+                                    <input type="radio" name="plan" id="plan-premium" value="8999" class="d-none">
+                                    <label for="plan-premium" class="card-body h-100 mb-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <h6 class="text-danger fw-bold">Premium</h6>
+                                            <h4 class="fw-bold mb-1">₹8999</h4>
+                                            <small class="text-muted">/ Year</small>
+                                            <hr class="my-3">
+                                            <h6 class="text-start small">Top Vendor Listing</h6>
+                                            <ul class="list-unstyled text-start small mt-2">
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Unlimited Products/Services</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>24/7 Support</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Featured Home Page Placement</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Priority Leads Access</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Social Media & Blog Promotion</li>
+                                            </ul>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Featured Home Page</li>
+                                                <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Priority Leads Access</li>
+                                            </ul>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Razorpay Payment -->
+                        <div class="mb-4">
+                            <h5 class="mb-3 text-center">Secure Payment via Razorpay</h5>
+                            <div class="text-center mb-4">
+                                <img src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" height="40" class="mb-2">
+                                <p class="text-muted small">Pay securely using Credit Card, Debit Card, Net Banking, UPI, or Wallets</p>
+                            </div>
+
+                            <form id="razorpay-form" action="{% url 'vendor_payment_callback' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+                                <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
+                                <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+                                <input type="hidden" name="selected_amount" id="selected_amount" value="999">
+                                <div id="payment-message" class="alert d-none" role="alert"></div>
+
+                                <div class="d-grid">
+                                    <button type="button" id="pay-button" class="btn btn-success btn-lg">
+                                        <i class="fas fa-lock me-2"></i>Pay ₹<span id="pay-amount">999</span> Securely
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Payment Methods Display -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="text-center">
+                                    <small class="text-muted">Supported Payment Methods:</small>
+                                    <div class="d-flex justify-content-center gap-3 mt-2">
+                                        <div class="text-center">
+                                            <i class="fas fa-credit-card fa-2x text-primary"></i>
+                                            <p class="small mb-0">Card</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <i class="fas fa-university fa-2x text-warning"></i>
+                                            <p class="small mb-0">NetBanking</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <i class="fas fa-mobile-alt fa-2x text-success"></i>
+                                            <p class="small mb-0">UPI</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <i class="fas fa-wallet fa-2x text-info"></i>
+                                            <p class="small mb-0">Wallet</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Note -->
+                        <div class="alert alert-secondary">
+                            <small class="mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                <strong>Secure Payment:</strong> Your payment information is safe with us. We use industry-standard encryption.
+                                After successful payment, your account will be reviewed by our admin team and typically verified within 24-48 hours.
+                                You will receive a confirmation email once your account is verified.
+                            </small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Support Contact -->
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    Need help? Contact us at <a href="mailto:support@borewellmart.com">support@borewellmart.com</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if not payment_completed %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+// Handle plan selection
+document.querySelectorAll('input[name="plan"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        var selectedAmount = this.value;
+        document.getElementById('pay-amount').textContent = selectedAmount;
+        document.getElementById('selected_amount').value = selectedAmount;
+        showPaymentMessage('', '');
+    });
+});
+
+function showPaymentMessage(message, type) {
+    var messageEl = document.getElementById('payment-message');
+    if (!message) {
+        messageEl.className = 'alert d-none';
+        messageEl.textContent = '';
+        return;
+    }
+    messageEl.className = 'alert alert-' + type;
+    messageEl.textContent = message;
+}
+
+function resetPayButton(selectedAmount) {
+    var payButton = document.getElementById('pay-button');
+    payButton.disabled = false;
+    payButton.innerHTML = '<i class="fas fa-lock me-2"></i>Pay ₹' + selectedAmount + ' Securely';
+}
+
+document.getElementById('pay-button').onclick = function(e) {
+    e.preventDefault();
+
+    var selectedAmount = document.getElementById('selected_amount').value;
+    var payButton = document.getElementById('pay-button');
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    showPaymentMessage('', '');
+    
+    // Disable button and show loading state
+    payButton.disabled = true;
+    payButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Order...';
+
+    // Create Razorpay order dynamically
+    var formData = new FormData();
+    formData.append('amount', selectedAmount);
+    formData.append('amount_unit', 'rupees');
+    formData.append('currency', '{{ razorpay_currency }}');
+    formData.append('receipt', 'vendor_{{ vendor.id }}_' + Date.now());
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    fetch("{% url 'api_create_order' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.redirected) {
+            throw new Error('Your session was redirected. Please refresh the page and try again.');
+        }
+        return response.json().then(data => ({
+            ok: response.ok,
+            data: data
+        }));
+    })
+    .then(result => {
+        var data = result.data;
+        if (!result.ok) {
+            var errorMessage = data.error || 'Unable to create order. Please try again.';
+            if (data.details) {
+                errorMessage += ' Details: ' + data.details;
+            }
+            resetPayButton(selectedAmount);
+            showPaymentMessage(errorMessage, 'danger');
+            return;
+        }
+        return data;
+    })
+    .catch(error => {
+        console.error('Network/Server error:', error);
+        resetPayButton(selectedAmount);
+        showPaymentMessage('Unable to connect to payment gateway. Please check your internet connection and try again. If the problem persists, please contact support.', 'danger');
+    })
+    .then(data => {
+        if (!data) {
+            return;
+        }
+        if (data.error) {
+            var errorMessage = data.error;
+            if (data.details) {
+                errorMessage += ' Details: ' + data.details;
+            }
+            showPaymentMessage(errorMessage, 'danger');
+            resetPayButton(selectedAmount);
+            return;
+        }
+
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": data.amount,
+            "currency": data.currency,
+            "name": "BorewellMart",
+            "description": "Vendor Registration Fee",
+            "order_id": data.order_id,
+            "method": {
+                "upi": true,
+                "card": true,
+                "netbanking": true,
+                "wallet": true
+            },
+            "handler": function (response) {
+                payButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying Payment...';
+
+                fetch("{% url 'api_verify_payment' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                })
+                .then(verifyResponse => verifyResponse.json().then(data => ({
+                    ok: verifyResponse.ok,
+                    data: data
+                })))
+                .then(result => {
+                    if (!result.ok || !result.data.success) {
+                        showPaymentMessage(result.data.error || 'Payment verification failed. Please contact support.', 'danger');
+                        resetPayButton(selectedAmount);
+                        return;
+                    }
+
+                    showPaymentMessage('Payment verified successfully. Redirecting...', 'success');
+                    window.location.href = result.data.redirect_url;
+                })
+                .catch(error => {
+                    console.error('Verification error:', error);
+                    showPaymentMessage('Payment verification failed. Please contact support.', 'danger');
+                    resetPayButton(selectedAmount);
+                });
+            },
+            "prefill": {
+                "name": "{{ vendor.company_name }}",
+                "email": "{{ vendor.user.email }}",
+                "contact": "{{ vendor.phone }}"
+            },
+            "notes": {
+                "vendor_id": "{{ vendor.id }}",
+                "company_name": "{{ vendor.company_name }}",
+                "selected_plan": selectedAmount
+            },
+            "theme": {
+                "color": "#06B6D4"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log('Checkout form closed');
+                    showPaymentMessage('Payment cancelled. You can try again when ready.', 'warning');
+                    resetPayButton(selectedAmount);
+                }
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+        rzp.on('payment.failed', function (response) {
+            console.log('Payment failed:', response.error.description);
+            showPaymentMessage('Payment failed: ' + response.error.description, 'danger');
+            resetPayButton(selectedAmount);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showPaymentMessage(error.message || 'Error creating order. Please try again.', 'danger');
+        resetPayButton(selectedAmount);
+    });
+};
+</script>
+{% endif %}
+{% endblock %}

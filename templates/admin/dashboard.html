@@ -1,0 +1,373 @@
+{% extends "admin/base.html" %}
+
+{% block nav_dashboard %}active{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Overview of your marketplace{% endblock %}
+
+{% block content %}
+<!-- Statistics Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_vendors }}</div>
+        <div class="stat-label">Total Vendors</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ verified_vendors }} verified
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_customers }}</div>
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-change">
+            <i class="bi bi-info-circle"></i> Registered users
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-tools"></i>
+        </div>
+        <div class="stat-value">{{ total_services }}</div>
+        <div class="stat-label">Active Services</div>
+        <div class="stat-change">
+            <i class="bi bi-list"></i> {{ total_categories }} sectors
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon purple">
+            <i class="bi bi-calendar-check"></i>
+        </div>
+        <div class="stat-value">{{ total_bookings }}</div>
+        <div class="stat-label">Total Bookings</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ completed_bookings }} completed
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon cyan">
+            <i class="bi bi-chat-dots"></i>
+        </div>
+        <div class="stat-value">{{ total_enquiries }}</div>
+        <div class="stat-label">Total Enquiries</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ pending_enquiries }} pending
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon red">
+            <i class="bi bi-currency-rupee"></i>
+        </div>
+        <div class="stat-value">₹{{ total_revenue|floatformat:0 }}</div>
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ completed_payments }} payments
+        </div>
+    </div>
+
+    <div class="stat-card" onclick="window.location.href='{% url 'admin_visitors' %}'" style="cursor: pointer;">
+        <div class="stat-card-icon indigo">
+            <i class="bi bi-eye-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_visitors|default:0 }}</div>
+        <div class="stat-label">Total Visitors</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ today_visitors|default:0 }} today
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-grid">
+    <!-- Booking Status Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h4 class="chart-title">Booking Status</h4>
+            <select class="form-select form-select-sm" style="width: auto;">
+                <option>This Month</option>
+                <option>Last 3 Months</option>
+                <option>All Time</option>
+            </select>
+        </div>
+        <div class="chart-canvas">
+            <canvas id="bookingStatusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Vendor Verification Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h4 class="chart-title">Vendor Verification Status</h4>
+        </div>
+        <div class="chart-canvas">
+            <canvas id="vendorVerificationChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Payment Status Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h4 class="chart-title">Payment Status</h4>
+        </div>
+        <div class="chart-canvas">
+            <canvas id="paymentStatusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h4 class="chart-title">Monthly Revenue</h4>
+        </div>
+        <div class="chart-canvas">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity & Pending Actions -->
+<div class="row g-4">
+    <!-- Recent Vendors Table -->
+    <div class="col-lg-8 col-md-7">
+        <div class="table-container">
+            <div class="table-header">
+                <h4 class="table-title">Pending Vendor Approvals</h4>
+                <a href="{% url 'admin_all_vendors' %}?status=pending" class="btn btn-primary btn-sm">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th class="table-hide-mobile">City</th>
+                            <th class="table-hide-mobile">Experience</th>
+                            <th class="table-hide-mobile">Applied</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vendor in all_pending_vendors|slice:":5" %}
+                        <tr>
+                            <td>
+                                <a href="#" class="table-link">{{ vendor.company_name }}</a>
+                                <div class="text-muted small">{{ vendor.email }}</div>
+                            </td>
+                            <td class="table-hide-mobile">{{ vendor.city.name }}</td>
+                            <td class="table-hide-mobile">{{ vendor.experience }} years</td>
+                            <td class="table-hide-mobile">{{ vendor.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'approve_vendor' vendor.id %}" class="action-btn approve" title="Approve">
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                    <a href="{% url 'reject_vendor' vendor.id %}" class="action-btn reject" title="Reject">
+                                        <i class="bi bi-x-lg"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i> No pending vendors
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="col-lg-4 col-md-5">
+        <div class="table-container">
+            <div class="table-header">
+                <h4 class="table-title">Quick Stats</h4>
+            </div>
+            <div class="p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Pending Vendors</span>
+                    <span class="badge badge-pending">{{ pending_vendors }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Verified Vendors</span>
+                    <span class="badge badge-verified">{{ verified_vendors }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Suspended Vendors</span>
+                    <span class="badge badge-suspended">{{ suspended_vendors }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Pending Bookings</span>
+                    <span class="badge badge-pending">{{ pending_bookings }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Active Bookings</span>
+                    <span class="badge badge-processing">{{ active_bookings }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Pending Enquiries</span>
+                    <span class="badge badge-pending">{{ pending_enquiries }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Responded Enquiries</span>
+                    <span class="badge badge-completed">{{ responded_enquiries }}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong class="text-truncate">Total Visitors</strong>
+                    <strong class="text-primary">{{ total_visitors|default:0 }}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Today's Visitors</span>
+                    <span class="badge badge-info">{{ today_visitors|default:0 }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-truncate">Repeat Visitors</span>
+                    <span class="badge badge-secondary">{{ repeat_visitors|default:0 }}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong class="text-truncate">Total Revenue</strong>
+                    <strong class="text-success">₹{{ total_revenue|floatformat:2 }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Edit category function
+function editCategory(id, name, description, icon, order) {
+    // Create a modal or redirect to the admin categories page with edit mode
+    window.location.href = "{% url 'admin_categories' %}?action=edit&category_id=" + id;
+}
+
+// Calculate chart data
+const pendingBookings = {{ pending_bookings }};
+const activeBookings = {{ active_bookings }};
+const completedBookings = {{ completed_bookings }};
+const totalBookings = {{ total_bookings }};
+const acceptedBookings = totalBookings - pendingBookings - activeBookings - completedBookings;
+
+// Booking Status Chart
+const bookingCtx = document.getElementById('bookingStatusChart').getContext('2d');
+new Chart(bookingCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Pending', 'Accepted', 'In Progress', 'Completed', 'Cancelled'],
+        datasets: [{
+            data: [pendingBookings, Math.max(0, acceptedBookings), activeBookings, completedBookings, 0],
+            backgroundColor: ['#f59e0b', '#3b82f6', '#06b6d4', '#10b981', '#ef4444'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Vendor Verification Chart
+const vendorCtx = document.getElementById('vendorVerificationChart').getContext('2d');
+new Chart(vendorCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Verified', 'Pending', 'Suspended'],
+        datasets: [{
+            data: [{{ verified_vendors }}, {{ pending_vendors }}, {{ suspended_vendors }}],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Payment Status Chart
+const totalPayments = {{ total_payments }};
+const completedPayments = {{ completed_payments }};
+const pendingPayments = {{ pending_payments }};
+const failedPayments = totalPayments - completedPayments - pendingPayments;
+
+const paymentCtx = document.getElementById('paymentStatusChart').getContext('2d');
+new Chart(paymentCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Completed', 'Pending', 'Failed'],
+        datasets: [{
+            data: [completedPayments, pendingPayments, Math.max(0, failedPayments)],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Revenue Chart
+const totalRevenue = {{ total_revenue|default:0 }};
+const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+new Chart(revenueCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Revenue (₹)',
+            data: [0, 0, totalRevenue, 0, 0, totalRevenue],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

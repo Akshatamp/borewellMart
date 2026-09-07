@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Services - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <h1 class="mb-4 text-center">Our Services</h1>
+
+    <!-- Sector Filter Buttons -->
+    <div class="text-center mb-4">
+        <div class="btn-group" role="group" aria-label="Sector filter">
+            <a href="{% url 'service_list' %}" class="btn {% if not selected_sector %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-th-large me-1"></i>All Services
+            </a>
+            {% for sector in sectors %}
+                <a href="{% url 'service_list' %}?sector={{ sector.id }}" class="btn {% if selected_sector == sector.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    {% if sector.name == 'Agriculture' %}
+                        <i class="fas fa-seedling me-1"></i>
+                    {% elif sector.name == 'Borewell' %}
+                        <i class="fas fa-water me-1"></i>
+                    {% else %}
+                        <i class="fas fa-cogs me-1"></i>
+                    {% endif %}
+                    {{ sector.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Filter Display -->
+    {% if selected_sector %}
+        <div class="text-center mb-3">
+            <span class="badge bg-info">
+                <i class="fas fa-filter me-1"></i>
+                Filtering by: {% for sector in sectors %}{% if sector.id == selected_sector %}{{ sector.name }}{% endif %}{% endfor %}
+                <a href="{% url 'service_list' %}" class="text-white ms-2" style="text-decoration: none;">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% for service in services %}
+            <div class="col-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                <a href="{% url 'subcategory_detail' service.id %}" class="text-decoration-none">
+                    <div class="card home-service-card h-100">
+                        {% if service.image %}
+                            <img src="{{ service.image.url }}" class="service-img" alt="{{ service.name }}" loading="lazy">
+                        {% else %}
+                            <div class="service-placeholder">
+                                <i class="fas fa-cogs text-white" style="font-size: 18px;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="card-title">{{ service.name }}</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No services available yet. Please check back later.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Featured Vendors Section -->
+    <section class="py-5 mt-5" style="background: var(--section);">
+        <div class="container-fluid">
+            <h2 class="text-center mb-2">Featured Providers</h2>
+            <p class="text-center mb-5" style="color: var(--light-text);">Top-rated Agri and borewell service providers</p>
+            <div class="row">
+                {% for vendor in featured_vendors %}
+                    <div class="col-md-4 col-lg-4 mb-4">
+                        <a href="{% url 'vendor_detail' vendor.id %}" class="text-decoration-none">
+                            <div class="card vendor-detail-card h-100" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                                <div class="card-body p-4">
+                                    <!-- Vendor Header -->
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h5 class="fw-bold mb-1" style="color: var(--dark); font-size: 18px;">{{ vendor.company_name }}</h5>
+                                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                {% if vendor.verification_status == 'verified' %}
+                                                    <span class="badge" style="background: var(--success); color: white; font-size: 11px; padding: 4px 10px; border-radius: 12px;">
+                                                        <i class="fas fa-check-circle me-1" style="font-size: 10px;"></i>Verified
+                                                    </span>
+                                                {% endif %}
+                                                <span class="badge" style="background: var(--primary); color: white; font-size: 11px; padding: 4px 10px; border-radius: 12px;">
+                                                    <i class="fas fa-fire me-1" style="font-size: 10px;"></i>Top Search
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="d-flex align-items-center justify-content-end" style="color: var(--accent);">
+                                                <i class="fas fa-star me-1"></i>
+                                                <span class="fw-bold" style="font-size: 18px;">{{ vendor.rating|default:4.8 }}</span>
+                                            </div>
+                                            <small class="text-muted" style="font-size: 12px;">42 ratings</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="mb-3">
+                                        <p class="mb-0" style="color: var(--text); font-size: 14px;">
+                                            <i class="fas fa-map-marker-alt me-2" style="color: var(--primary);"></i>
+                                            {{ vendor.address|default:"Church Building Kinnigoli, Mangalore" }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Service Tags -->
+                                    <div class="mb-3">
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            {% for service in vendor.vendor_services.all|slice:":2" %}
+                                                <span class="badge" style="background: var(--section); color: var(--text); font-size: 12px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(2, 132, 199, 0.2);">
+                                                    {{ service.service.name }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            No featured vendors available at this time.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'vendor_list' %}" class="btn btn-primary">View All Providers</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Home Page Service Cards (Square Rounded Avatar style) */
+.home-service-card {
+    background: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    padding: 1.25rem 0.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    transition: all 0.3s ease !important;
+}
+
+.home-service-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+    border-top: none !important;
+}
+
+.home-service-card .service-img {
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 12px !important;
+    object-fit: cover !important;
+    border: 2px solid #eaeaea !important;
+    margin: 0 auto 0.75rem auto !important;
+    display: block !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+
+.home-service-card .service-placeholder {
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #06B6D4 0%, #22d3ee 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 0.75rem auto !important;
+    border: 2px solid #eaeaea !important;
+}
+
+/* Home Card Typography & Spacing Override */
+.home-service-card .card-body {
+    padding: 0 !important;
+    margin-top: 0.25rem !important;
+    text-align: center !important;
+}
+
+.home-service-card .card-title {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.3 !important;
+}
+
+/* Vendor Detail Card Styling */
+.vendor-detail-card {
+    background: #fff !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.vendor-detail-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+    border-top: none !important;
+}
+
+.vendor-detail-card .btn {
+    transition: all 0.3s ease !important;
+}
+
+.vendor-detail-card .btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+@media (max-width: 768px) {
+    .vendor-detail-card .d-flex.gap-2 {
+        flex-direction: column !important;
+    }
+    
+    .vendor-detail-card .btn {
+        width: 100% !important;
+    }
+}
+</style>
+{% endblock %}

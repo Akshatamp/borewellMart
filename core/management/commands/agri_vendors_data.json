@@ -1,0 +1,330 @@
+{
+  "agricultural_cities": [
+    {
+      "name": "Vijayapura",
+      "description": "Agricultural hub of North Karnataka - known for sugarcane, maize, and pulses",
+      "latitude": 16.8304,
+      "longitude": 75.714,
+      "specialties": [
+        "farm ponds",
+        "solar pumps",
+        "drip irrigation"
+      ],
+      "climate": "Arid to semi-arid, requires efficient irrigation"
+    },
+    {
+      "name": "Raichur",
+      "description": "Cotton and rice growing region along the Tungabhadra river basin",
+      "latitude": 16.2076,
+      "longitude": 77.3463,
+      "specialties": [
+        "rice field irrigation",
+        "cotton farm wells"
+      ],
+      "climate": "Hot and dry, monsoon-dependent agriculture"
+    },
+    {
+      "name": "Kalaburagi",
+      "description": "Red cotton belt of Karnataka with rich groundwater potential",
+      "latitude": 17.328,
+      "longitude": 76.8336,
+      "specialties": [
+        "deep borewell drilling",
+        "cotton irrigation"
+      ],
+      "climate": "Deccan plateau, drought-prone area"
+    },
+    {
+      "name": "Bidar",
+      "description": "Agricultural district with rich groundwater reserves",
+      "latitude": 17.9072,
+      "longitude": 77.5283,
+      "specialties": [
+        "open wells",
+        "traditional irrigation"
+      ],
+      "climate": "Moderate rainfall, good water table"
+    },
+    {
+      "name": "Ballari",
+      "description": "Iron and agricultural district with mixed farming",
+      "latitude": 15.1393,
+      "longitude": 76.9123,
+      "specialties": [
+        "industrial and farm water solutions"
+      ],
+      "climate": "Dry, requires sustainable irrigation"
+    },
+    {
+      "name": "Shivamogga",
+      "description": "Areca nut and paddy growing region in Western Ghats",
+      "latitude": 13.9299,
+      "longitude": 75.5681,
+      "specialties": [
+        "areca irrigation",
+        "paddy field water management"
+      ],
+      "climate": "High rainfall, lush greenery"
+    }
+  ],
+  "agricultural_services": [
+    {
+      "name": "Drip Irrigation Installation",
+      "description": "Complete drip irrigation system setup for farms and gardens",
+      "target_crops": [
+        "sugarcane",
+        "vegetables",
+        "fruits",
+        "flowers"
+      ],
+      "water_saving": "Up to 60%"
+    },
+    {
+      "name": "Sprinkler System Installation",
+      "description": "Modern sprinkler irrigation systems for agricultural lands",
+      "target_crops": [
+        "wheat",
+        "rice",
+        "pulses",
+        "cereals"
+      ],
+      "water_saving": "Up to 40%"
+    },
+    {
+      "name": "Farm Pond Construction",
+      "description": "Excavation and construction of farm ponds for water storage",
+      "capacity_range": "100 to 10,000 cubic meters",
+      "benefits": [
+        "rainwater harvesting",
+        "drought mitigation",
+        "fish farming"
+      ]
+    },
+    {
+      "name": "Open Well Construction",
+      "description": "Traditional open well digging and construction services",
+      "depth_range": "20 to 100 feet",
+      "diameter_options": [
+        "6 feet",
+        "8 feet",
+        "10 feet",
+        "12 feet"
+      ]
+    },
+    {
+      "name": "Solar Pump Installation",
+      "description": "Solar-powered water pump systems for sustainable irrigation",
+      "power_range": "1HP to 20HP",
+      "subsidies_available": true
+    },
+    {
+      "name": "Micro-Irrigation System Setup",
+      "description": "Efficient micro-irrigation systems for water conservation",
+      "types": [
+        "drip",
+        "sprinkler",
+        "micro-sprinkler"
+      ],
+      "efficiency": "Up to 90% water use efficiency"
+    },
+    {
+      "name": "Agricultural Pipeline Installation",
+      "description": "Main and sub-pipeline installation for farm irrigation",
+      "pipe_types": [
+        "PVC",
+        "HDPE",
+        "Steel"
+      ],
+      "diameter_range": "2 inches to 12 inches"
+    },
+    {
+      "name": "Groundwater Survey Services",
+      "description": "Scientific groundwater detection and survey services",
+      "methods": [
+        "electrical resistivity",
+        "remote sensing",
+        "vertical electrical sounding"
+      ],
+      "accuracy": "Up to 85%"
+    }
+  ],
+  "specialized_agri_vendors": [
+    {
+      "company_name": "Vijayapura Agri Wells Pvt Ltd",
+      "location": "Vijayapura",
+      "specialization": "Sugarcane farm irrigation specialists",
+      "services": [
+        "borewell drilling",
+        "farm pond construction",
+        "solar pump installation"
+      ],
+      "established_year": 2008,
+      "service_area": "Vijayapura, Bagalkot, Belagavi districts",
+      "phone": "9876543225",
+      "email": "vijayapura@agriwell.com",
+      "notable_projects": "200+ farm ponds in sugarcane belt"
+    },
+    {
+      "company_name": "Raichur Farm Irrigation Systems",
+      "location": "Raichur",
+      "specialization": "Rice and cotton irrigation experts",
+      "services": [
+        "drip irrigation",
+        "sprinkler systems",
+        "pump installation"
+      ],
+      "established_year": 2010,
+      "service_area": "Raichur, Koppal, Yadgir districts",
+      "phone": "9876543226",
+      "email": "raichur@farmirrigation.com",
+      "notable_projects": "500+ drip irrigation systems for cotton farms"
+    },
+    {
+      "company_name": "Kalaburagi Cotton Belt Drilling",
+      "location": "Kalaburagi",
+      "specialization": "Deep borewell specialists for arid regions",
+      "services": [
+        "deep borewell drilling",
+        "submersible pumps",
+        "groundwater survey"
+      ],
+      "established_year": 2005,
+      "service_area": "Kalaburagi, Bidar, Yadgir districts",
+      "phone": "9876543227",
+      "email": "kalaburagi@cottondrilling.com",
+      "notable_projects": "300+ successful borewells in red soil region"
+    },
+    {
+      "company_name": "Bidar Groundwater Experts",
+      "location": "Bidar",
+      "specialization": "Traditional and modern water solutions",
+      "services": [
+        "open well construction",
+        "borewell drilling",
+        "farm ponds"
+      ],
+      "established_year": 2012,
+      "service_area": "Bidar, Vikarabad, Medak districts",
+      "phone": "9876543228",
+      "email": "bidar@groundwater.com",
+      "notable_projects": "150+ open wells with high water yield"
+    },
+    {
+      "company_name": "Ballari Farm Water Solutions",
+      "location": "Ballari",
+      "specialization": "Industrial and agricultural water management",
+      "services": [
+        "irrigation pipeline",
+        "pump repair",
+        "water storage solutions"
+      ],
+      "established_year": 2009,
+      "service_area": "Ballari, Koppal, Raichur districts",
+      "phone": "9876543229",
+      "email": "ballari@farmwater.com",
+      "notable_projects": "Integrated water systems for 50+ large farms"
+    },
+    {
+      "company_name": "Shivamogga Areca Irrigation Co",
+      "location": "Shivamogga",
+      "specialization": "Areca nut and plantation irrigation",
+      "services": [
+        "micro-irrigation",
+        "sprinkler systems",
+        "pump installation"
+      ],
+      "established_year": 2011,
+      "service_area": "Shivamogga, Chikkamagaluru, Hassan districts",
+      "phone": "9876543230",
+      "email": "shivamogga@arecairrigation.com",
+      "notable_projects": "1000+ areca plantations with efficient irrigation"
+    },
+    {
+      "company_name": "Vijayapura Solar Pumps & Energy",
+      "location": "Vijayapura",
+      "specialization": "Solar-powered agricultural solutions",
+      "services": [
+        "solar pump installation",
+        "solar fencing",
+        "solar water heaters"
+      ],
+      "established_year": 2015,
+      "service_area": "North Karnataka region",
+      "phone": "9876543231",
+      "email": "vijayapura@solarpump.com",
+      "notable_projects": "Government subsidy partner for 200+ solar pumps"
+    },
+    {
+      "company_name": "Raichur Drip Irrigation Systems",
+      "location": "Raichur",
+      "specialization": "Precision drip irrigation for water-scarce areas",
+      "services": [
+        "drip irrigation design",
+        "automated irrigation",
+        "fertigation systems"
+      ],
+      "established_year": 2013,
+      "service_area": "Raichur, Koppal, Bellary districts",
+      "phone": "9876543232",
+      "email": "raichur@dripsystems.com",
+      "notable_projects": "10,000+ acres under drip irrigation"
+    },
+    {
+      "company_name": "Kalaburagi Farm Pond Specialists",
+      "location": "Kalaburagi",
+      "specialization": "Farm pond excavation and lining",
+      "services": [
+        "farm pond construction",
+        "rainwater harvesting",
+        "check dams"
+      ],
+      "established_year": 2014,
+      "service_area": "Kalaburagi, Yadgir, Raichur districts",
+      "phone": "9876543233",
+      "email": "kalaburagi@farmponds.com",
+      "notable_projects": "100+ farm ponds with HDPE lining"
+    },
+    {
+      "company_name": "Bidar Open Well & Traditional Water",
+      "location": "Bidar",
+      "specialization": "Traditional open well construction",
+      "services": [
+        "open well construction",
+        "step wells restoration",
+        "recharge wells"
+      ],
+      "established_year": 2006,
+      "service_area": "Bidar, Hyderabad-Karnataka region",
+      "phone": "9876543234",
+      "email": "bidar@openwell.com",
+      "notable_projects": "Restoration of 25+ traditional step wells"
+    }
+  ],
+  "government_schemes": [
+    {
+      "scheme_name": "PM Krishi Sinchai Yojana (PMKSY)",
+      "description": "Central scheme for micro-irrigation",
+      "subsidy": "Up to 55% for small farmers",
+      "eligible_services": [
+        "drip irrigation",
+        "sprinkler systems"
+      ]
+    },
+    {
+      "scheme_name": "Karnataka State Solar Pump Scheme",
+      "description": "State-sponsored solar pump installation",
+      "subsidy": "Up to 80% for farmers",
+      "eligible_services": [
+        "solar pump installation"
+      ]
+    },
+    {
+      "scheme_name": "Farm Pond Construction Scheme",
+      "description": "State subsidy for farm pond construction",
+      "subsidy": "Up to 50% of construction cost",
+      "eligible_services": [
+        "farm pond construction"
+      ]
+    }
+  ]
+}

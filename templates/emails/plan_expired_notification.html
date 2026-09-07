@@ -1,0 +1,102 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 20px;
+            border-radius: 5px 5px 0 0;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .alert {
+            background-color: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 15px;
+            margin: 15px 0;
+            color: #c62828;
+        }
+        .plan-details {
+            background-color: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #d32f2f;
+        }
+        .plan-details h3 {
+            margin-top: 0;
+            color: #d32f2f;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Plan Expired</h2>
+        </div>
+        <div class="content">
+            <p>Hi <strong>{{ vendor_name }}</strong>,</p>
+            
+            <div class="alert">
+                <strong>⚠️ Important:</strong> Your <strong>{{ plan_name }}</strong> plan has expired!
+            </div>
+            
+            <p>Your subscription plan has ended as of <strong>{{ expiry_date }}</strong>. To continue accessing all the features and benefits on BorewellMart, please renew your plan immediately.</p>
+            
+            <div class="plan-details">
+                <h3>Plan Details</h3>
+                <p><strong>Plan Name:</strong> {{ plan_name }}</p>
+                <p><strong>Plan Type:</strong> {{ plan_type }}</p>
+                <p><strong>Expiry Date:</strong> {{ expiry_date }}</p>
+            </div>
+            
+            <p style="color: #c62828; font-weight: bold;">⏰ Action Required: Your services may be limited until you renew your plan.</p>
+            
+            <a href="{{ renewal_link }}" class="button">Renew Your Plan Now</a>
+            
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">
+                If you have any questions or need assistance, please contact us at <strong>support@borewellmart.com</strong>
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 BorewellMart. All rights reserved.</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}

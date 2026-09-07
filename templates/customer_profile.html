@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Profile Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        {% if profile.profile_image %}
+                            <img src="{{ profile.profile_image.url }}" alt="Profile" class="rounded-circle" width="120" height="120">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto" style="width: 120px; height: 120px;">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h4 class="mb-1">{{ profile.user.username }}</h4>
+                    <p class="text-muted mb-3">{{ profile.user.email }}</p>
+                    <span class="badge badge-info">{{ profile.get_user_type_display }}</span>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Quick Stats</h6>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Member Since</span>
+                        <span class="font-weight-bold">{{ profile.user.date_joined|date:"M Y" }}</span>
+                    </div>
+                    {% if profile.city %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Location</span>
+                        <span class="font-weight-bold">{{ profile.city.name }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Profile Information -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Username</label>
+                            <p class="font-weight-bold mb-0">{{ profile.user.username }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Email</label>
+                            <p class="font-weight-bold mb-0">{{ profile.user.email }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Phone</label>
+                            <p class="font-weight-bold mb-0">{{ profile.phone|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">User Type</label>
+                            <p class="font-weight-bold mb-0">{{ profile.get_user_type_display }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">City</label>
+                            <p class="font-weight-bold mb-0">{{ profile.city.name|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">State</label>
+                            <p class="font-weight-bold mb-0">{{ profile.city.state|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="text-muted small">Address</label>
+                            <p class="font-weight-bold mb-0">{{ profile.address|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">First Name</label>
+                            <p class="font-weight-bold mb-0">{{ profile.user.first_name|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Last Name</label>
+                            <p class="font-weight-bold mb-0">{{ profile.user.last_name|default:"Not provided" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Actions -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Account Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'customer_dashboard' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'customer_profile_edit' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

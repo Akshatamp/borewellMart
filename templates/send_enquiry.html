@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+
+{% block title %}Send Enquiry - {{ vendor.company_name }} - BorewellMart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .enquiry-container {
+        background: var(--section);
+        min-height: calc(100vh - 200px);
+        padding: 40px 0;
+    }
+
+    .enquiry-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .enquiry-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .vendor-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .vendor-card .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px 25px;
+        font-weight: 600;
+    }
+
+    .vendor-card .card-header i {
+        margin-right: 10px;
+        color: var(--primary);
+    }
+
+    .vendor-profile {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    }
+
+    .vendor-logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+
+    .vendor-logo-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .vendor-rating {
+        color: #ffc107;
+        font-size: 16px;
+    }
+
+    .enquiry-form-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+
+    .enquiry-form-card .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        padding: 25px;
+    }
+
+    .enquiry-form-card .card-body {
+        padding: 30px;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 14px;
+        min-width: 70px;
+    }
+
+    .info-value {
+        color: #212529;
+        font-weight: 500;
+    }
+
+    .process-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+        border: 1px solid #c8e6c9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .process-box h6 {
+        color: var(--success);
+        margin-bottom: 15px;
+    }
+
+    .process-steps {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .process-step {
+        flex: 1;
+        min-width: 150px;
+        text-align: center;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .process-step .step-number {
+        width: 35px;
+        height: 35px;
+        background: var(--gradient-primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: 600;
+    }
+
+    .process-step .step-text {
+        font-size: 13px;
+        color: #495057;
+    }
+
+    .tip-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-custom .breadcrumb-item a {
+        color: #6c757d;
+        text-decoration: none;
+    }
+
+    .breadcrumb-custom .breadcrumb-item.active {
+        color: var(--primary);
+    }
+
+    .service-preview {
+        background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+        border-radius: 8px;
+        padding: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="enquiry-container">
+    <div class="container-fluid">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-custom">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'vendor_list' %}">Vendors</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'vendor_detail' vendor.id %}">{{ vendor.company_name }}</a></li>
+                <li class="breadcrumb-item active">Send Enquiry</li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="enquiry-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1><i class="fas fa-envelope-open-text me-3"></i>Send Enquiry to {{ vendor.company_name }}</h1>
+                    <p class="mb-0 mt-2 opacity-75">Get detailed pricing and service information before booking</p>
+                </div>
+                {% if vendor.is_emergency_available %}
+                    <div class="badge bg-danger px-4 py-2 fs-6">
+                        <i class="fas fa-bolt me-2"></i>24×7 Emergency
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Process Flow -->
+        <div class="process-box mb-4">
+            <h6 class="text-center mb-3"><i class="fas fa-route me-2"></i>How It Works</h6>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Send Enquiry</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Get Pricing</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Review Quote</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Book Service</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column - Vendor Info -->
+            <div class="col-lg-5">
+                <div class="vendor-card">
+                    <div class="card-header">
+                        <i class="fas fa-building"></i>Vendor Details
+                    </div>
+                    <div class="vendor-profile">
+                        {% if vendor.logo %}
+                            <img src="{{ vendor.logo.url }}" class="vendor-logo" alt="{{ vendor.company_name }}">
+                        {% else %}
+                            <div class="vendor-logo-placeholder">
+                                <i class="fas fa-building text-white fa-2x"></i>
+                            </div>
+                        {% endif %}
+                        <h4 class="mb-1">{{ vendor.company_name }}</h4>
+                        <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-1"></i>{{ vendor.city.name }}</p>
+                        <div class="mb-2">
+                            <span class="vendor-rating">
+                                {% for i in ''|ljust:5 %}
+                                    {% if forloop.counter <= vendor.rating|floatformat:0 %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-dark ms-1">{{ vendor.rating|default:"0.0" }}</span>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-center gap-3">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ vendor.experience }} Years Exp.</small>
+                            {% if vendor.is_emergency_available %}
+                                <small class="text-danger"><i class="fas fa-bolt me-1"></i>Emergency</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="background: white;">
+                        {% if vendor.phone %}
+                        <div class="info-item">
+                            <div class="info-icon bg-light text-primary">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">{{ vendor.phone }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if vendor.email %}
+                        <div class="info-item">
+                            <div class="info-icon bg-light text-primary">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <div class="info-label">Email</div>
+                                <div class="info-value">{{ vendor.email }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Enquiry Form -->
+            <div class="col-lg-7">
+                <div class="enquiry-form-card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-paper-plane me-2" style="color: var(--primary);"></i>Your Enquiry</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <!-- Service Selection -->
+                            <div class="mb-4">
+                                <label for="{{ form.subservice.id_for_label }}" class="form-label">
+                                    <i class="fas fa-cogs me-1"></i>Select Service *
+                                </label>
+                                {{ form.subservice }}
+                                {% if form.subservice.errors %}
+                                    <div class="text-danger small mt-1">{{ form.subservice.errors }}</div>
+                                {% endif %}
+                                <small class="text-muted">Choose the service you want to enquire about</small>
+                            </div>
+
+                            <!-- Message -->
+                            <div class="mb-4">
+                                <label for="{{ form.message.id_for_label }}" class="form-label">
+                                    <i class="fas fa-comment-alt me-1"></i>Your Requirements *
+                                </label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+                                {% endif %}
+                                <small class="text-muted">Describe your requirements, location, borewell depth (if applicable), and any specific details needed for accurate pricing</small>
+                            </div>
+
+                            <!-- Tip Box -->
+                            <div class="tip-box mb-4">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Tip for Better Response</h6>
+                                <ul class="small mb-0" style="padding-left: 20px;">
+                                    <li>Mention expected borewell depth (e.g., 300 feet, 500 feet)</li>
+                                    <li>Specify pipe size requirements (4 inch, 6 inch, etc.)</li>
+                                    <li>Provide location details and accessibility</li>
+                                    <li>Mention any specific requirements or timeline</li>
+                                </ul>
+                            </div>
+
+                            <!-- Info Box -->
+                            <div class="process-box mb-4" style="margin-bottom: 20px;">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-check-circle text-success fa-lg me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-2">What Happens Next?</h6>
+                                        <ul class="small mb-0" style="padding-left: 20px;">
+                                            <li>Vendor receives your enquiry immediately</li>
+                                            <li>Detailed pricing response within 24-48 hours</li>
+                                            <li>You can review the quote and ask questions</li>
+                                            <li>Proceed to booking when satisfied with pricing</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Enquiry
+                                </button>
+                                <a href="{% url 'vendor_detail' vendor.id %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Go Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

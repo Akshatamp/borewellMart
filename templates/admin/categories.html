@@ -1,0 +1,508 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Sector Management{% endblock %}
+{% block page_subtitle %}Manage sectors and services{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-layer-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_sectors }}</div>
+        <div class="stat-label">Sectors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-list-nested"></i>
+        </div>
+        <div class="stat-value">{{ total_services }}</div>
+        <div class="stat-label">Services</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-tools"></i>
+        </div>
+        <div class="stat-value">{{ total_services }}</div>
+        <div class="stat-label">Total Subservices</div>
+    </div>
+</div>
+
+<!-- Sectors & Services -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="table-container">
+            <div class="table-header">
+                <h4 class="table-title">Sectors</h4>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <i class="bi bi-plus-lg"></i> Add Sector
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Name</th>
+                            <th>Services</th>
+                            <th>Subservices</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sector in sectors %}
+                        <tr>
+                            <td>
+                                {% if sector.image %}
+                                <img src="{{ sector.image.url }}" alt="{{ sector.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-{{ sector.icon|default:'layer' }} text-muted"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>{{ sector.name }}</strong>
+                                <div class="text-muted small">{{ sector.description|truncatewords:8 }}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">{{ sector.services.count }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ sector.total_services }}</span>
+                            </td>
+                            <td>{{ sector.order }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-sm btn-table" onclick="editCategory('{{ sector.id }}', '{{ sector.name|escapejs }}', '{{ sector.description|escapejs }}', '{{ sector.icon|default:""|escapejs }}', {{ sector.order }})">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-table text-danger" onclick="deleteCategory('{{ sector.id }}', '{{ sector.name|escapejs }}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i> No sectors
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sectors Pagination -->
+            {% if sectors.has_other_pages %}
+            <nav aria-label="Sectors pagination" class="mt-3">
+                <ul class="pagination pagination-sm justify-content-center">
+                    {% if sectors.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ sectors.previous_page_number }}&subpage={{ request.GET.subpage }}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    {% endif %}
+
+                    {% for num in sectors.paginator.page_range %}
+                    {% if sectors.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}&subpage={{ request.GET.subpage }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if sectors.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ sectors.next_page_number }}&subpage={{ request.GET.subpage }}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="table-container">
+            <div class="table-header">
+                <h4 class="table-title">Services</h4>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSubcategoryModal">
+                    <i class="bi bi-plus-lg"></i> Add Service
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sector</th>
+                            <th>Name</th>
+                            <th>Subservices</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                        <tr>
+                            <td>
+                                <span class="badge bg-light text-dark">{{ service.sector.name }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ service.name }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ service.subservices.count }}</span>
+                            </td>
+                            <td>{{ service.order }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-sm btn-table" onclick="editSubcategory('{{ service.id }}', '{{ service.name|escapejs }}', '{{ service.description|escapejs }}', '{{ service.icon|default:""|escapejs }}', {{ service.order }}, '{{ service.sector.id }}')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-table text-danger" onclick="deleteSubcategory('{{ service.id }}', '{{ service.name|escapejs }}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i> No services
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Services Pagination -->
+            {% if services.has_other_pages %}
+            <nav aria-label="Services pagination" class="mt-3">
+                <ul class="pagination pagination-sm justify-content-center">
+                    {% if services.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&subpage={{ services.previous_page_number }}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    {% endif %}
+
+                    {% for num in services.paginator.page_range %}
+                    {% if services.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ request.GET.page }}&subpage={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if services.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&subpage={{ services.next_page_number }}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Sector Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Sector</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'admin_category_add' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_category">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID *</label>
+                        <input type="text" name="id" class="form-control" required placeholder="e.g. borewell">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" class="form-control" placeholder="e.g. droplet">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Sector</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="addSubcategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'admin_subcategory_add' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_subcategory">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sector *</label>
+                        <select name="category" class="form-select" required>
+                            {% for sector in all_sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ID *</label>
+                        <input type="text" name="id" class="form-control" required placeholder="e.g. drilling">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" class="form-control" placeholder="e.g. gear">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Sector Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Sector</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editCategoryForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_category">
+                <input type="hidden" name="category_id" id="editCategoryId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" name="id" id="editCategoryOriginalId" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" id="editCategoryName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" id="editCategoryDesc" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" id="editCategoryIcon" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" id="editCategoryOrder" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep current image</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Sector</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Service Modal -->
+<div class="modal fade" id="editSubcategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editSubcategoryForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_subcategory">
+                <input type="hidden" name="subcategory_id" id="editSubcategoryId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sector *</label>
+                        <select name="category" id="editSubcategoryCategory" class="form-select" required>
+                            {% for sector in all_sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" name="id" id="editSubcategoryOriginalId" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" id="editSubcategoryName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" id="editSubcategoryDesc" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" id="editSubcategoryIcon" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" id="editSubcategoryOrder" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep current image</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editCategory(id, name, desc, icon, order) {
+    document.getElementById('editCategoryId').value = id;
+    document.getElementById('editCategoryOriginalId').value = id;
+    document.getElementById('editCategoryName').value = name;
+    document.getElementById('editCategoryDesc').value = desc || '';
+    document.getElementById('editCategoryIcon').value = icon || '';
+    document.getElementById('editCategoryOrder').value = order;
+    document.getElementById('editCategoryForm').action = "{% url 'admin_categories' %}";
+
+    const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+    modal.show();
+}
+
+function deleteCategory(id, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This will affect all services and subservices.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_categories' %}";
+        const actionInput = document.createElement('input');
+        actionInput.name = 'action';
+        actionInput.value = 'delete_category';
+        const catIdInput = document.createElement('input');
+        catIdInput.name = 'category_id';
+        catIdInput.value = id;
+        const csrfToken = document.createElement('input');
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(actionInput);
+        form.appendChild(catIdInput);
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function editSubcategory(id, name, desc, icon, order, categoryId) {
+    document.getElementById('editSubcategoryId').value = id;
+    document.getElementById('editSubcategoryOriginalId').value = id;
+    document.getElementById('editSubcategoryName').value = name;
+    document.getElementById('editSubcategoryDesc').value = desc || '';
+    document.getElementById('editSubcategoryIcon').value = icon || '';
+    document.getElementById('editSubcategoryOrder').value = order;
+    document.getElementById('editSubcategoryCategory').value = categoryId;
+    document.getElementById('editSubcategoryForm').action = "{% url 'admin_categories' %}";
+
+    const modal = new bootstrap.Modal(document.getElementById('editSubcategoryModal'));
+    modal.show();
+}
+
+function deleteSubcategory(id, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This will affect all subservices in this service.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_categories' %}";
+        const actionInput = document.createElement('input');
+        actionInput.name = 'action';
+        actionInput.value = 'delete_subcategory';
+        const subIdInput = document.createElement('input');
+        subIdInput.name = 'subcategory_id';
+        subIdInput.value = id;
+        const csrfToken = document.createElement('input');
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(actionInput);
+        form.appendChild(subIdInput);
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

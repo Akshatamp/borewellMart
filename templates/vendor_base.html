@@ -1,0 +1,507 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vendor Panel - BorewellMart{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --primary-color: #0284C7;
+            --primary-dark: #0369a1;
+            --secondary-color: #06B6D4;
+            --secondary-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #0284C7 0%, #06B6D4 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--secondary-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #0284C7 0%, #06B6D4 100%);
+            color: white;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.16);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-brand i {
+            font-size: 1.75rem;
+        }
+
+        .sidebar-brand h5 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .sidebar-brand img {
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-section-title {
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.25rem 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: rgba(255,255,255,0.86);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255,255,255,0.16);
+            color: white;
+        }
+
+        .sidebar-link:hover {
+            transform: translateX(4px);
+        }
+
+        .sidebar-link i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .notification-badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        .notification-badge.warning {
+            background: #f59e0b;
+        }
+
+        .notification-badge.success {
+            background: #10b981;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: white;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .header-btn:hover {
+            background: var(--secondary-bg);
+            border-color: var(--primary-color);
+            color: var(--text-dark);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06B6D4, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        .table-container,
+        .panel-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .table-title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+
+        .messages-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            padding: 0;
+            gap: 0;
+        }
+
+        .mobile-toggle span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text-dark);
+            border-radius: 2px;
+        }
+
+        .mobile-toggle span:nth-child(2) {
+            margin: 4px 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: inline-flex;
+            }
+
+            .top-header {
+                padding: 1rem;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .header-btn span {
+                display: none;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .top-header {
+                align-items: flex-start;
+            }
+
+            .page-title h1 {
+                font-size: 1.125rem;
+            }
+
+            .content-area {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            {% if user.vendor and user.vendor.logo %}
+                <img src="{{ user.vendor.logo.url }}" alt="{{ user.vendor.company_name }}" style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);">
+            {% else %}
+                <i class="bi bi-droplet-fill"></i>
+            {% endif %}
+            <h5>{% if user.vendor and user.vendor.company_name %}{{ user.vendor.company_name|truncatewords:2 }}{% else %}Vendor Panel{% endif %}</h5>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="{% url 'vendor_dashboard' %}" class="sidebar-link {% block nav_dashboard %}{% endblock %}">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'vendor_bookings' %}" class="sidebar-link {% block nav_bookings %}{% endblock %}">
+                    <i class="bi bi-calendar-check-fill"></i>
+                    <span>Bookings</span>
+                </a>
+                <a href="{% url 'vendor_enquiries' %}" class="sidebar-link {% block nav_enquiries %}{% endblock %}">
+                    <i class="bi bi-chat-left-text-fill"></i>
+                    <span>Enquiry</span>
+                    {% if pending_enquiries_count > 0 %}
+                    <span class="notification-badge">{{ pending_enquiries_count }}</span>
+                    {% endif %}
+                </a>
+                <!-- <a href="{% url 'notifications' %}" class="sidebar-link {% block nav_notifications %}{% endblock %}">
+                    <i class="bi bi-bell-fill"></i>
+                    <span>Notifications</span>
+                    {% if unread_notifications_count > 0 %}
+                    <span class="notification-badge {% if unread_notifications_count <= 3 %}warning{% endif %}">{{ unread_notifications_count }}</span>
+                    {% endif %}
+                </a> -->
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Service</div>
+                <a href="{% url 'vendor_service_add' %}" class="sidebar-link {% block nav_service_add %}{% endblock %}">
+                    <i class="bi bi-plus-square-fill"></i>
+                    <span>Add Service</span>
+                </a>
+                <a href="{% url 'vendor_services' %}" class="sidebar-link {% block nav_services %}{% endblock %}">
+                    <i class="bi bi-tools"></i>
+                    <span>View Services</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Community</div>
+                <a href="{% url 'vendor_communities' %}" class="sidebar-link {% block nav_communities %}{% endblock %}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Communities</span>
+                </a>
+                <a href="{% url 'forum_home' %}" class="sidebar-link {% block nav_forum %}{% endblock %}">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Forum</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Plans</div>
+                <a href="{% url 'vendor_plans' %}" class="sidebar-link {% block nav_plans %}{% endblock %}">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>My Plans</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="{% url 'vendor_payment_page' %}" class="sidebar-link {% block nav_payment %}{% endblock %}">
+                    <i class="bi bi-credit-card-fill"></i>
+                    <span>Payment</span>
+                </a>
+                <a href="{% url 'logout' %}" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+
+            {% if user.vendor %}
+                <div class="nav-section" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.16); padding-top: 1rem;">
+                    <div style="padding: 0.75rem 1rem; border-radius: 0.5rem; background: rgba(255,255,255,0.1);">
+                        <small style="display: block; color: rgba(255,255,255,0.65); margin-bottom: 0.5rem; font-weight: 600;">Status</small>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600;">
+                            {% if user.vendor.verification_status == 'verified' %}
+                                <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></span>
+                                <span>Verified ✓</span>
+                            {% elif user.vendor.verification_status == 'pending' %}
+                                <span style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                                <span>Pending</span>
+                            {% else %}
+                                <span style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></span>
+                                <span>Suspended</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+        <div class="top-header">
+            <div class="d-flex align-items-center gap-3">
+                <button class="mobile-toggle" id="mobileToggle" type="button" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="page-title">
+                    <h1>{% block page_title %}Vendor Panel{% endblock %}</h1>
+                    <p>{% block page_subtitle %}{% endblock %}</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+            </div>
+        </div>
+        <div class="content-area">
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+
+            mobileToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            document.querySelectorAll('.sidebar-link').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 991) {
+                        closeSidebar();
+                    }
+                });
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

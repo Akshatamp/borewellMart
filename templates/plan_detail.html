@@ -1,0 +1,170 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}{{ plan.plan_name }} - Plan Details{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>{{ plan.plan_name }}</h1>
+            <p class="text-muted">
+                <i class="fas fa-calendar"></i> {{ plan.start_date }} to {{ plan.end_date }}
+            </p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{% url 'vendor_plans' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Plans
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Plan Details Card -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Plan Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="text-muted">Plan Type</label>
+                            <p class="h5">
+                                <span class="badge badge-info">{{ plan.get_plan_type_display }}</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted">Price</label>
+                            <p class="h5">₹{{ plan.price }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="text-muted">Status</label>
+                            <p class="h5">
+                                {% if plan.status == 'active' %}
+                                    <span class="badge badge-success">Active</span>
+                                {% elif plan.status == 'expired' %}
+                                    <span class="badge badge-danger">Expired</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">{{ plan.get_status_display }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted">Days Until Expiry</label>
+                            <p class="h5">
+                                {% with days=plan.days_until_expiry %}
+                                    {% if days <= 0 %}
+                                        <span class="text-danger font-weight-bold">Expired</span>
+                                    {% elif days <= 7 %}
+                                        <span class="text-warning font-weight-bold">{{ days }} days</span>
+                                    {% else %}
+                                        <span class="text-success">{{ days }} days</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="text-muted">Description</label>
+                            <p>{{ plan.description|linebreaks }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="text-muted">Notification Schedule</label>
+                            <p>
+                                <small class="text-muted">
+                                    You will receive notifications <strong>7 days</strong>, <strong>3 days</strong>, and <strong>1 day</strong> before plan expiry.
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bell"></i> Notifications Sent
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if notifications %}
+                        <div class="list-group">
+                            {% for notification in notifications %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <span class="badge badge-primary">{{ notification.get_notification_type_display }}</span>
+                                            </h6>
+                                            <p class="mb-1 text-muted">{{ notification.notification_text }}</p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock"></i> {{ notification.sent_at|date:"M d, Y H:i" }}
+                                            </small>
+                                        </div>
+                                        <div>
+                                            {% if notification.email_sent %}
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check"></i> Email Sent
+                                                </span>
+                                            {% else %}
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-hourglass"></i> Pending
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No notifications sent yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Sidebar -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'edit_plan' plan.id %}" class="btn btn-warning btn-block mb-2">
+                        <i class="fas fa-edit"></i> Edit Plan
+                    </a>
+                    {% if plan.status == 'active' or plan.status == 'expired' %}
+                        <a href="{% url 'renew_plan' plan.id %}" class="btn btn-success btn-block mb-2">
+                            <i class="fas fa-redo"></i> Renew Plan
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'plan_notifications' plan.id %}" class="btn btn-info btn-block">
+                        <i class="fas fa-bell"></i> View All Notifications
+                    </a>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="alert alert-info">
+                <h6 class="alert-heading">
+                    <i class="fas fa-info-circle"></i> Plan Information
+                </h6>
+                <p class="mb-0">
+                    Your plan is valid from <strong>{{ plan.start_date }}</strong> to <strong>{{ plan.end_date }}</strong>.
+                    After expiry, you can renew it to continue your subscription.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

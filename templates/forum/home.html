@@ -1,0 +1,647 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}BorewellMart Community Forum{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #0284C7;
+        --secondary-color: #06B6D4;
+        --primary-dark: #0369a1;
+        --primary-light: #06B6D4;
+    }
+
+    .forum-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .forum-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .forum-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+
+    .forum-search {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+    }
+
+    .forum-search input {
+        border-radius: 50px;
+        padding: 1rem 1.5rem;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .category-filter {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1.5rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    .filter-btn {
+        border: 2px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: white;
+        color: var(--primary-color);
+        border-color: white;
+        transform: translateY(-2px);
+    }
+
+    .forum-card {
+        border: none;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+    }
+
+    .forum-card:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 12px;
+        color: white;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .thread-card {
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .thread-card:hover {
+        border-left-color: var(--secondary-color);
+        background: rgba(6, 182, 212, 0.02);
+    }
+
+    .thread-card:last-child {
+        border-bottom: none;
+    }
+
+    .thread-card.solved {
+        border-left-color: #28a745;
+    }
+
+    .solved-badge {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .thread-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .thread-stats {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: #6c757d;
+        flex-wrap: wrap;
+    }
+
+    .thread-stats span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .ask-question-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        font-size: 1.5rem;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .ask-question-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.1));
+        border: 1px solid rgba(6, 182, 212, 0.2);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-card p {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+
+    .contributor-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .contributor-item:hover {
+        background: rgba(6, 182, 212, 0.05);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(6, 182, 212, 0.1);
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sidebar-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .sidebar-card-header {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(16, 185, 129, 0.05));
+        padding: 1rem;
+        border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+    }
+
+    .sidebar-card-header h6 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sidebar-card-body {
+        padding: 1rem;
+    }
+
+    .quick-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .quick-link:hover {
+        background: rgba(6, 182, 212, 0.05);
+        transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+        .forum-hero {
+            padding: 2rem 0;
+        }
+
+        .ask-question-btn {
+            width: 50px;
+            height: 50px;
+            bottom: 1rem;
+            right: 1rem;
+        }
+
+        .thread-stats {
+            font-size: 0.75rem;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Forum Hero Section -->
+<div class="forum-hero">
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-5 fw-bold mb-2">BorewellMart Community Forum</h1>
+                <p class="lead mb-4 opacity-75">Connect, Share Knowledge, Get Expert Answers</p>
+
+                <div class="forum-search">
+                    <form action="{% url 'forum_category' 'all' %}" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search questions, topics, or keywords...">
+                            <button class="btn btn-light" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="category-filter">
+                    <a href="{% url 'forum_category' 'all' %}" class="filter-btn {% if category.slug == 'all' %}active{% endif %}">
+                        <i class="fas fa-th-list me-1"></i>All
+                    </a>
+                    {% for cat in categories %}
+                        <a href="{% url 'forum_category' cat.slug %}" class="filter-btn">
+                            <i class="fas fa-{{ cat.icon|default:'tag' }} me-1"></i>{{ cat.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Quick Stats -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="stat-card">
+                        <h3>{{ total_threads }}</h3>
+                        <p class="mb-0">Questions</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-card">
+                        <h3>{{ total_posts }}</h3>
+                        <p class="mb-0">Answers</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stat-card">
+                        <h3>{{ total_members }}</h3>
+                        <p class="mb-0">Members</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Discussions -->
+            <div class="section-header">
+                <h4 class="section-title">
+                    <i class="fas fa-comments text-primary"></i>Recent Discussions
+                </h4>
+            </div>
+
+            <div class="card forum-card">
+                <div class="card-body p-0">
+                    {% for thread in recent_threads %}
+                        <div class="thread-card {% if thread.status == 'solved' %}solved{% endif %} p-3">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    {% if thread.author.userprofile.profile_image %}
+                                        <img src="{{ thread.author.userprofile.profile_image.url }}" alt="{{ thread.author.username }}" class="user-avatar">
+                                    {% else %}
+                                        <div class="user-avatar d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+                                            {{ thread.author.username|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="mb-0">
+                                            <a href="{% url 'forum_thread' thread.slug %}" class="text-decoration-none text-dark fw-semibold">
+                                                {{ thread.title }}
+                                            </a>
+                                        </h6>
+                                        {% if thread.status == 'solved' %}
+                                            <span class="solved-badge">
+                                                <i class="fas fa-check-circle"></i>SOLVED
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-muted small mb-2">
+                                        {{ thread.content|truncatewords:15 }}
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <div class="thread-meta">
+                                            <span class="me-3">
+                                                <strong>{{ thread.author.username }}</strong>
+                                            </span>
+                                            {% if thread.author.userprofile.city %}
+                                                <span class="me-3">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>{{ thread.author.userprofile.city }}
+                                                </span>
+                                            {% endif %}
+                                            <span>
+                                                <i class="far fa-clock me-1"></i>{{ thread.updated_at|timesince }} ago
+                                            </span>
+                                        </div>
+                                        <div class="thread-stats">
+                                            <span>
+                                                <i class="fas fa-thumbs-up"></i>{{ thread.like_count }}
+                                            </span>
+                                            <span>
+                                                <i class="fas fa-reply"></i>{{ thread.reply_count }}
+                                            </span>
+                                            <span>
+                                                <i class="fas fa-eye"></i>{{ thread.views }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="p-4 text-center text-muted">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: rgba(6, 182, 212, 0.1);">
+                                <i class="fas fa-comments fa-2x"></i>
+                            </div>
+                            <p>No discussions yet. Be the first to ask a question!</p>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'forum_create_thread' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Ask Question
+                            </a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login to Ask
+                            </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Forum Categories -->
+            <div class="section-header mt-4">
+                <h4 class="section-title">
+                    <i class="fas fa-folder text-primary"></i>Categories
+                </h4>
+                <a href="{% url 'forum_category' 'all' %}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-th me-1"></i>View All
+                </a>
+            </div>
+
+            <div class="card forum-card">
+                <div class="card-body p-0">
+                    {% for category in categories %}
+                        <div class="thread-card p-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="category-icon">
+                                    <i class="fas fa-{{ category.icon|default:'folder' }}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">
+                                        <a href="{% url 'forum_category' category.slug %}" class="text-decoration-none text-dark fw-semibold">
+                                            {{ category.name }}
+                                        </a>
+                                        {% if category.is_service_related %}
+                                            <span class="badge bg-info bg-opacity-10 text-info ms-2">
+                                                <i class="fas fa-cogs me-1"></i>Service
+                                            </span>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="text-muted small mb-2">{{ category.description }}</p>
+                                    <div class="thread-stats">
+                                        <span>
+                                            <i class="fas fa-question-circle"></i>{{ category.thread_count }} Questions
+                                        </span>
+                                        <span>
+                                            <i class="fas fa-comment"></i>{{ category.post_count }} Answers
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="p-4 text-center text-muted">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: rgba(6, 182, 212, 0.1);">
+                                <i class="fas fa-folder-open fa-2x"></i>
+                            </div>
+                            <p>No categories yet</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Ask Question CTA -->
+            <div class="card forum-card" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+                <div class="card-body text-center p-4">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background: rgba(255,255,255,0.2);">
+                        <i class="fas fa-question-circle fa-2x"></i>
+                    </div>
+                    <h5 class="mb-2">Have a Question?</h5>
+                    <p class="mb-3 small opacity-75">Get answers from verified borewell experts and community members.</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'forum_create_thread' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-plus me-2"></i>Ask Question
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Ask
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Communities Section -->
+            <div class="card sidebar-card">
+                <div class="sidebar-card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-users text-primary"></i>Communities
+                    </h6>
+                </div>
+                <div class="sidebar-card-body">
+                    {% for community in communities %}
+                        <a href="{% if community.is_member %}{% url 'community_detail' community.slug %}{% else %}{% url 'join_community' community.slug %}{% endif %}" class="contributor-item text-decoration-none">
+                            {% if community.image %}
+                            <img src="{{ community.image.url }}" alt="{{ community.name }}" class="rounded" style="width:40px;height:40px;object-fit:cover;">
+                            {% else %}
+                            <div class="rounded d-flex align-items-center justify-content-center" style="width:40px;height:40px;background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+                                <i class="fas fa-users small"></i>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold small text-dark">{{ community.name }}</div>
+                                <div class="text-muted small">{{ community.member_count }} members</div>
+                            </div>
+                            {% if community.is_member %}
+                            <i class="fas fa-eye text-primary"></i>
+                            {% else %}
+                            <i class="fas fa-plus text-success"></i>
+                            {% endif %}
+                        </a>
+                    {% empty %}
+                        <p class="text-muted small mb-0 text-center">No communities yet</p>
+                    {% endfor %}
+                    {% if communities %}
+                    <div class="mt-3 pt-2 border-top">
+                        <a href="{% url 'community_list' %}" class="text-decoration-none small text-primary fw-semibold">
+                            <i class="fas fa-arrow-right me-1"></i>View All Communities
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Top Contributors -->
+            <div class="card sidebar-card">
+                <div class="sidebar-card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-fire text-danger"></i>Top Contributors
+                    </h6>
+                </div>
+                <div class="sidebar-card-body">
+                    {% for contributor in top_contributors %}
+                        <div class="contributor-item">
+                            {% if contributor.userprofile.profile_image %}
+                            <img src="{{ contributor.userprofile.profile_image.url }}" alt="{{ contributor.username }}" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+                            {% else %}
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+                                {{ contributor.username|first|upper }}
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold small">{{ contributor.username }}</div>
+                                <div class="text-muted small">{{ contributor.thread_count }} questions</div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted small mb-0 text-center">No contributors yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card sidebar-card">
+                <div class="sidebar-card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-link text-primary"></i>Quick Links
+                    </h6>
+                </div>
+                <div class="sidebar-card-body">
+                    <a href="{% url 'forum_category' 'all' %}?filter=unsolved" class="quick-link text-decoration-none text-dark">
+                        <i class="fas fa-question-circle text-warning"></i>
+                        <span>Unsolved Questions</span>
+                    </a>
+                    <a href="{% url 'forum_category' 'all' %}?filter=solved" class="quick-link text-decoration-none text-dark">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Solved Questions</span>
+                    </a>
+                    <a href="{% url 'forum_category' 'all' %}?filter=popular" class="quick-link text-decoration-none text-dark">
+                        <i class="fas fa-fire text-danger"></i>
+                        <span>Popular Questions</span>
+                    </a>
+                    <a href="{% url 'blog_list' %}" class="quick-link text-decoration-none text-dark">
+                        <i class="fas fa-book text-info"></i>
+                        <span>Knowledge Center</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Button -->
+{% if user.is_authenticated %}
+    <a href="{% url 'forum_create_thread' %}" class="ask-question-btn" title="Ask Question">
+        <i class="fas fa-plus"></i>
+    </a>
+{% endif %}
+{% endblock %}

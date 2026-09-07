@@ -1,0 +1,131 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Edit Community - Admin{% endblock %}
+
+{% block page_title %}Edit Community{% endblock %}
+{% block page_subtitle %}Edit community details{% endblock %}
+{% block nav_communities %}active{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Edit Community</h2>
+            <p class="text-muted mb-0">Update community details and settings</p>
+        </div>
+        <a href="{% url 'admin_communities' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Communities
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm" style="border-radius: 12px; border: none;">
+                <div class="card-body p-4">
+                    <div class="alert alert-info mb-4" style="border-radius: 8px; border: none;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Editing <strong>{{ community.name }}</strong>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">Community Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                            <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold">Profile Image</label>
+                                <div class="p-3 rounded" style="background: rgba(6, 182, 212, 0.05); border: 2px dashed rgba(6, 182, 212, 0.3);">
+                                    {{ form.image }}
+                                    {% if community.image %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current:</small>
+                                        <img src="{{ community.image.url }}" class="img-thumbnail ms-2" width="50" height="50" style="object-fit: cover;">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if form.image.errors %}
+                                <div class="text-danger small mt-1">{{ form.image.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.cover_image.id_for_label }}" class="form-label fw-semibold">Cover Image</label>
+                                <div class="p-3 rounded" style="background: rgba(6, 182, 212, 0.05); border: 2px dashed rgba(6, 182, 212, 0.3);">
+                                    {{ form.cover_image }}
+                                    {% if community.cover_image %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current:</small>
+                                        <img src="{{ community.cover_image.url }}" class="img-thumbnail ms-2" width="50" height="50" style="object-fit: cover;">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if form.cover_image.errors %}
+                                <div class="text-danger small mt-1">{{ form.cover_image.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 pt-3">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'admin_communities' %}" class="btn btn-outline-secondary px-4">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4" style="border-radius: 12px; border: none;">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Community Preview
+                    </h6>
+                    <div class="text-center mb-3">
+                        {% if community.image %}
+                        <img src="{{ community.image.url }}" class="rounded-circle" alt="{{ community.name }}" width="80" height="80" style="object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                            <i class="fas fa-users text-white fa-2x"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h5 class="text-center mb-2">{{ community.name }}</h5>
+                    <p class="text-muted small text-center mb-3">{{ community.description|truncatewords:20 }}</p>
+                    <div class="row text-center g-2">
+                        <div class="col-6">
+                            <div class="p-2 rounded" style="background: rgba(6, 182, 212, 0.1);">
+                                <div class="fw-bold">{{ community.member_count }}</div>
+                                <div class="small text-muted">Members</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded" style="background: rgba(16, 185, 129, 0.1);">
+                                <div class="fw-bold">{{ community.post_count }}</div>
+                                <div class="small text-muted">Posts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

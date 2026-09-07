@@ -1,0 +1,652 @@
+{
+  "sectors": [
+    {
+      "name": "Agriculture",
+      "slug": "agriculture",
+      "description": "Agricultural water solutions and irrigation services",
+      "services": [
+        {
+          "id": "borewell_drilling",
+          "name": "Borewell Drilling",
+          "slug": "borewell-drilling",
+          "description": "Professional borewell drilling services for agricultural and domestic needs",
+          "icon": "water",
+          "subservices": [
+            {
+              "id": "deep_borewell",
+              "name": "Deep Borewell",
+              "slug": "deep-borewell",
+              "description": "Deep borewell drilling for areas with low water table",
+              "per_feet_amount": 150,
+              "min_depth": 500,
+              "max_depth": 1500
+            },
+            {
+              "id": "shallow_borewell",
+              "name": "Shallow Borewell",
+              "slug": "shallow-borewell",
+              "description": "Shallow borewell for areas with good water table",
+              "per_feet_amount": 120,
+              "min_depth": 100,
+              "max_depth": 400
+            },
+            {
+              "id": "tube_well",
+              "name": "Tube Well Drilling",
+              "slug": "tube-well-drilling",
+              "description": "Tube well installation for consistent water supply",
+              "per_feet_amount": 140,
+              "min_depth": 200,
+              "max_depth": 800
+            },
+            {
+              "id": "rock_drilling",
+              "name": "Rock Drilling",
+              "slug": "rock-drilling",
+              "description": "Specialized drilling through hard rock formations",
+              "per_feet_amount": 180,
+              "min_depth": 300,
+              "max_depth": 1200
+            },
+            {
+              "id": "6inch_borewell",
+              "name": "6 Inch Borewell",
+              "slug": "6inch-borewell",
+              "description": "Standard 6 inch borewell for domestic use",
+              "per_feet_amount": 130,
+              "min_depth": 200,
+              "max_depth": 600
+            },
+            {
+              "id": "8inch_borewell",
+              "name": "8 Inch Borewell",
+              "slug": "8inch-borewell",
+              "description": "Large 8 inch borewell for commercial/irrigation",
+              "per_feet_amount": 160,
+              "min_depth": 300,
+              "max_depth": 1000
+            }
+          ]
+        },
+        {
+          "id": "irrigation_systems",
+          "name": "Irrigation Systems",
+          "slug": "irrigation-systems",
+          "description": "Modern irrigation system installation and maintenance",
+          "icon": "agriculture",
+          "subservices": [
+            {
+              "id": "drip_irrigation",
+              "name": "Drip Irrigation",
+              "slug": "drip-irrigation",
+              "description": "Water-efficient drip irrigation system setup",
+              "per_feet_amount": 80,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "sprinkler_system",
+              "name": "Sprinkler System",
+              "slug": "sprinkler-system",
+              "description": "Automated sprinkler system for large fields",
+              "per_feet_amount": 75,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "flood_irrigation",
+              "name": "Flood Irrigation",
+              "slug": "flood-irrigation",
+              "description": "Traditional flood irrigation channel setup",
+              "per_feet_amount": 60,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "micro_irrigation",
+              "name": "Micro Irrigation",
+              "slug": "micro-irrigation",
+              "description": "Precision micro irrigation for high-value crops",
+              "per_feet_amount": 95,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "water_pump_installation",
+          "name": "Water Pump Installation",
+          "slug": "water-pump-installation",
+          "description": "Water pump installation and setup services",
+          "icon": "settings",
+          "subservices": [
+            {
+              "id": "submersible_pump",
+              "name": "Submersible Pump",
+              "slug": "submersible-pump",
+              "description": "Deep well submersible pump installation",
+              "per_feet_amount": 100,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "centrifugal_pump",
+              "name": "Centrifugal Pump",
+              "slug": "centrifugal-pump",
+              "description": "Centrifugal pump for shallow wells",
+              "per_feet_amount": 90,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "jet_pump",
+              "name": "Jet Pump",
+              "slug": "jet-pump",
+              "description": "Jet pump for residential water supply",
+              "per_feet_amount": 85,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "solar_pump",
+              "name": "Solar Pump",
+              "slug": "solar-pump",
+              "description": "Solar-powered water pump installation",
+              "per_feet_amount": 120,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "monoblock_pump",
+              "name": "Monoblock Pump",
+              "slug": "monoblock-pump",
+              "description": "Compact monoblock pump for domestic use",
+              "per_feet_amount": 80,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "farm_equipment",
+          "name": "Farm Equipment Services",
+          "slug": "farm-equipment-services",
+          "description": "Agricultural equipment installation and maintenance",
+          "icon": "tractor",
+          "subservices": [
+            {
+              "id": "tractor_water_pump",
+              "name": "Tractor Water Pump",
+              "slug": "tractor-water-pump",
+              "description": "PTO driven water pump for irrigation",
+              "per_feet_amount": 110,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "rain_gun",
+              "name": "Rain Gun System",
+              "slug": "rain-gun-system",
+              "description": "High pressure rain gun irrigation",
+              "per_feet_amount": 85,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Construction",
+      "slug": "construction",
+      "description": "Construction and excavation services",
+      "services": [
+        {
+          "id": "earth_excavation",
+          "name": "Earth Excavation",
+          "slug": "earth-excavation",
+          "description": "Professional earth excavation services",
+          "icon": "terrain",
+          "subservices": [
+            {
+              "id": "foundation_digging",
+              "name": "Foundation Digging",
+              "slug": "foundation-digging",
+              "description": "Excavation for building foundations",
+              "per_feet_amount": 120,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "trench_excavation",
+              "name": "Trench Excavation",
+              "slug": "trench-excavation",
+              "description": "Trench digging for pipelines and cables",
+              "per_feet_amount": 110,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "basement_excavation",
+              "name": "Basement Excavation",
+              "slug": "basement-excavation",
+              "description": "Deep excavation for basement construction",
+              "per_feet_amount": 150,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "pool_excavation",
+              "name": "Swimming Pool Excavation",
+              "slug": "pool-excavation",
+              "description": "Excavation for swimming pool construction",
+              "per_feet_amount": 140,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "land_leveling",
+          "name": "Land Leveling",
+          "slug": "land-leveling",
+          "description": "Land leveling and grading services",
+          "icon": "landscape",
+          "subservices": [
+            {
+              "id": "bulldozing",
+              "name": "Bulldozing",
+              "slug": "bulldozing",
+              "description": "Heavy bulldozing for land clearing",
+              "per_feet_amount": 100,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "grading",
+              "name": "Grading",
+              "slug": "grading",
+              "description": "Precision land grading",
+              "per_feet_amount": 95,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "land_rolling",
+              "name": "Land Rolling",
+              "slug": "land-rolling",
+              "description": "Land rolling for agricultural fields",
+              "per_feet_amount": 70,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "concrete_drilling",
+          "name": "Concrete Drilling",
+          "slug": "concrete-drilling",
+          "description": "Drilling through concrete structures",
+          "icon": "construction",
+          "subservices": [
+            {
+              "id": "core_drilling",
+              "name": "Core Drilling",
+              "slug": "core-drilling",
+              "description": "Diamond core drilling in concrete",
+              "per_feet_amount": 200,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "anchor_drilling",
+              "name": "Anchor Drilling",
+              "slug": "anchor-drilling",
+              "description": "Drilling for anchor installations",
+              "per_feet_amount": 150,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Maintenance",
+      "slug": "maintenance",
+      "description": "Maintenance and repair services",
+      "services": [
+        {
+          "id": "borewell_maintenance",
+          "name": "Borewell Maintenance",
+          "slug": "borewell-maintenance",
+          "description": "Borewell cleaning and maintenance services",
+          "icon": "build",
+          "subservices": [
+            {
+              "id": "borewell_flushing",
+              "name": "Borewell Flushing",
+              "slug": "borewell-flushing",
+              "description": "Complete borewell flushing to remove silt",
+              "per_feet_amount": 80,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "pump_repair",
+              "name": "Pump Repair",
+              "slug": "pump-repair",
+              "description": "Water pump repair and servicing",
+              "per_feet_amount": 150,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "pipe_replacement",
+              "name": "Pipe Replacement",
+              "slug": "pipe-replacement",
+              "description": "Replacement of damaged borewell pipes",
+              "per_feet_amount": 120,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "motor_repair",
+              "name": "Motor Repair",
+              "slug": "motor-repair",
+              "description": "Borewell motor repair and rewinding",
+              "per_feet_amount": 180,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "cable_replacement",
+              "name": "Cable Replacement",
+              "slug": "cable-replacement",
+              "description": "Replacement of submersible pump cables",
+              "per_feet_amount": 90,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "water_testing",
+          "name": "Water Testing",
+          "slug": "water-testing",
+          "description": "Water quality testing and analysis",
+          "icon": "science",
+          "subservices": [
+            {
+              "id": "water_quality",
+              "name": "Water Quality Test",
+              "slug": "water-quality-test",
+              "description": "Complete water quality analysis",
+              "per_feet_amount": 500,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "camera_inspection",
+              "name": "Borewell Camera Inspection",
+              "slug": "borewell-camera-inspection",
+              "description": "Video inspection of borewell condition",
+              "per_feet_amount": 300,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "yield_test",
+              "name": "Water Yield Test",
+              "slug": "water-yield-test",
+              "description": "Measure water yield per hour",
+              "per_feet_amount": 400,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "bacteriological_test",
+              "name": "Bacteriological Test",
+              "slug": "bacteriological-test",
+              "description": "Test for bacteria and contaminants",
+              "per_feet_amount": 350,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        },
+        {
+          "id": "restoration",
+          "name": "Borewell Restoration",
+          "slug": "borewell-restoration",
+          "description": "Restoration of dry or failed borewells",
+          "icon": "restore",
+          "subservices": [
+            {
+              "id": "hydro_fracturing",
+              "name": "Hydro Fracturing",
+              "slug": "hydro-fracturing",
+              "description": "Pressure fracturing to improve yield",
+              "per_feet_amount": 250,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "acidization",
+              "name": "Borewell Acidization",
+              "slug": "borewell-acidization",
+              "description": "Chemical treatment to clear blocks",
+              "per_feet_amount": 200,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "re_drilling",
+              "name": "Re-drilling",
+              "slug": "re-drilling",
+              "description": "Deepening existing borewell",
+              "per_feet_amount": 170,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Residential",
+      "slug": "residential",
+      "description": "Residential water solutions",
+      "services": [
+        {
+          "id": "domestic_borewell",
+          "name": "Domestic Borewell",
+          "slug": "domestic-borewell",
+          "description": "Borewell services for residential properties",
+          "icon": "home",
+          "subservices": [
+            {
+              "id": "house_borewell",
+              "name": "House Borewell",
+              "slug": "house-borewell",
+              "description": "Standard borewell for home use",
+              "per_feet_amount": 125,
+              "min_depth": 150,
+              "max_depth": 500
+            },
+            {
+              "id": "apartment_borewell",
+              "name": "Apartment Borewell",
+              "slug": "apartment-borewell",
+              "description": "High capacity borewell for apartments",
+              "per_feet_amount": 145,
+              "min_depth": 300,
+              "max_depth": 800
+            },
+            {
+              "id": "garden_borewell",
+              "name": "Garden Borewell",
+              "slug": "garden-borewell",
+              "description": "Small borewell for garden irrigation",
+              "per_feet_amount": 110,
+              "min_depth": 100,
+              "max_depth": 300
+            }
+          ]
+        },
+        {
+          "id": "water_treatment",
+          "name": "Water Treatment",
+          "slug": "water-treatment",
+          "description": "Water purification and treatment systems",
+          "icon": "water_drop",
+          "subservices": [
+            {
+              "id": "ro_installation",
+              "name": "RO System Installation",
+              "slug": "ro-installation",
+              "description": "Reverse osmosis system setup",
+              "per_feet_amount": 150,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "water_softener",
+              "name": "Water Softener",
+              "slug": "water-softener",
+              "description": "Water softener installation",
+              "per_feet_amount": 180,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "uv_purifier",
+              "name": "UV Purifier",
+              "slug": "uv-purifier",
+              "description": "UV water purifier installation",
+              "per_feet_amount": 130,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Industrial",
+      "slug": "industrial",
+      "description": "Industrial and commercial water solutions",
+      "services": [
+        {
+          "id": "industrial_borewell",
+          "name": "Industrial Borewell",
+          "slug": "industrial-borewell",
+          "description": "Large capacity borewell for industries",
+          "icon": "factory",
+          "subservices": [
+            {
+              "id": "factory_borewell",
+              "name": "Factory Borewell",
+              "slug": "factory-borewell",
+              "description": "High yield borewell for factories",
+              "per_feet_amount": 200,
+              "min_depth": 500,
+              "max_depth": 1500
+            },
+            {
+              "id": "institution_borewell",
+              "name": "Institution Borewell",
+              "slug": "institution-borewell",
+              "description": "Borewell for schools, hospitals, etc",
+              "per_feet_amount": 175,
+              "min_depth": 400,
+              "max_depth": 1200
+            }
+          ]
+        },
+        {
+          "id": "industrial_pump",
+          "name": "Industrial Pump",
+          "slug": "industrial-pump",
+          "description": "Heavy duty industrial pumps",
+          "icon": "pump",
+          "subservices": [
+            {
+              "id": "turbine_pump",
+              "name": "Turbine Pump",
+              "slug": "turbine-pump",
+              "description": "Vertical turbine pump installation",
+              "per_feet_amount": 250,
+              "min_depth": 0,
+              "max_depth": 0
+            },
+            {
+              "id": "booster_pump",
+              "name": "Booster Pump",
+              "slug": "booster-pump",
+              "description": "Pressure booster pump setup",
+              "per_feet_amount": 180,
+              "min_depth": 0,
+              "max_depth": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Consulting",
+      "slug": "consulting",
+      "description": "Water resource consulting services",
+      "services": [
+        {
+          "id": "groundwater_survey",
+          "name": "Groundwater Survey",
+          "slug": "groundwater-survey",
+          "description": "Scientific groundwater location surveys",
+          "icon": "explore",
+          "subservices": [
+            {
+              "id": "scientific_survey",
+              "name": "Scientific Survey",
+              "slug": "scientific-survey",
+              "description": "Geophysical survey for water",
+              "per_feet_amount": 0,
+              "min_depth": 0,
+              "max_depth": 0,
+              "flat_rate": 5000
+            },
+            {
+              "id": "traditional_survey",
+              "name": "Traditional Survey",
+              "slug": "traditional-survey",
+              "description": "Traditional water divining methods",
+              "per_feet_amount": 0,
+              "min_depth": 0,
+              "max_depth": 0,
+              "flat_rate": 2000
+            }
+          ]
+        },
+        {
+          "id": "feasibility_study",
+          "name": "Feasibility Study",
+          "slug": "feasibility-study",
+          "description": "Project feasibility and planning",
+          "icon": "assessment",
+          "subservices": [
+            {
+              "id": "project_report",
+              "name": "Project Report",
+              "slug": "project-report",
+              "description": "Detailed project report preparation",
+              "per_feet_amount": 0,
+              "min_depth": 0,
+              "max_depth": 0,
+              "flat_rate": 10000
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

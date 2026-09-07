@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Internal Server Error - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column justify-content-center align-items-center py-5 min-vh-75">
+    <div class="card text-center p-5 shadow-lg border-0 fade-in-up" style="max-width: 550px; border-radius: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: var(--card-shadow);">
+        <div class="error-illustration mb-4">
+            <div class="d-inline-flex justify-content-center align-items-center rounded-circle" style="width: 120px; height: 120px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);">
+                <i class="fas fa-exclamation-triangle text-danger fa-4x animate-shake"></i>
+            </div>
+        </div>
+        
+        <h1 class="fw-bold mb-3" style="font-size: 3rem; background: var(--gradient-danger); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">500</h1>
+        <h3 class="fw-semibold text-dark mb-3">System Under Maintenance</h3>
+        <p class="text-muted mb-4 px-3" style="font-size: 1.05rem; line-height: 1.6;">
+            We are experiencing an internal server issue or the link is temporarily offline. Our technical team has been notified.
+        </p>
+        
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
+            <a href="{% url 'home' %}" class="btn btn-danger px-4 py-2 fw-semibold shadow-sm" style="border-radius: 12px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); border: none; transition: all 0.3s ease;">
+                <i class="fas fa-home me-2"></i>Go to Homepage
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 py-2 fw-semibold" style="border-radius: 12px; transition: all 0.3s ease;">
+                <i class="fas fa-redo me-2"></i>Try Again
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+    .fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .animate-shake {
+        animation: shake 1.5s ease-in-out infinite;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes shake {
+        0%, 100% { transform: rotate(0deg); }
+        10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg); }
+        20%, 40%, 60%, 80% { transform: rotate(5deg); }
+    }
+</style>
+{% endblock %}

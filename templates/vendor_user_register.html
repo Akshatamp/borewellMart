@@ -1,0 +1,612 @@
+{% extends 'base_auth.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Vendor Register - BorewellMart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);
+        padding: 2rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .water-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 200%;
+        height: 100px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: 50% 100%;
+        animation: wave 10s linear infinite;
+        opacity: 0.3;
+    }
+
+    .water-wave:nth-child(2) {
+        bottom: 10px;
+        animation: wave 7s linear infinite reverse;
+        opacity: 0.2;
+    }
+
+    .water-wave:nth-child(3) {
+        bottom: 20px;
+        animation: wave 5s linear infinite;
+        opacity: 0.1;
+    }
+
+    @keyframes wave {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .water-bubbles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .bubble {
+        position: absolute;
+        bottom: -50px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        animation: rise 8s infinite ease-in;
+    }
+
+    .bubble:nth-child(1) {
+        left: 10%;
+        width: 40px;
+        height: 40px;
+        animation-delay: 0s;
+    }
+
+    .bubble:nth-child(2) {
+        left: 20%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 2s;
+    }
+
+    .bubble:nth-child(3) {
+        left: 35%;
+        width: 50px;
+        height: 50px;
+        animation-delay: 4s;
+    }
+
+    .bubble:nth-child(4) {
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        animation-delay: 1s;
+    }
+
+    .bubble:nth-child(5) {
+        left: 65%;
+        width: 45px;
+        height: 45px;
+        animation-delay: 3s;
+    }
+
+    .bubble:nth-child(6) {
+        left: 80%;
+        width: 25px;
+        height: 25px;
+        animation-delay: 5s;
+    }
+
+    @keyframes rise {
+        0% {
+            bottom: -50px;
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(20px);
+        }
+        100% {
+            bottom: 100%;
+            transform: translateX(-20px);
+        }
+    }
+
+    .auth-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: slideInUp 0.6s ease-out;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .auth-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s infinite;
+    }
+
+    .auth-body {
+        padding: 2rem;
+        background: white;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0284C7;
+        box-shadow: 0 0 0 0.2rem rgba(2, 132, 199, 0.25);
+    }
+
+    .btn-auth {
+        background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-auth:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(2, 132, 199, 0.4);
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="water-wave"></div>
+    <div class="water-wave"></div>
+    <div class="water-wave"></div>
+    <div class="water-bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-7">
+            <div class="card auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-store"></i>
+                    <h3 class="mb-0">Vendor Registration</h3>
+                    <p class="mb-0 opacity-75">Join as a vendor</p>
+                </div>
+                <div class="auth-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-2"></i>Username
+                                </label>
+                                {{ form.username|add_class:"form-control" }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-2"></i>Email
+                                </label>
+                                {{ form.email|add_class:"form-control" }}
+                                <button type="button" class="btn btn-outline-primary w-100 mt-2" id="sendOtpBtn" onclick="sendOTP()">
+                                    Send OTP
+                                </button>
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row" id="otpSection" style="display: none;">
+                            <div class="col-md-6 mb-3">
+                                <label for="otpInput" class="form-label fw-semibold">
+                                    <i class="fas fa-key me-2"></i>Enter OTP
+                                </label>
+                                <input type="text" class="form-control" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6">
+                                <small class="text-muted" id="otpTimer"></small>
+                            </div>
+                            <div class="col-md-6 mb-3 d-flex align-items-end">
+                                <button type="button" class="btn btn-success w-100" onclick="verifyOTP()">
+                                    <i class="fas fa-check me-2"></i>Verify OTP
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-phone me-2"></i>Phone
+                                </label>
+                                {{ form.phone|add_class:"form-control" }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.state.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-map me-2"></i>State
+                                </label>
+                                {{ form.state|add_class:"form-select" }}
+                                <small class="text-muted">Select your state</small>
+                                {% if form.state.errors %}
+                                    <div class="text-danger small mt-1">{{ form.state.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.city.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-city me-2"></i>City
+                                </label>
+                                {{ form.city|add_class:"form-select" }}
+                                <small class="text-muted" id="cityHelp">Please select a state first</small>
+                                {% if form.city.errors %}
+                                    <div class="text-danger small mt-1">{{ form.city.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.company_name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-building me-2"></i>Company Name
+                            </label>
+                            {{ form.company_name|add_class:"form-control" }}
+                            {% if form.company_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.company_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.experience.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-clock me-2"></i>Experience (Years)
+                                </label>
+                                {{ form.experience|add_class:"form-control" }}
+                                {% if form.experience.errors %}
+                                    <div class="text-danger small mt-1">{{ form.experience.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.license_number.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-id-card me-2"></i>License Number (Optional)
+                                </label>
+                                {{ form.license_number|add_class:"form-control" }}
+                                {% if form.license_number.errors %}
+                                    <div class="text-danger small mt-1">{{ form.license_number.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.address.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt me-2"></i>Address
+                            </label>
+                            {{ form.address|add_class:"form-control" }}
+                            {% if form.address.errors %}
+                                <div class="text-danger small mt-1">{{ form.address.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                                <div class="input-group">
+                                    {{ form.password1|add_class:"form-control" }}
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                        <i class="fas fa-eye" id="toggleIcon1"></i>
+                                    </button>
+                                </div>
+                                {% if form.password1.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-2"></i>Confirm Password
+                                </label>
+                                <div class="input-group">
+                                    {{ form.password2|add_class:"form-control" }}
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                        <i class="fas fa-eye" id="toggleIcon2"></i>
+                                    </button>
+                                </div>
+                                {% if form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-auth">
+                            <i class="fas fa-store me-2"></i>Register as Vendor
+                        </button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="fw-semibold" style="color: #0284C7;">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let otpVerified = false;
+let countdownInterval;
+
+function sendOTP() {
+    const emailInput = document.getElementById('{{ form.email.id_for_label }}');
+    const usernameInput = document.getElementById('{{ form.username.id_for_label }}');
+    const email = emailInput.value;
+    const username = usernameInput.value;
+    
+    if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    if (!username) {
+        alert('Please enter a username');
+        return;
+    }
+    
+    // Show OTP section
+    document.getElementById('otpSection').style.display = 'flex';
+    
+    // Disable send button and start countdown
+    const sendBtn = document.getElementById('sendOtpBtn');
+    sendBtn.disabled = true;
+    let seconds = 60;
+    
+    countdownInterval = setInterval(() => {
+        seconds--;
+        document.getElementById('otpTimer').textContent = `Resend OTP in ${seconds}s`;
+        
+        if (seconds <= 0) {
+            clearInterval(countdownInterval);
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Resend OTP';
+            document.getElementById('otpTimer').textContent = '';
+        }
+    }, 1000);
+    
+    fetch('/send-otp/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ email: email, username: username })
+    })
+    .then(response => {
+        return response.json().catch(() => {
+            throw new Error('Server returned an invalid response');
+        });
+    })
+    .then(data => {
+        if (data.success) {
+            alert('OTP sent successfully to ' + email);
+        } else {
+            alert('Error sending OTP: ' + data.message);
+            // Reset countdown & UI since it failed
+            clearInterval(countdownInterval);
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send OTP';
+            document.getElementById('otpTimer').textContent = '';
+            document.getElementById('otpSection').style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send OTP. Please check your email configuration or try again.');
+        // Reset countdown & UI since it failed
+        clearInterval(countdownInterval);
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send OTP';
+        document.getElementById('otpTimer').textContent = '';
+        document.getElementById('otpSection').style.display = 'none';
+    });
+}
+
+function verifyOTP() {
+    const otp = document.getElementById('otpInput').value;
+    
+    if (otp.length !== 6) {
+        alert('Please enter a valid 6-digit OTP');
+        return;
+    }
+    
+    fetch('/verify-otp/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ otp: otp })
+    })
+    .then(response => {
+        return response.json().catch(() => {
+            throw new Error('Server returned an invalid response');
+        });
+    })
+    .then(data => {
+        if (data.success) {
+            otpVerified = true;
+            alert('OTP verified successfully!');
+            document.getElementById('otpSection').style.display = 'none';
+            document.getElementById('sendOtpBtn').textContent = 'Verified ✓';
+            document.getElementById('sendOtpBtn').classList.remove('btn-outline-primary');
+            document.getElementById('sendOtpBtn').classList.add('btn-success');
+            document.getElementById('sendOtpBtn').disabled = true;
+            // Disable email input so it cannot be modified after verification
+            document.getElementById('{{ form.email.id_for_label }}').readOnly = true;
+        } else {
+            alert('Invalid OTP. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to verify OTP. Please try again.');
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Add form submission validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const emailInput = document.getElementById('{{ form.email.id_for_label }}');
+    if (emailInput.value && !otpVerified) {
+        e.preventDefault();
+        alert('Please verify your email with OTP before submitting');
+    }
+});
+
+// State-City Cascading Dropdown
+const stateSelect = document.getElementById('{{ form.state.id_for_label }}');
+const citySelect = document.getElementById('{{ form.city.id_for_label }}');
+const cityHelp = document.getElementById('cityHelp');
+
+// Initially disable city dropdown and add "Select state first" option
+citySelect.disabled = true;
+citySelect.innerHTML = '<option value="">Select State First</option>';
+
+stateSelect.addEventListener('change', function() {
+    const selectedState = this.value;
+
+    if (selectedState) {
+        // Fetch cities for the selected state
+        fetch(`/api/cities-by-state/?state=${encodeURIComponent(selectedState)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.cities.length > 0) {
+                    // Clear existing options and add default option
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+
+                    // Add cities as options
+                    data.cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+
+                    // Enable city dropdown
+                    citySelect.disabled = false;
+                    cityHelp.textContent = `Found ${data.cities.length} cities in ${selectedState}`;
+                    cityHelp.classList.remove('text-danger');
+                    cityHelp.classList.add('text-success');
+                } else {
+                    // No cities found for this state
+                    citySelect.innerHTML = '<option value="">No cities available</option>';
+                    citySelect.disabled = true;
+                    cityHelp.textContent = 'No cities found for this state';
+                    cityHelp.classList.remove('text-success');
+                    cityHelp.classList.add('text-danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching cities:', error);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                citySelect.disabled = true;
+                cityHelp.textContent = 'Failed to load cities. Please try again.';
+                cityHelp.classList.remove('text-success');
+                cityHelp.classList.add('text-danger');
+            });
+    } else {
+        // Reset city dropdown when no state is selected
+        citySelect.innerHTML = '<option value="">Select State First</option>';
+        citySelect.disabled = true;
+        cityHelp.textContent = 'Please select a state first';
+        cityHelp.classList.remove('text-danger', 'text-success');
+    }
+});
+
+// Password Toggle Functionality
+const togglePassword1 = document.querySelector('#togglePassword1');
+const passwordInput1 = document.querySelector('#id_password1');
+const toggleIcon1 = document.querySelector('#toggleIcon1');
+
+togglePassword1.addEventListener('click', function() {
+    const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput1.setAttribute('type', type);
+    toggleIcon1.classList.toggle('fa-eye');
+    toggleIcon1.classList.toggle('fa-eye-slash');
+});
+
+const togglePassword2 = document.querySelector('#togglePassword2');
+const passwordInput2 = document.querySelector('#id_password2');
+const toggleIcon2 = document.querySelector('#toggleIcon2');
+
+togglePassword2.addEventListener('click', function() {
+    const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput2.setAttribute('type', type);
+    toggleIcon2.classList.toggle('fa-eye');
+    toggleIcon2.classList.toggle('fa-eye-slash');
+});
+</script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Vendor Registration - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="fw-bold mb-2" style="color: var(--secondary-color);">
+                        <i class="fas fa-file-excel me-3" style="color: #1D6F42;"></i>Bulk Vendor Registration
+                    </h1>
+                    <p class="text-muted mb-0">Register multiple vendors at once via Excel upload</p>
+                </div>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Limit Warning -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="mb-1 fw-bold"><i class="fas fa-chart-bar me-2"></i>Daily Registration Limit</h5>
+                            <p class="mb-0 opacity-75">Maximum 500 vendors per day</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="display-6 fw-bold">{{ today_count }} / 500</div>
+                            <small class="opacity-75">{{ remaining }} remaining today</small>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 10px;">
+                        <div class="progress-bar bg-white" role="progressbar" style="width: {{ today_count|floatformat:0 }}%;" aria-valuenow="{{ today_count }}" aria-valuemin="0" aria-valuemax="500"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-upload me-2"></i>Upload Excel File
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="{{ form.excel_file.id_for_label }}" class="form-label fw-bold">
+                                Select Excel File
+                            </label>
+                            <input type="file" name="{{ form.excel_file.html_name }}"
+                                   class="form-control {% if form.excel_file.errors %}is-invalid{% endif %}"
+                                   id="{{ form.excel_file.id_for_label }}"
+                                   accept=".xlsx,.xls" required>
+                            {% if form.excel_file.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.excel_file.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                Accepted formats: .xlsx, .xls
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-file-import me-2"></i>Process Vendors
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-info-circle me-2"></i>Instructions</h6>
+                </div>
+                <div class="card-body">
+                    <ol class="mb-0 small">
+                        <li class="mb-2">Prepare Excel file with required columns</li>
+                        <li class="mb-2">Ensure all city names exist in the system</li>
+                        <li class="mb-2">Email addresses must be unique</li>
+                        <li class="mb-2">Phone numbers will be used as passwords</li>
+                        <li class="mb-2">Email addresses will be used as usernames</li>
+                        <li class="mb-2">Vendors will be set to pending verification</li>
+                        <li class="mb-2">Admin must approve vendors before they can access dashboard</li>
+                        <li>No approval emails will be sent for bulk registration</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Required Columns</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm small mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>company_name</code></td>
+                                    <td>Text</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>email</code></td>
+                                    <td>Email</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>phone</code></td>
+                                    <td>Text</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>city</code></td>
+                                    <td>Text</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>address</code></td>
+                                    <td>Text</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>experience</code></td>
+                                    <td>Number</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><code>license_number</code></td>
+                                    <td>Text</td>
+                                    <td><i class="fas fa-check text-success"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Excel Format -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-table me-2"></i>Sample Excel Format</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>company_name</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                    <th>city</th>
+                                    <th>address</th>
+                                    <th>experience</th>
+                                    <th>license_number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ABC Borewells</td>
+                                    <td>abc@example.com</td>
+                                    <td>9876543210</td>
+                                    <td>Dharwad</td>
+                                    <td>123 Main Street, Dharwad</td>
+                                    <td>5</td>
+                                    <td>LIC-12345</td>
+                                </tr>
+                                <tr>
+                                    <td>XYZ Drilling</td>
+                                    <td>xyz@example.com</td>
+                                    <td>9876543211</td>
+                                    <td>Hubli</td>
+                                    <td>456 Market Road, Hubli</td>
+                                    <td>10</td>
+                                    <td>LIC-67890</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Note: Duplicate emails will be skipped. Vendors registered via bulk upload will be set to pending verification. Admin must approve them before they can access the dashboard. No approval emails will be sent.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

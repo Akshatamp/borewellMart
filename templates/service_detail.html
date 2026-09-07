@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ service.name }} - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid service-detail-page py-4 py-md-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'service_list' %}">Services</a></li>
+            {% if service.service %}
+                <li class="breadcrumb-item"><a href="{% url 'subcategory_detail' service.service.id %}">{{ service.service.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">{{ service.name }}</li>
+        </ol>
+    </nav>
+
+    {% if user_city %}
+        <div class="alert alert-info mb-4" style="border-radius: 15px;">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            Showing vendors in <strong>{{ user_city.name }}</strong>
+            {% if request.GET.city %}
+            <a href="{% url 'service_detail' service.id %}" class="float-end text-decoration-none">
+                <i class="fas fa-times"></i> Show All
+            </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning mb-4" style="border-radius: 15px;">
+            <i class="fas fa-info-circle me-2"></i>
+            Showing vendors from all cities. <a href="{% url 'city_list' %}" class="alert-link">Select a city</a> to see local vendors.
+        </div>
+    {% endif %}
+
+    <!-- Service Info Card with Per Feet Rate -->
+    <div class="card mb-4" style="border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+        <div class="card-body p-3 p-md-4">
+            <div class="row align-items-center gy-3">
+                <div class="col-12 col-md-8">
+                    <h3 class="fw-bold mb-2 service-title">{{ service.name }}</h3>
+                    <p class="text-muted mb-0">{{ service.description|truncatewords:20 }}</p>
+                </div>
+                <div class="col-12 col-md-4 text-start text-md-end">
+                    {% if service.per_feet_amount %}
+                    <div class="p-3 d-inline-block" style="background: linear-gradient(135deg, #06B6D4 0%, #22d3ee 100%); border-radius: 12px;">
+                        <small class="text-white d-block">Rate Per Feet</small>
+                        <div class="fw-bold text-white" style="font-size: 1.5rem;">₹{{ service.per_feet_amount }}</div>
+                    </div>
+                    {% else %}
+                    <div class="p-3 d-inline-block" style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%); border-radius: 12px;">
+                        <small class="text-white d-block">Pricing</small>
+                        <div class="fw-bold text-white" style="font-size: 1.5rem;">Ask Price</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-store me-2" style="color: #06B6D4;"></i>Vendors Offering {{ service.name }}
+        </h2>
+        <span class="badge bg-primary fs-6">{{ vendor_subservices|length }} Vendors</span>
+    </div>
+
+    <div class="row g-3 g-md-4">
+        {% for vendor_service in vendor_subservices %}
+            <div class="col-6 col-md-4 col-lg-3 mb-3 vendor-item">
+                <a href="{% url 'vendor_detail' vendor_service.vendor.id %}" class="text-decoration-none">
+                    <div class="card vendor-modern-card h-100" style="border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                        <!-- Light Gradient Header Background -->
+                        <div class="vendor-card-header" style="background: linear-gradient(135deg, {% if vendor_service.vendor.get_logo_color == '#06B6D4' %}#E0F7FE 0%, #B2EBF2 100%{% elif vendor_service.vendor.get_logo_color == '#8B5CF6' %}#F3E8FF 0%, #E9D5FF 100%{% elif vendor_service.vendor.get_logo_color == '#EC4899' %}#FDF2F8 0%, #FBCFE8 100%{% elif vendor_service.vendor.get_logo_color == '#F59E0B' %}#FEF3C7 0%, #FDE68A 100%{% elif vendor_service.vendor.get_logo_color == '#10B981' %}#D1FAE5 0%, #A7F3D0 100%{% elif vendor_service.vendor.get_logo_color == '#3B82F6' %}#DBEAFE 0%, #BFDBFE 100%{% elif vendor_service.vendor.get_logo_color == '#EF4444' %}#FEE2E2 0%, #FECACA 100%{% elif vendor_service.vendor.get_logo_color == '#6366F1' %}#EEF2FF 0%, #E0E7FF 100%{% elif vendor_service.vendor.get_logo_color == '#14B8A6' %}#CCFBF1 0%, #99F6E4 100%{% else %}#FEF3C7 0%, #FDE68A 100%{% endif %}); padding: 24px 16px; position: relative;">
+                            <!-- Decorative circles -->
+                            <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.6); border-radius: 50%;"></div>
+                            <div style="position: absolute; bottom: -30px; left: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.5); border-radius: 50%;"></div>
+
+                            <!-- Vendor Logo - White Circle with Colored Text -->
+                            <div class="d-flex justify-content-center mb-2" style="position: relative; z-index: 1;">
+                                <div style="width: 60px; height: 60px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 3px solid rgba(255,255,255,0.8);">
+                                    <span style="font-size: 24px; font-weight: bold; color: {{ vendor_service.vendor.get_logo_color }};">{{ vendor_service.vendor.get_initials }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Company Name -->
+                            <h5 class="text-center mb-2" style="color: #333; font-weight: 700; font-size: 16px; position: relative; z-index: 1;">{{ vendor_service.vendor.company_name }}</h5>
+
+                            <!-- Badges Row -->
+                            <div class="d-flex justify-content-center gap-2 flex-wrap" style="position: relative; z-index: 1;">
+                                {% if vendor_service.vendor.verification_status == 'verified' %}
+                                    <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                        <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>Verified
+                                    </span>
+                                {% endif %}
+                                <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                    <i class="fas fa-fire me-1" style="color: #F59E0B;"></i>Top Search
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Content Section -->
+                        <div class="card-body p-3" style="background: white;">
+                            <!-- Rating -->
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i class="fas fa-star me-1" style="color: #FFD700; font-size: 14px;"></i>
+                                <span class="fw-bold" style="font-size: 16px; color: #333;">{{ vendor_service.vendor.rating|default:4.8 }}</span>
+                                <span style="font-size: 12px; color: #999;">(42)</span>
+                            </div>
+
+                            <!-- Address -->
+                            <p class="text-center mb-2" style="font-size: 12px; color: #666;">
+                                <i class="fas fa-map-marker-alt me-1" style="color: {{ vendor_service.vendor.get_logo_color }};"></i>
+                                {{ vendor_service.vendor.city.name }}
+                            </p>
+
+                            <!-- Service Tags -->
+                            <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                {% for service in vendor_service.vendor.vendor_services.all|slice:":2" %}
+                                    <span class="badge" style="background: #f5f5f5; color: #555; font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 500;">
+                                        {{ service.service.name }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            {% if show_recommendations %}
+                <div class="col-12">
+                    <div class="alert alert-warning" style="border-radius: 15px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>No vendors found in {{ user_city.name }} for this service.</strong> Here are recommendations from nearby cities:
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-info" style="border-radius: 15px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No vendors offering this service yet. Please check back later.
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if show_recommendations %}
+        <div class="mt-5">
+            <h3 class="mb-4 text-center">
+                <i class="fas fa-lightbulb text-warning me-2"></i>Recommended Vendors from Nearby Cities
+            </h3>
+            <div class="row g-3 g-md-4">
+                {% for vendor_service in recommended_vendor_subservices %}
+                    <div class="col-6 col-md-4 col-lg-3 mb-3 vendor-item">
+                        <a href="{% url 'vendor_detail' vendor_service.vendor.id %}" class="text-decoration-none">
+                            <div class="card vendor-modern-card h-100" style="border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                                <!-- Light Gradient Header Background -->
+                                <div class="vendor-card-header" style="background: linear-gradient(135deg, {% if vendor_service.vendor.get_logo_color == '#06B6D4' %}#E0F7FE 0%, #B2EBF2 100%{% elif vendor_service.vendor.get_logo_color == '#8B5CF6' %}#F3E8FF 0%, #E9D5FF 100%{% elif vendor_service.vendor.get_logo_color == '#EC4899' %}#FDF2F8 0%, #FBCFE8 100%{% elif vendor_service.vendor.get_logo_color == '#F59E0B' %}#FEF3C7 0%, #FDE68A 100%{% elif vendor_service.vendor.get_logo_color == '#10B981' %}#D1FAE5 0%, #A7F3D0 100%{% elif vendor_service.vendor.get_logo_color == '#3B82F6' %}#DBEAFE 0%, #BFDBFE 100%{% elif vendor_service.vendor.get_logo_color == '#EF4444' %}#FEE2E2 0%, #FECACA 100%{% elif vendor_service.vendor.get_logo_color == '#6366F1' %}#EEF2FF 0%, #E0E7FF 100%{% elif vendor_service.vendor.get_logo_color == '#14B8A6' %}#CCFBF1 0%, #99F6E4 100%{% else %}#FEF3C7 0%, #FDE68A 100%{% endif %}); padding: 24px 16px; position: relative;">
+                                    <!-- Decorative circles -->
+                                    <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.6); border-radius: 50%;"></div>
+                                    <div style="position: absolute; bottom: -30px; left: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.5); border-radius: 50%;"></div>
+
+                                    <!-- Vendor Logo - White Circle with Colored Text -->
+                                    <div class="d-flex justify-content-center mb-2" style="position: relative; z-index: 1;">
+                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 3px solid rgba(255,255,255,0.8);">
+                                            <span style="font-size: 24px; font-weight: bold; color: {{ vendor_service.vendor.get_logo_color }};">{{ vendor_service.vendor.get_initials }}</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Company Name -->
+                                    <h5 class="text-center mb-2" style="color: #333; font-weight: 700; font-size: 16px; position: relative; z-index: 1;">{{ vendor_service.vendor.company_name }}</h5>
+
+                                    <!-- Badges Row -->
+                                    <div class="d-flex justify-content-center gap-2 flex-wrap" style="position: relative; z-index: 1;">
+                                        {% if vendor_service.vendor.verification_status == 'verified' %}
+                                            <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                                <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>Verified
+                                            </span>
+                                        {% endif %}
+                                        <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                            <i class="fas fa-fire me-1" style="color: #F59E0B;"></i>Top Search
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Content Section -->
+                                <div class="card-body p-3" style="background: white;">
+                                    <!-- Rating -->
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-star me-1" style="color: #FFD700; font-size: 14px;"></i>
+                                        <span class="fw-bold" style="font-size: 16px; color: #333;">{{ vendor_service.vendor.rating|default:4.8 }}</span>
+                                        <span style="font-size: 12px; color: #999;">(42)</span>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <p class="text-center mb-2" style="font-size: 12px; color: #666;">
+                                        <i class="fas fa-map-marker-alt me-1" style="color: {{ vendor_service.vendor.get_logo_color }};"></i>
+                                        {{ vendor_service.vendor.city.name }}
+                                    </p>
+
+                                    <!-- Service Tags -->
+                                    <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                        {% for service in vendor_service.vendor.vendor_services.all|slice:":2" %}
+                                            <span class="badge" style="background: #f5f5f5; color: #555; font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 500;">
+                                                {{ service.service.name }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info" style="border-radius: 15px;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No recommendations available at the moment.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            {% if service.subcategory %}
+                <a href="{% url 'subcategory_detail' service.subcategory.id %}" class="btn btn-outline-primary" style="border-radius: 10px;">
+                    <i class="fas fa-arrow-left me-2"></i>Back to {{ service.subcategory.name }}
+                </a>
+            {% else %}
+                <a href="{% url 'service_list' %}" class="btn btn-outline-primary" style="border-radius: 10px;">
+                    <i class="fas fa-arrow-left me-2"></i>Back to All Services
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Vendor Modern Card Styling */
+.vendor-modern-card {
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.vendor-modern-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+}
+
+.vendor-modern-card .vendor-card-header {
+    transition: all 0.3s ease !important;
+}
+
+.vendor-modern-card:hover .vendor-card-header {
+    filter: brightness(1.05);
+}
+
+.vendor-modern-card:hover .vendor-card-header div[style*="border-radius: 50%"] {
+    transform: scale(1.1);
+}
+
+.vendor-modern-card:hover .vendor-card-header div[style*="border-radius: 50%"]:first-of-type {
+    transition: transform 0.3s ease;
+}
+
+.service-detail-page h2 {
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    overflow-wrap: anywhere;
+}
+
+.service-title {
+    overflow-wrap: anywhere;
+}
+
+.card {
+    background: #fff;
+}
+
+.alert {
+    border: none;
+}
+
+@media (max-width: 575.98px) {
+    .service-detail-page .breadcrumb {
+        font-size: 0.85rem;
+    }
+
+    .vendor-modern-card:hover {
+        transform: none;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <h1 class="mb-4">Search Results</h1>
+
+    {% if query %}
+        <p class="mb-4">Showing results for: <strong>{{ query }}</strong></p>
+    {% endif %}
+
+    {% if selected_state or selected_city or selected_category %}
+        <div class="mb-4">
+            {% if selected_state %}
+                <span class="badge bg-secondary p-2 me-2">State: {{ selected_state }}</span>
+            {% endif %}
+            {% if selected_city %}
+                <span class="badge bg-secondary p-2 me-2">City: {% for city in cities %}{% if city.id|stringformat:"s" == selected_city %}{{ city.name }}{% endif %}{% endfor %}</span>
+            {% endif %}
+            {% if selected_category %}
+                <span class="badge bg-secondary p-2">Category: {% if selected_category == 'agriculture' %}Agriculture{% elif selected_category == 'borewell' %}Borewell{% else %}{{ selected_category }}{% endif %}</span>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Category Filter -->
+    <div class="text-center mb-4">
+        <div class="btn-group category-filter" role="group">
+            <a href="{% url 'search' %}?q={{ query }}&state={{ selected_state|default:'' }}&city={{ selected_city|default:'' }}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if selected_service %}&service={{ selected_service }}{% endif %}" class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                All
+            </a>
+            <a href="{% url 'search' %}?q={{ query }}&state={{ selected_state|default:'' }}&city={{ selected_city|default:'' }}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if selected_service %}&service={{ selected_service }}{% endif %}&category=agriculture" class="btn {% if selected_category == 'agriculture' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-leaf me-1"></i>Agri
+            </a>
+            <a href="{% url 'search' %}?q={{ query }}&state={{ selected_state|default:'' }}&city={{ selected_city|default:'' }}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}{% if selected_service %}&service={{ selected_service }}{% endif %}&category=borewell" class="btn {% if selected_category == 'borewell' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-tint me-1"></i>Borewell
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for vendor in vendors %}
+            <div class="col-md-3 col-lg-3 mb-4 vendor-item" data-vendor-categories="{% for service in vendor.vendor_services.all %}{{ service.service.sector.id }} {% endfor %}">
+                <a href="{% url 'vendor_detail' vendor.id %}" class="text-decoration-none">
+                    <div class="card vendor-modern-card h-100" style="border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                        <!-- Light Gradient Header Background -->
+                        <div class="vendor-card-header" style="background: linear-gradient(135deg, {% if vendor.get_logo_color == '#06B6D4' %}#E0F7FE 0%, #B2EBF2 100%{% elif vendor.get_logo_color == '#8B5CF6' %}#F3E8FF 0%, #E9D5FF 100%{% elif vendor.get_logo_color == '#EC4899' %}#FDF2F8 0%, #FBCFE8 100%{% elif vendor.get_logo_color == '#F59E0B' %}#FEF3C7 0%, #FDE68A 100%{% elif vendor.get_logo_color == '#10B981' %}#D1FAE5 0%, #A7F3D0 100%{% elif vendor.get_logo_color == '#3B82F6' %}#DBEAFE 0%, #BFDBFE 100%{% elif vendor.get_logo_color == '#EF4444' %}#FEE2E2 0%, #FECACA 100%{% elif vendor.get_logo_color == '#6366F1' %}#EEF2FF 0%, #E0E7FF 100%{% elif vendor.get_logo_color == '#14B8A6' %}#CCFBF1 0%, #99F6E4 100%{% else %}#FEF3C7 0%, #FDE68A 100%{% endif %}); padding: 24px 16px; position: relative;">
+                            <!-- Decorative circles -->
+                            <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.6); border-radius: 50%;"></div>
+                            <div style="position: absolute; bottom: -30px; left: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.5); border-radius: 50%;"></div>
+
+                            <!-- Vendor Logo - White Circle with Colored Text -->
+                            <div class="d-flex justify-content-center mb-2" style="position: relative; z-index: 1;">
+                                <div style="width: 60px; height: 60px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 3px solid rgba(255,255,255,0.8);">
+                                    <span style="font-size: 24px; font-weight: bold; color: {{ vendor.get_logo_color }};">{{ vendor.get_initials }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Company Name -->
+                            <h5 class="text-center mb-2" style="color: #333; font-weight: 700; font-size: 16px; position: relative; z-index: 1;">{{ vendor.company_name }}</h5>
+
+                            <!-- Badges Row -->
+                            <div class="d-flex justify-content-center gap-2 flex-wrap" style="position: relative; z-index: 1;">
+                                {% if vendor.verification_status == 'verified' %}
+                                    <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                        <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>Verified
+                                    </span>
+                                {% endif %}
+                                <span class="badge" style="background: rgba(255,255,255,0.7); color: #333; font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 500;">
+                                    <i class="fas fa-fire me-1" style="color: #F59E0B;"></i>Top Search
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Content Section -->
+                        <div class="card-body p-3" style="background: white;">
+                            <!-- Rating -->
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i class="fas fa-star me-1" style="color: #FFD700; font-size: 14px;"></i>
+                                <span class="fw-bold" style="font-size: 16px; color: #333;">{{ vendor.rating|default:4.8 }}</span>
+                                <span style="font-size: 12px; color: #999;">(42)</span>
+                            </div>
+
+                            <!-- Address -->
+                            <p class="text-center mb-2" style="font-size: 12px; color: #666;">
+                                <i class="fas fa-map-marker-alt me-1" style="color: {{ vendor.get_logo_color }};"></i>
+                                {{ vendor.address|default:"Church Building Kinnigoli, Mangalore" }}
+                            </p>
+
+                            <!-- Service Tags -->
+                            <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                {% for service in vendor.vendor_services.all|slice:":2" %}
+                                    <span class="badge" style="background: #f5f5f5; color: #555; font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 500;">
+                                        {{ service.service.name }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>No vendors found matching your search criteria.</p>
+                <a href="{% url 'vendor_list' %}" class="btn btn-primary">View All Vendors</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Vendor Modern Card Styling */
+.vendor-modern-card {
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.vendor-modern-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+}
+
+.vendor-modern-card .vendor-card-header {
+    transition: all 0.3s ease !important;
+}
+
+.vendor-modern-card:hover .vendor-card-header {
+    filter: brightness(1.05);
+}
+
+.vendor-modern-card:hover .vendor-card-header div[style*="border-radius: 50%"] {
+    transform: scale(1.1);
+}
+
+.vendor-modern-card:hover .vendor-card-header div[style*="border-radius: 50%"]:first-of-type {
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .vendor-modern-card .d-flex.gap-2 {
+        flex-direction: column !important;
+    }
+
+    .vendor-modern-card .btn {
+        width: 100% !important;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update on Your Vendor Application - BorewellMart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .notice-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .notice-box strong {
+            color: #721c24;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box strong {
+            color: #495057;
+        }
+        .reasons-list {
+            margin: 25px 0;
+        }
+        .reasons-list li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white !important;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 25px 0;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #495057;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+        .contact-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Update on Your Vendor Application</h1>
+            <p>BorewellMart Vendor Registration Status</p>
+        </div>
+
+        <div class="content">
+            <p>Dear <strong>{{ vendor.user.username }}</strong>,</p>
+
+            <div class="notice-box">
+                <p><strong>We regret to inform you that your vendor application could not be approved at this time.</strong></p>
+                <p style="margin: 15px 0 0 0;">After careful review, we found some issues with your application that need to be addressed.</p>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Application Details:</strong></p>
+                <p>Company Name: {{ vendor.company_name }}<br>
+                Email: {{ vendor.email }}<br>
+                Phone: {{ vendor.phone }}</p>
+            </div>
+
+            <h3>Possible Reasons for Rejection:</h3>
+            <ul class="reasons-list">
+                <li>❌ Incomplete or incorrect business information provided</li>
+                <li>❌ Invalid license number or missing certifications</li>
+                <li>❌ Contact details could not be verified</li>
+                <li>❌ Business location is outside our service area</li>
+                <li>❌ Previously suspended or flagged account</li>
+                <li>❌ Insufficient experience in the industry</li>
+            </ul>
+
+            <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <h3 style="margin-top: 0; color: #2E7D32;">📝 What You Can Do:</h3>
+                <ol>
+                    <li><strong>Review Your Application:</strong> Check all information for accuracy</li>
+                    <li><strong>Update Documentation:</strong> Ensure all certificates and licenses are valid</li>
+                    <li><strong>Reapply:</strong> Submit a new application with corrected information</li>
+                    <li><strong>Contact Support:</strong> Reach out if you believe this was an error</li>
+                </ol>
+            </div>
+
+            <p>If you believe there has been a mistake or would like more information about why your application was rejected, please don't hesitate to contact our support team.</p>
+
+            <div style="text-align: center;">
+                <a href="{{ frontend_url }}" class="cta-button">Return to BorewellMart</a>
+            </div>
+
+            <p style="margin-top: 25px;">We appreciate your interest in joining BorewellMart and hope to work with you in the future.</p>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated email from BorewellMart. Please do not reply to this email.</p>
+            <div class="contact-info">
+                <p>Questions? Contact us at <a href="mailto:vendors@borewellmart.com">vendors@borewellmart.com</a></p>
+                <p>© {% now "Y" %} BorewellMart. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

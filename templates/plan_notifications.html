@@ -1,0 +1,207 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}Plan Notifications - {{ plan.plan_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-0">Notifications for {{ plan.plan_name }}</h1>
+            <p class="text-muted">Track all notifications sent for this plan</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{% url 'plan_detail' plan.id %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Plan
+            </a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Plan Summary</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="text-muted">Plan Type</label>
+                    <p><span class="badge badge-info">{{ plan.get_plan_type_display }}</span></p>
+                </div>
+                <div class="col-md-3">
+                    <label class="text-muted">Price</label>
+                    <p>₹{{ plan.price }}</p>
+                </div>
+                <div class="col-md-3">
+                    <label class="text-muted">Validity</label>
+                    <p>{{ plan.start_date }} to {{ plan.end_date }}</p>
+                </div>
+                <div class="col-md-3">
+                    <label class="text-muted">Status</label>
+                    <p>
+                        {% if plan.status == 'active' %}
+                            <span class="badge badge-success">Active</span>
+                        {% elif plan.status == 'expired' %}
+                            <span class="badge badge-danger">Expired</span>
+                        {% else %}
+                            <span class="badge badge-secondary">{{ plan.get_status_display }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Timeline -->
+    {% if notifications %}
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-history"></i> Notification History ({{ total_notifications }} notifications)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for notification in notifications %}
+                        <div class="timeline-item mb-4">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="timeline-marker" style="background-color: 
+                                        {% if notification.notification_type == '7_day_before' %}#FFC107
+                                        {% elif notification.notification_type == '3_day_before' %}#FF9800
+                                        {% elif notification.notification_type == '1_day_before' %}#F44336
+                                        {% elif notification.notification_type == 'expired' %}#D32F2F
+                                        {% else %}#2196F3{% endif %};">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="card border">
+                                        <div class="card-header" style="background-color: 
+                                            {% if notification.notification_type == '7_day_before' %}#FFF3E0
+                                            {% elif notification.notification_type == '3_day_before' %}#FFF3E0
+                                            {% elif notification.notification_type == '1_day_before' %}#FFEBEE
+                                            {% elif notification.notification_type == 'expired' %}#FFEBEE
+                                            {% else %}#E3F2FD{% endif %};">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="mb-0">
+                                                        <span class="badge badge-pill" style="background-color: 
+                                                            {% if notification.notification_type == '7_day_before' %}#FFC107
+                                                            {% elif notification.notification_type == '3_day_before' %}#FF9800
+                                                            {% elif notification.notification_type == '1_day_before' %}#F44336
+                                                            {% elif notification.notification_type == 'expired' %}#D32F2F
+                                                            {% else %}#2196F3{% endif %}; color: white;">
+                                                            {{ notification.get_notification_type_display }}
+                                                        </span>
+                                                    </h6>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted">{{ notification.notification_date }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="mb-3">{{ notification.notification_text }}</p>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <small>
+                                                        {% if notification.email_sent %}
+                                                            <span class="badge badge-success">
+                                                                <i class="fas fa-envelope"></i> Email Sent
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge badge-warning">
+                                                                <i class="fas fa-hourglass-half"></i> Email Pending
+                                                            </span>
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <small>
+                                                        {% if notification.sms_sent %}
+                                                            <span class="badge badge-success">
+                                                                <i class="fas fa-sms"></i> SMS Sent
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge badge-secondary">
+                                                                <i class="fas fa-ban"></i> SMS Not Configured
+                                                            </span>
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-4 text-right">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-clock"></i> {{ notification.sent_at|date:"M d, Y H:i" }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% if notifications.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if notifications.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ notifications.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in notifications.paginator.page_range %}
+                        {% if notifications.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if notifications.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ notifications.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ notifications.paginator.num_pages }}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+        <style>
+            .timeline-marker {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 20px;
+                margin-left: 15px;
+            }
+        </style>
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> <strong>No notifications yet.</strong> Notifications will be sent based on your plan expiry schedule.
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+
+{% block title %}Complete Payment - Booking #{{ booking.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.payment-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    min-height: calc(100vh - 200px);
+    padding: 40px 0;
+}
+
+.payment-header {
+    background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.qr-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.qr-image-container {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.qr-image-container img {
+    max-width: 250px;
+    height: auto;
+    border: 3px solid #0284C7;
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+.qr-placeholder {
+    width: 250px;
+    height: 250px;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: #999;
+    text-align: center;
+    padding: 20px;
+}
+
+.payment-details {
+    background: #e0f2fe;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #bae6fd;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.info-value {
+    color: #212529;
+    font-weight: 500;
+}
+
+.amount-display {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0284C7;
+}
+
+.upi-instructions {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.step-item {
+    display: flex;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    background: #0284C7;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    padding: 12px 15px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #0284C7;
+    box-shadow: 0 0 0 0.2rem rgba(2, 132, 199, 0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);
+    border: none;
+    padding: 14px 35px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #28a745;
+    border-radius: 15px;
+    padding: 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="payment-header">
+            <h1><i class="fas fa-qrcode me-3"></i>Complete Your Payment</h1>
+            <p class="mb-0 mt-2 opacity-75">Scan the QR code or use the UPI ID to complete your booking payment</p>
+        </div>
+
+        {% if payment_completed %}
+            <!-- Payment Completed Alert -->
+            <div class="alert alert-success mb-4">
+                <h5><i class="fas fa-check-circle me-2"></i>Payment Completed Successfully</h5>
+                <p class="mb-0">
+                    Your payment of <strong>₹{{ payment.amount }}</strong> has been completed successfully.
+                    Your booking has been confirmed and the vendor has been notified.
+                </p>
+            </div>
+
+            <!-- Payment Details Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">Payment Details</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless table-sm">
+                        <tr>
+                            <td class="fw-bold">Booking ID:</td>
+                            <td>#{{ booking.id }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Transaction ID:</td>
+                            <td>{{ payment.transaction_id|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Payment Date:</td>
+                            <td>{{ payment.payment_date|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Amount Paid:</td>
+                            <td class="text-success fw-bold">₹{{ payment.amount }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Payment Method:</td>
+                            <td>{{ payment.get_payment_method_display }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Payment Status:</td>
+                            <td><span class="badge bg-success">{{ payment.get_status_display }}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="{% url 'customer_dashboard' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </a>
+            </div>
+        {% else %}
+            <div class="row">
+                <!-- Left Column - QR Code -->
+                <div class="col-lg-5">
+                    <div class="qr-card">
+                        <h5 class="mb-3 text-center"><i class="fas fa-qrcode me-2"></i>Scan to Pay</h5>
+
+                        <div class="qr-image-container">
+                            {% if vendor.upi_id %}
+                                {% if qr_code_url %}
+                                    <img src="{{ qr_code_url }}" alt="UPI QR Code">
+                                {% else %}
+                                    <div class="qr-placeholder">
+                                        <div>
+                                            <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
+                                            <p class="mb-0">QR Code Error</p>
+                                            <small>Could not generate QR code. Please refresh the page.</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="qr-placeholder">
+                                    <div>
+                                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                                        <p class="mb-0">QR Code Unavailable</p>
+                                        <small>Vendor has not configured UPI payment</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-muted mb-1">Or use UPI ID to pay:</p>
+                            <div class="alert alert-info d-inline-block">
+                                <code class="fs-5">{{ vendor.upi_id|default:"vendor@upi" }}</code>
+                                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyUPIId()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Payment Form -->
+                <div class="col-lg-7">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-credit-card me-2"></i>UPI Payment Details</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <!-- Payment Summary -->
+                            <div class="payment-details mb-4">
+                                <div class="info-row">
+                                    <span class="info-label">Vendor:</span>
+                                    <span class="info-value">{{ vendor.company_name }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Service:</span>
+                                    <span class="info-value">{{ booking.subservice.name }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Date & Time:</span>
+                                    <span class="info-value">{{ booking.date|date:"d M Y" }} at {{ booking.time }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Total Amount:</span>
+                                    <span class="amount-display">₹{{ amount }}</span>
+                                </div>
+                            </div>
+
+                            <!-- UPI Instructions -->
+                            <div class="upi-instructions mb-4">
+                                <h6 class="fw-bold mb-3"><i class="fas fa-info-circle me-2"></i>How to Pay</h6>
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <div>
+                                        <strong>Scan the QR code</strong> using any UPI app (GPay, PhonePe, Paytm, etc.)
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <div>
+                                        <strong>Enter the amount</strong> ₹{{ amount }} and complete the payment
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">3</div>
+                                    <div>
+                                        <strong>Copy the Transaction ID</strong> from your UPI app
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">4</div>
+                                    <div>
+                                        <strong>Paste the Transaction ID</strong> below and submit
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Form -->
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label for="{{ form.transaction_id.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-receipt me-1"></i>UPI Transaction ID *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="transaction_id"
+                                        class="form-control"
+                                        id="transaction_id"
+                                        placeholder="Enter your UPI transaction ID (e.g., 3210XXXXXXXXX)"
+                                        required
+                                        maxlength="200"
+                                    >
+                                    <small class="text-muted">You can find this in your UPI app's payment history</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.screenshot.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-camera me-1"></i>Payment Screenshot (Optional)
+                                    </label>
+                                    <input
+                                        type="file"
+                                        name="screenshot"
+                                        class="form-control"
+                                        id="screenshot"
+                                        accept="image/*"
+                                    >
+                                    <small class="text-muted">Upload a screenshot of your payment for faster verification</small>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="{{ form.notes.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-comment me-1"></i>Additional Notes (Optional)
+                                    </label>
+                                    <textarea
+                                        name="notes"
+                                        class="form-control"
+                                        id="notes"
+                                        rows="3"
+                                        placeholder="Any additional information about your payment"
+                                    ></textarea>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-check me-2"></i>Complete Booking Payment
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Security Note -->
+                    <div class="alert alert-secondary mt-3">
+                        <small class="mb-0">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Secure Payment:</strong> Your payment goes directly to the vendor's UPI account.
+                            We verify all payments to ensure smooth service delivery. For any issues, contact support.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyUPIId() {
+    const upiId = '{{ vendor.upi_id|default:"vendor@upi" }}';
+    navigator.clipboard.writeText(upiId).then(() => {
+        alert('UPI ID copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+</script>
+{% endblock %}

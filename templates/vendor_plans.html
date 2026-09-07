@@ -1,0 +1,166 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}My Plans - BorewellMart{% endblock %}
+{% block nav_plans %}active{% endblock %}
+{% block page_title %}My Plans{% endblock %}
+{% block page_subtitle %}Manage your vendor subscription plans{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-0">My Plans</h1>
+            <p class="text-muted">Manage your vendor subscription plans</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{% url 'vendor_payment_page' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Plan
+            </a>
+        </div>
+    </div>
+
+    <!-- Plan Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">{{ total_plans }}</h3>
+                    <p class="text-muted mb-0">Total Plans</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">{{ active_plans }}</h3>
+                    <p class="text-muted mb-0">Active Plans</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-danger">{{ expired_plans }}</h3>
+                    <p class="text-muted mb-0">Expired Plans</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plans List -->
+    {% if plans %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Plan Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Validity</th>
+                        <th>Status</th>
+                        <th>Days Left</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in plans %}
+                        <tr>
+                            <td>
+                                <strong>{{ plan.plan_name }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">{{ plan.get_plan_type_display }}</span>
+                            </td>
+                            <td>₹{{ plan.price }}</td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ plan.start_date }} to {{ plan.end_date }}
+                                </small>
+                            </td>
+                            <td>
+                                {% if plan.status == 'active' %}
+                                    <span class="badge badge-success">Active</span>
+                                {% elif plan.status == 'expired' %}
+                                    <span class="badge badge-danger">Expired</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">{{ plan.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% with days=plan.days_until_expiry %}
+                                    {% if days <= 0 %}
+                                        <span class="text-danger font-weight-bold">Expired</span>
+                                    {% elif days <= 7 %}
+                                        <span class="text-warning font-weight-bold">{{ days }} days</span>
+                                    {% else %}
+                                        <span class="text-success">{{ days }} days</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <a href="{% url 'plan_detail' plan.id %}" class="btn btn-sm btn-info" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'edit_plan' plan.id %}" class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if plan.status == 'active' or plan.status == 'expired' %}
+                                    <a href="{% url 'renew_plan' plan.id %}" class="btn btn-sm btn-success" title="Renew Plan">
+                                        <i class="fas fa-redo"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if plans.has_other_pages %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if plans.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ plans.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in plans.paginator.page_range %}
+                        {% if plans.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if plans.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ plans.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ plans.paginator.num_pages }}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> <strong>No plans yet!</strong> Create your first plan to manage your vendor subscription.
+            <a href="{% url 'vendor_payment_page' %}" class="alert-link">Create Plan</a>
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

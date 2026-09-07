@@ -1,0 +1,49 @@
+Vendor Registration Submitted - BorewellMart
+
+Dear {{ user.username }},
+
+Thank you for registering your business {{ company_name }} with BorewellMart!
+
+Your vendor profile has been submitted successfully and is currently under review.
+
+⚠️ VERIFICATION PENDING:
+------------------------
+Your profile is being reviewed by our team. You will receive another email once your account is verified and approved. This process typically takes 1-2 business days.
+
+REGISTRATION DETAILS:
+---------------------
+Company Name: {{ company_name }}
+Username: {{ user.username }}
+Email: {{ user.email }}
+
+WHAT HAPPENS NEXT?
+------------------
+1. Review: Our team reviews your business details and credentials
+2. Verification: We verify your business information and certifications
+3. Approval: Once approved, you'll receive access to your vendor dashboard
+4. Go Live: Your business will be visible to customers seeking services
+
+BENEFITS AFTER APPROVAL:
+------------------------
+- Vendor Dashboard: Manage your services, bookings, and customer enquiries
+- Booking Management: Accept and manage service requests from customers
+- Enquiry Responses: Provide detailed quotes and respond to customer enquiries
+- Build Reputation: Collect reviews and build your business credibility
+- Targeted Exposure: Reach customers actively looking for your services
+
+WHILE WAITING FOR APPROVAL:
+----------------------------
+- Prepare your service catalog and pricing
+- Gather high-quality images of your work for your gallery
+- Review our vendor guidelines and best practices
+
+Visit BorewellMart: {{ frontend_url }}
+
+Questions? Contact us at vendors@borewellmart.com
+
+Best regards,
+The BorewellMart Vendor Team
+
+---
+This is an automated email. Please do not reply to this email.
+© {% now "Y" %} BorewellMart. All rights reserved.

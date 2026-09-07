@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active">Notifications</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">
+        <i class="fas fa-bell me-2"></i>{{ title }}
+        <span class="badge" style="background: var(--gradient-primary);">{{ notifications|length }}</span>
+    </h1>
+
+    <div class="row">
+        <div class="col-12">
+            {% if notifications %}
+                {% for notification in notifications %}
+                    {% if user_type == 'vendor' %}
+                        <!-- Vendor Notification: Pending Enquiry -->
+                        <div class="card mb-3 fade-in" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: none; border-left: 4px solid #D97706;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="notification-icon me-3">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);">
+                                            <i class="fas fa-envelope text-white fa-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h5 class="mb-1 fw-bold">New Enquiry from {{ notification.customer.username }}</h5>
+                                                <p class="text-muted small mb-2">
+                                                    <i class="fas fa-clock me-1"></i>{{ notification.created_at|date:"F d, Y H:i" }}
+                                                </p>
+                                            </div>
+                                            <span class="badge bg-warning">Pending</span>
+                                        </div>
+                                        <p class="mb-2"><strong>Service:</strong> {% if notification.subservice %}{{ notification.subservice.name }}{% else %}N/A{% endif %}</p>
+                                        <p class="mb-3">{{ notification.message }}</p>
+                                        <a href="{% url 'respond_enquiry' notification.id %}" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%); border: none;">
+                                            <i class="fas fa-reply me-1"></i>Respond Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Customer Notification: Vendor Response -->
+                        <div class="card mb-3 fade-in" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: none; border-left: 4px solid #22c55e;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="notification-icon me-3">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%);">
+                                            <i class="fas fa-reply text-white fa-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h5 class="mb-1 fw-bold">Response from {{ notification.vendor.company_name }}</h5>
+                                                <p class="text-muted small mb-2">
+                                                    <i class="fas fa-clock me-1"></i>{{ notification.updated_at|date:"F d, Y H:i" }}
+                                                </p>
+                                            </div>
+                                            <span class="badge bg-success">Responded</span>
+                                        </div>
+                                        <p class="mb-2"><strong>Service:</strong> {% if notification.subservice %}{{ notification.subservice.name }}{% else %}N/A{% endif %}</p>
+                                        {% if notification.vendor_response %}
+                                            <p class="mb-2"><strong>Vendor Response:</strong> {{ notification.vendor_response }}</p>
+                                        {% endif %}
+                                        {% if notification.quoted_amount %}
+                                            <p class="mb-3"><strong>Quoted Amount:</strong> <span class="fw-bold" style="color: #0284C7;">₹{{ notification.quoted_amount }}</span></p>
+                                        {% endif %}
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a href="{% url 'book_service' notification.vendor.id notification.subservice.id %}?enquiry={{ notification.id }}" class="btn btn-success btn-sm">
+                                                <i class="fas fa-calendar-check me-1"></i>Book Now
+                                            </a>
+                                            <a href="{% url 'vendor_detail' notification.vendor.id %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-user me-1"></i>View Vendor
+                                            </a>
+                                            <a href="{% url 'dismiss_notification' notification.id %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="fas fa-times me-1"></i>Dismiss
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info text-center fade-in" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <i class="fas fa-bell-slash fa-2x mb-2"></i>
+                    <p class="mb-0">{{ empty_message }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .notification-icon {
+        flex-shrink: 0;
+    }
+
+    .card:hover {
+        transform: translateY(-10px) !important;
+        border-top: 4px solid #D97706 !important;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock %}

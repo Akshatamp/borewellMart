@@ -1,0 +1,349 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}{{ action }} Service - BorewellMart{% endblock %}
+{% block nav_services %}{% if action == 'Add' %}active{% endif %}{% endblock %}
+
+{% block content %}
+<style>
+/* Form Container Styles */
+.form-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.form-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Form Field Styles */
+.form-group-wrapper {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+}
+
+.form-label i {
+    color: var(--primary-color);
+}
+
+.form-label .badge-new {
+    background: var(--primary-color);
+    color: white;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    margin-left: 0.5rem;
+}
+
+select.form-control,
+input.form-control,
+textarea.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background: white;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-grid .form-group-wrapper {
+    margin-bottom: 0;
+}
+
+select.form-control:focus,
+input.form-control:focus,
+textarea.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+}
+
+select.form-control:disabled {
+    background: var(--secondary-bg);
+    cursor: not-allowed;
+}
+
+.form-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.form-section {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.form-title-row {
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-submit,
+.btn-cancel {
+    min-width: 140px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    color: white;
+}
+
+.btn-cancel {
+    background: white;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    background: var(--secondary-bg);
+    color: var(--text-dark);
+}
+
+/* Page layout */
+.form-section {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.form-title-row {
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.form-grid .form-group-wrapper {
+    margin-bottom: 0;
+}
+
+.btn-submit,
+.btn-cancel {
+    min-width: 160px;
+}
+</style>
+
+<div class="form-section">
+    <div class="form-title-row">
+        <div>
+            <h1 class="form-title">{{ action }} Service</h1>
+            <p class="form-hint">
+                {% if action == 'Add' %}
+                    Add a new service to your profile. Select a sector, choose an existing service or enter a new one, then provide the subservice name.
+                {% else %}
+                    Update your service details below to keep your offerings current.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <form method="post" id="vendor-service-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="form-error mb-3">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="form-group-wrapper">
+                <label for="sector-select" class="form-label">
+                    <i class="bi bi-list-task"></i>Sector *
+                </label>
+                <select name="sector" id="sector-select" class="form-control" required>
+                    <option value="">Select Sector</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector.id }}" {% if form.sector.value == sector.id %}selected{% endif %}>
+                        {{ sector.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted d-block mt-2">
+                    <i class="bi bi-lightbulb"></i> Select the sector for your service.
+                </small>
+                {% if form.sector.errors %}
+                    <div class="form-error">{{ form.sector.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Service Selection Field -->
+            <div class="form-group-wrapper">
+                <label for="service-select" class="form-label">
+                    <i class="bi bi-tools"></i>Service Name
+                </label>
+                {{ form.service }}
+                <small class="text-muted d-block mt-2">
+                    <i class="bi bi-lightbulb"></i> Select an existing service for the chosen sector.
+                </small>
+                {% if form.service.errors %}
+                    <div class="form-error">{{ form.service.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Subservice Name Field -->
+            <div class="form-group-wrapper">
+                <label for="{{ form.subservice_name.id_for_label }}" class="form-label">
+                    <i class="bi bi-tags"></i>Subservice Name *
+                </label>
+                {{ form.subservice_name }}
+                <small class="text-muted d-block mt-2">
+                    <i class="bi bi-lightbulb"></i> Enter the subservice name you offer under the selected service.
+                </small>
+                {% if form.subservice_name.errors %}
+                    <div class="form-error">{{ form.subservice_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group-wrapper">
+            <label for="{{ form.description.id_for_label }}" class="form-label">
+                <i class="bi bi-file-text"></i>Description
+            </label>
+            <textarea name="description" id="{{ form.description.id_for_label }}"
+                      class="form-control" rows="4"
+                      placeholder="Provide clear details about your service to attract more customers.">{{ form.description.value|default:'' }}</textarea>
+            <small class="text-muted d-block mt-2">
+                <i class="bi bi-lightbulb"></i> Describe your service, specialties, and what customers can expect.
+            </small>
+            {% if form.description.errors %}
+                <div class="form-error">{{ form.description.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">
+                {% if action == 'Add' %}
+                    <i class="bi bi-check-circle"></i>Add Service
+                {% else %}
+                    <i class="bi bi-check-circle"></i>Update Service
+                {% endif %}
+            </button>
+            <a href="{% url 'vendor_services' %}" class="btn-cancel">
+                <i class="bi bi-x-circle"></i>Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sectorSelect = document.getElementById('sector-select');
+    const serviceSelect = document.getElementById('service-select');
+    const initialServiceValue = '{{ form.service.value|default:"" }}';
+
+    const allServices = [
+        {% for service in services %}
+        {
+            id: '{{ service.id|escapejs }}',
+            sectorId: '{{ service.sector.id }}',
+            name: '{{ service.name|escapejs }}'
+        },
+        {% endfor %}
+    ];
+
+    const servicesBySector = {};
+    allServices.forEach(s => {
+        if (!servicesBySector[s.sectorId]) {
+            servicesBySector[s.sectorId] = [];
+        }
+        servicesBySector[s.sectorId].push({ id: s.id, name: s.name });
+    });
+
+    function buildServiceOptions(sectorId) {
+        serviceSelect.innerHTML = '<option value="">Select Service</option>';
+        if (!sectorId || !servicesBySector[sectorId]) return;
+
+        servicesBySector[sectorId].forEach(service => {
+            const option = document.createElement('option');
+            option.value = service.id;
+            option.textContent = service.name;
+            serviceSelect.appendChild(option);
+        });
+
+        if (initialServiceValue) {
+            serviceSelect.value = initialServiceValue;
+        }
+    }
+
+    sectorSelect.addEventListener('change', function() {
+        buildServiceOptions(this.value);
+    });
+
+    if (sectorSelect.value) {
+        buildServiceOptions(sectorSelect.value);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Knowledge Center - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <h1 class="text-center mb-5">Borewell Knowledge Center</h1>
+    <p class="text-center mb-5">Learn about borewell maintenance, water conservation, and more</p>
+    
+    <div class="row">
+        {% for blog in blogs %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">{{ blog.get_category_display }}</span>
+                        <h5 class="card-title">{{ blog.title }}</h5>
+                        <p class="card-text small">{{ blog.content|truncatewords:20 }}</p>
+                        <p class="card-text small text-muted">{{ blog.created_at|date:"F d, Y" }}</p>
+                        <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-outline-primary btn-sm">Read More</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>No articles available yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Featured Vendors Section -->
+    <section class="py-5 mt-5" style="background: var(--section);">
+        <div class="container-fluid">
+            <h2 class="text-center mb-2">Featured Providers</h2>
+            <p class="text-center mb-5" style="color: var(--light-text);">Top-rated Agri and borewell service providers</p>
+            <div class="row">
+                {% for vendor in featured_vendors %}
+                    <div class="col-md-4 col-lg-2 mb-4">
+                        <div class="card text-center p-2" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    {% if vendor.logo %}
+                                        <img src="{{ vendor.logo.url }}" class="rounded-circle" alt="{{ vendor.company_name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 50px; height: 50px; background: var(--gradient-primary);">
+                                            <i class="fas fa-building text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <h5 class="card-title fw-bold mb-2" style="font-size: 13px;">{{ vendor.company_name }}</h5>
+                                <div class="d-flex justify-content-center gap-1 mb-2 flex-wrap">
+                                    {% if vendor.verification_status == 'verified' %}
+                                        <span class="badge bg-success" style="font-size: 9px;"><i class="fas fa-check-circle"></i></span>
+                                    {% endif %}
+                                    <span class="badge bg-info" style="font-size: 9px;"><i class="fas fa-map-marker-alt"></i> {{ vendor.city.name }}</span>
+                                    <span class="badge bg-warning" style="font-size: 9px;"><i class="fas fa-star"></i> {{ vendor.rating }}</span>
+                                    {% if vendor.is_emergency_available %}
+                                        <span class="badge bg-danger" style="font-size: 9px;"><i class="fas fa-exclamation-triangle"></i> 24×7</span>
+                                    {% endif %}
+                                </div>
+                                <p class="card-text text-muted mb-2" style="font-size: 11px;">
+                                    <i class="fas fa-cogs me-1"></i>{{ vendor.services_count }} Services
+                                </p>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{% url 'vendor_detail' vendor.id %}" class="btn btn-primary btn-sm" style="font-size: 10px; padding: 0.25rem 0.5rem;">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'vendor_list' %}" class="btn btn-primary">View All Providers</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card:hover {
+        transform: translateY(-10px) !important;
+        border-top: 4px solid #D97706 !important;
+    }
+</style>
+{% endblock %}

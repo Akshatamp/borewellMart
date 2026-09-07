@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Cities - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Cities We Serve</h1>
+        <!-- State Filter Dropdown -->
+        <select id="stateFilter" class="form-select d-inline-block" style="max-width: 200px;" onchange="filterCities(this.value)">
+            <option value="all">All States</option>
+            {% for state in states %}
+            <option value="{{ state }}" {% if selected_state == state %}selected{% endif %}>{{ state }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Cities List -->
+    <div class="row" id="citiesContainer">
+        {% for city in cities %}
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2 mb-3 city-item" data-state="{{ city.state }}">
+            <a href="{% url 'city_detail' city.id %}" class="text-decoration-none">
+                <div class="card home-city-card">
+                    {% if city.image %}
+                        <img src="{{ city.image.url }}" class="city-img" alt="{{ city.name }}">
+                    {% else %}
+                        <div class="city-placeholder">
+                            <span class="text-white fw-bold text-uppercase" style="font-size: 14px;">{{ city.name|slice:":3" }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title">{{ city.name }}</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>No cities available yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+<script>
+function filterCities(state) {
+    // Filter cards
+    const cards = document.querySelectorAll('.city-item');
+    cards.forEach(card => {
+        if (state === 'all' || card.dataset.state === state) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Initialize cities filter on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const stateFilter = document.getElementById('stateFilter');
+    if (stateFilter && stateFilter.value !== 'all') {
+        filterCities(stateFilter.value);
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Home Page City Cards (Circular Avatar style) */
+.home-city-card {
+    background: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    padding: 1.25rem 0.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-items: center !important;
+    height: 100% !important;
+    transition: all 0.3s ease !important;
+}
+
+.home-city-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+    border-top: none !important;
+}
+
+.home-city-card .city-img {
+    width: 85px !important;
+    height: 85px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 2px solid #eaeaea !important;
+    margin: 0 auto 0.75rem auto !important;
+    display: block !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+
+.home-city-card .city-placeholder {
+    width: 85px !important;
+    height: 85px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 0.75rem auto !important;
+    border: 2px solid #eaeaea !important;
+}
+
+/* Home Card Typography & Spacing Override */
+.home-city-card .card-body {
+    padding: 0 !important;
+    margin-top: 0.25rem !important;
+    text-align: center !important;
+}
+
+.home-city-card .card-title {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.3 !important;
+}
+</style>
+{% endblock %}

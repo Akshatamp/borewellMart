@@ -1,0 +1,264 @@
+{% extends "admin/base.html" %}
+
+{% block nav_sectors %}active{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-layer-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_sectors }}</div>
+        <div class="stat-label">Sectors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-list-nested"></i>
+        </div>
+        <div class="stat-value">{{ total_services }}</div>
+        <div class="stat-label">Services</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-tools"></i>
+        </div>
+        <div class="stat-value">{{ total_subservices }}</div>
+        <div class="stat-label">Total Subservices</div>
+    </div>
+</div>
+
+<!-- Sectors Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4 class="table-title">Sectors</h4>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSectorModal">
+            <i class="bi bi-plus-lg"></i> Add Sector
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Services</th>
+                    <th>Subservices</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sector in sectors %}
+                <tr>
+                    <td>
+                        {% if sector.image %}
+                        <img src="{{ sector.image.url }}" alt="{{ sector.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="bi bi-{{ sector.icon|default:'layer' }} text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ sector.name }}</strong>
+                        <div class="text-muted small">{{ sector.description|truncatewords:8 }}</div>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary">{{ sector.services.count }}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-info">{{ sector.total_subservices }}</span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-sm btn-table" onclick="editSector('{{ sector.id }}', '{{ sector.name|escapejs }}', '{{ sector.description|escapejs }}', '{{ sector.icon|default:""|escapejs }}', {{ sector.order }})">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-table text-danger" onclick="deleteSector('{{ sector.id }}', '{{ sector.name|escapejs }}')">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i> No sectors
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if sectors.has_other_pages %}
+    <nav aria-label="Sectors pagination" class="mt-3">
+        <ul class="pagination pagination-sm justify-content-center">
+            {% if sectors.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ sectors.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in sectors.paginator.page_range %}
+            {% if sectors.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if sectors.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ sectors.next_page_number }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Add Sector Modal -->
+<div class="modal fade" id="addSectorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Sector</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'admin_sectors' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_sector">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID *</label>
+                        <input type="text" name="id" class="form-control" required placeholder="e.g. borewell">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" class="form-control" placeholder="e.g. droplet">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Sector</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Sector Modal -->
+<div class="modal fade" id="editSectorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Sector</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editSectorForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_sector">
+                <input type="hidden" name="sector_id" id="editSectorId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" name="id" id="editSectorOriginalId" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" id="editSectorName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" id="editSectorDesc" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" id="editSectorIcon" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" id="editSectorOrder" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep current image</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Sector</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editSector(id, name, desc, icon, order) {
+    document.getElementById('editSectorId').value = id;
+    document.getElementById('editSectorOriginalId').value = id;
+    document.getElementById('editSectorName').value = name;
+    document.getElementById('editSectorDesc').value = desc || '';
+    document.getElementById('editSectorIcon').value = icon || '';
+    document.getElementById('editSectorOrder').value = order;
+    document.getElementById('editSectorForm').action = "{% url 'admin_sectors' %}";
+
+    const modal = new bootstrap.Modal(document.getElementById('editSectorModal'));
+    modal.show();
+}
+
+function deleteSector(id, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This will affect all services and subservices.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_sectors' %}";
+        const actionInput = document.createElement('input');
+        actionInput.name = 'action';
+        actionInput.value = 'delete_sector';
+        const sectorIdInput = document.createElement('input');
+        sectorIdInput.name = 'sector_id';
+        sectorIdInput.value = id;
+        const csrfToken = document.createElement('input');
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(actionInput);
+        form.appendChild(sectorIdInput);
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

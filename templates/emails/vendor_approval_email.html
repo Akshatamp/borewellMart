@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Account Approved - BorewellMart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success-box strong {
+            color: #155724;
+            font-size: 20px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2E7D32;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box strong {
+            color: #2E7D32;
+        }
+        .feature-list {
+            margin: 25px 0;
+        }
+        .feature-list li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #2E7D32;
+            color: white !important;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 25px 0;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #1B5E20;
+        }
+        .next-steps {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .next-steps h3 {
+            margin-top: 0;
+            color: #2E7D32;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer a {
+            color: #2E7D32;
+            text-decoration: none;
+        }
+        .contact-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Congratulations!</h1>
+            <p>Your Vendor Account Has Been Approved</p>
+        </div>
+
+        <div class="content">
+            <p class="welcome-text">Dear <strong>{{ vendor.user.username }}</strong>,</p>
+
+            <div class="success-box">
+                <strong>✅ Your Vendor Account is Now Active!</strong>
+                <p style="margin: 10px 0 0 0;">Your business <strong>{{ vendor.company_name }}</strong> has been successfully verified and is now live on BorewellMart.</p>
+            </div>
+
+            <p>We're excited to inform you that your vendor profile has been reviewed and approved. You can now start receiving booking requests and enquiries from customers looking for your services.</p>
+
+            <div class="info-box">
+                <p><strong>Business Details:</strong></p>
+                <p>Company Name: {{ vendor.company_name }}<br>
+                Email: {{ vendor.email }}<br>
+                Phone: {{ vendor.phone }}<br>
+                City: {{ vendor.city.name }}</p>
+            </div>
+
+            <div class="next-steps">
+                <h3>🔐 Important: Set Your Password</h3>
+                <p>To access your vendor dashboard, you'll need to set up your password. Click the button below to create a secure password:</p>
+                <div style="text-align: center; margin: 20px 0;">
+                    <a href="{{ password_reset_url }}" class="cta-button">Set Your Password</a>
+                </div>
+                <p class="text-muted small"><em>This link is valid for 24 hours. If you've already set a password during registration, you can use your existing credentials to login.</em></p>
+            </div>
+
+            <div class="next-steps">
+                <h3>🚀 Recommended Next Steps:</h3>
+                <ol>
+                    <li><strong>Set Your Password:</strong> Use the link above to create your login password</li>
+                    <li><strong>Add Your Services:</strong> List all the services you offer with competitive pricing</li>
+                    <li><strong>Upload Gallery Images:</strong> Showcase your previous work to build trust</li>
+                    <li><strong>Complete Your Profile:</strong> Ensure all business details are accurate</li>
+                    <li><strong>Set Availability:</strong> Update your emergency service availability</li>
+                </ol>
+            </div>
+
+            <h3>What You Can Do Now:</h3>
+            <ul class="feature-list">
+                <li>📊 <strong>Access Your Dashboard:</strong> Manage all your business activities from one place</li>
+                <li>📅 <strong>Receive Booking Requests:</strong> Customers can now book your services directly</li>
+                <li>💬 <strong>Respond to Enquiries:</strong> Provide detailed quotes to interested customers</li>
+                <li>⭐ <strong>Build Your Reputation:</strong> Deliver great service and collect positive reviews</li>
+                <li>📈 <strong>Track Your Performance:</strong> Monitor bookings, revenue, and customer feedback</li>
+            </ul>
+
+            <div style="text-align: center;">
+                <a href="{{ frontend_url }}/dashboard/vendor/" class="cta-button">Go to Your Vendor Dashboard</a>
+            </div>
+
+            <p style="margin-top: 25px;">If you have any questions or need assistance getting started, our support team is here to help. Welcome to the BorewellMart family!</p>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated email from BorewellMart. Please do not reply to this email.</p>
+            <div class="contact-info">
+                <p>Need help? Contact us at <a href="mailto:vendors@borewellmart.com">vendors@borewellmart.com</a></p>
+                <p>© {% now "Y" %} BorewellMart. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% if grouped_services %}
+    {% for category_name, category_data in grouped_services.items %}
+    <div class="category-section mb-4">
+        {% with category_lower=category_data.category.name|lower %}
+        <div class="category-section-header {% if 'borewell' in category_lower %}borewell{% elif 'agri' in category_lower %}agriculture{% elif 'construct' in category_lower %}construction{% elif 'water' in category_lower %}water{% else %}category-default{% endif %}">
+            <div class="icon">
+                <i class="bi bi-{{ category_data.category.icon|default:'folder' }}"></i>
+            </div>
+            <div>
+                <h3>{{ category_data.category.name }}</h3>
+                <small>{{ category_data.category.description|truncatewords:8 }}</small>
+            </div>
+            <div class="count">
+                {% for vs in category_data.subcategories.values %}{% endfor %}
+                {{ category_data.subcategories|length }} subcategories
+            </div>
+        </div>
+        {% endwith %}
+
+        <div class="service-cards-container">
+            {% for subcategory_name, subcategory_data in category_data.subcategories.items %}
+                {% for vendor_service in subcategory_data.services %}
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <div class="service-card-icon {% if 'borewell' in category_data.category.name|lower %}category-borewell{% elif 'agri' in category_data.category.name|lower %}category-agriculture{% else %}category-default{% endif %}">
+                            <i class="bi bi-{{ subcategory_data.subcategory.icon|default:'gear' }}"></i>
+                        </div>
+                        <div class="service-card-title">
+                            <h6>{{ vendor_service.subservice.name }}</h6>
+                            <small>{{ subcategory_data.subcategory.name }}</small>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <p>{{ vendor_service.description|default:"No description provided"|truncatewords:20 }}</p>
+                    </div>
+                    <div class="service-card-footer">
+                        <span class="date">Added {{ vendor_service.created_at|date:"M d, Y" }}</span>
+                        <div class="actions">
+                            <a href="{% url 'vendor_service_edit' vendor_service.id %}" class="btn-edit">
+                                <i class="bi bi-pencil me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'vendor_service_delete' vendor_service.id %}" class="btn-delete">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No Services Yet</h3>
+        <p>Start adding your services to reach more customers.</p>
+        <a href="{% url 'vendor_service_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add Your First Service
+        </a>
+    </div>
+{% endif %}

@@ -1,0 +1,358 @@
+{% extends "admin/base.html" %}
+
+{% block nav_vendors %}active{% endblock %}
+{% block page_title %}Vendor Management{% endblock %}
+{% block page_subtitle %}Manage and verify all vendors{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Category Badge Styles */
+.badge-borewell {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+}
+.badge-agriculture {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+}
+.badge-construction {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+.badge-water {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+}
+.badge-default {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_count }}</div>
+        <div class="stat-label">Total Vendors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div class="stat-value">{{ verified_count }}</div>
+        <div class="stat-label">Verified</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-clock-fill"></i>
+        </div>
+        <div class="stat-value">{{ pending_count }}</div>
+        <div class="stat-label">Pending</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon red">
+            <i class="bi bi-x-circle-fill"></i>
+        </div>
+        <div class="stat-value">{{ suspended_count }}</div>
+        <div class="stat-label">Suspended</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="table-container" style="margin-bottom: 1.5rem;">
+    <div class="table-header">
+        <h4 class="table-title">Filters</h4>
+    </div>
+    <div class="p-3">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label small">Status</label>
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Status</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="verified" {% if status_filter == 'verified' %}selected{% endif %}>Verified</option>
+                    <option value="suspended" {% if status_filter == 'suspended' %}selected{% endif %}>Suspended</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">State</label>
+                <select name="state" id="stateFilter" class="form-select">
+                    <option value="">All States</option>
+                    {% for state in states %}
+                    <option value="{{ state }}" {% if state_filter == state %}selected{% endif %}>{{ state }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">City</label>
+                <select name="city" id="cityFilter" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Cities</option>
+                    {% for city in cities %}
+                    <option value="{{ city.id }}" data-state="{{ city.state }}" {% if city_filter|stringformat:"s" == city.id|stringformat:"s" %}selected{% endif %}>{{ city.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Search vendors..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a href="{% url 'admin_all_vendors' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Vendors Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4 class="table-title">All Vendors</h4>
+        <div class="table-actions">
+            <a href="{% url 'bulk_vendor_registration' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-upload"></i> Bulk Upload
+            </a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>City</th>
+                    <th>Sectors</th>
+                    <th>Experience</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Trial Plan</th>
+                    <th>Bookings</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendor in vendors %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if vendor.logo %}
+                            <img src="{{ vendor.logo.url }}" alt="" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                {{ vendor.company_name|first|default:"V" }}
+                            </div>
+                            {% endif %}
+                            <div>
+                                <a href="#" class="table-link">{{ vendor.company_name }}</a>
+                                <div class="text-muted small">{{ vendor.license_number|default:"No license" }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div><i class="bi bi-envelope small text-muted"></i> {{ vendor.email }}</div>
+                        <div><i class="bi bi-phone small text-muted"></i> {{ vendor.phone }}</div>
+                    </td>
+                    <td>{{ vendor.city.name }}</td>
+                    <td>
+                        {% if vendor.service_categories %}
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for category in vendor.service_categories %}
+                                    {% with category_lower=category.name|lower %}
+                                        <span class="badge {% if 'borewell' in category_lower %}badge-borewell{% elif 'agri' in category_lower %}badge-agriculture{% elif 'construct' in category_lower %}badge-construction{% elif 'water' in category_lower %}badge-water{% else %}badge-default{% endif %}">
+                                            {{ category.name }}
+                                        </span>
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="text-muted small">No services</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ vendor.experience }} years</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            {{ vendor.rating|default:0 }}
+                        </div>
+                    </td>
+                    <td>
+                        {% if vendor.verification_status == 'verified' %}
+                        <span class="badge badge-verified">
+                            <i class="bi bi-check-circle"></i> Verified
+                        </span>
+                        {% elif vendor.verification_status == 'pending' %}
+                        <span class="badge badge-pending">
+                            <i class="bi bi-clock"></i> Pending
+                        </span>
+                        {% else %}
+                        <span class="badge badge-suspended">
+                            <i class="bi bi-x-circle"></i> Suspended
+                        </span>
+                        {% endif %}
+                        {% if vendor.is_emergency_available %}
+                        <br><span class="badge bg-info mt-1"><i class="bi bi-lightning"></i> 24×7</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if vendor.current_plan %}
+                            <div class="small">
+                                <strong>{{ vendor.current_plan.plan_name }}</strong><br>
+                                {% if vendor.current_plan.status == 'expired' %}
+                                <span class="badge bg-danger">Expired</span>
+                                {% elif vendor.days_remaining <= 3 %}
+                                <span class="badge bg-warning text-dark">{{ vendor.days_remaining }} days left</span>
+                                {% else %}
+                                <span class="badge bg-success">{{ vendor.days_remaining }} days left</span>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <span class="text-muted small">No plan</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ vendor.bookings_count }}</td>
+                    <td>{{ vendor.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            {% if vendor.verification_status == 'pending' %}
+                            <a href="{% url 'approve_vendor' vendor.id %}" class="btn btn-sm btn-success" title="Approve">
+                                <i class="bi bi-check-lg"></i>
+                            </a>
+                            <a href="{% url 'reject_vendor' vendor.id %}" class="btn btn-sm btn-danger" title="Reject">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                            {% elif vendor.verification_status == 'verified' %}
+                            <a href="{% url 'suspend_vendor' vendor.id %}" class="btn btn-sm btn-warning" title="Suspend">
+                                <i class="bi bi-slash-circle"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'activate_vendor' vendor.id %}" class="btn btn-sm btn-success" title="Activate">
+                                <i class="bi bi-check-circle"></i>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'admin_vendor_edit' vendor.id %}" class="btn btn-sm btn-table" title="Edit Vendor">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'delete_vendor' vendor.id %}" class="btn btn-sm btn-table text-danger" onclick="return confirm('Are you sure you want to delete this vendor?');" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-3">No vendors found</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if vendors.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-3">
+    <ul class="pagination justify-content-center">
+        {% if vendors.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ vendors.previous_page_number }}&status={{ status_filter }}&state={{ state_filter|default_if_none:'' }}&city={{ city_filter|default_if_none:'' }}&search={{ search_query|urlencode }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in vendors.paginator.page_range %}
+        {% if vendors.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}&status={{ status_filter }}&state={{ state_filter|default_if_none:'' }}&city={{ city_filter|default_if_none:'' }}&search={{ search_query|urlencode }}">{{ num }}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if vendors.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ vendors.next_page_number }}&status={{ status_filter }}&state={{ state_filter|default_if_none:'' }}&city={{ city_filter|default_if_none:'' }}&search={{ search_query|urlencode }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add search functionality
+document.querySelector('input[name="search"]').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+        this.form.submit();
+    }
+});
+
+// State filter - filter cities based on selected state
+const stateFilter = document.getElementById('stateFilter');
+const cityFilter = document.getElementById('cityFilter');
+
+if (stateFilter && cityFilter) {
+    stateFilter.addEventListener('change', function() {
+        const selectedState = this.value;
+        const cityOptions = cityFilter.querySelectorAll('option');
+
+        cityOptions.forEach(option => {
+            if (option.value === '') {
+                // Keep "All Cities" option
+                return;
+            }
+
+            const optionState = option.getAttribute('data-state');
+            if (selectedState === '' || optionState === selectedState) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+
+        // Reset city filter when state changes
+        cityFilter.value = '';
+
+        // Submit form to apply state filter
+        this.form.submit();
+    });
+
+    // Filter cities on page load based on selected state (don't submit)
+    if (stateFilter.value) {
+        const selectedState = stateFilter.value;
+        const cityOptions = cityFilter.querySelectorAll('option');
+
+        cityOptions.forEach(option => {
+            if (option.value === '') {
+                return;
+            }
+
+            const optionState = option.getAttribute('data-state');
+            if (selectedState === '' || optionState === selectedState) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    }
+}
+</script>
+{% endblock %}

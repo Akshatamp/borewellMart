@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vendor.company_name }} - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb" style="background-color: #f8f9fa; padding: 10px 15px; border-radius: 5px;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-primary"><i class="fas fa-home me-1"></i>Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'vendor_list' %}" class="text-decoration-none text-primary">Vendors</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ vendor.company_name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Cover Image -->
+    {% if vendor.cover_image %}
+    <div class="mb-4 position-relative" style="border-radius: 12px; overflow: hidden; height: 250px;">
+        <img src="{{ vendor.cover_image.url }}" alt="{{ vendor.company_name }} Cover" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    {% endif %}
+
+    <!-- Vendor Header with Logo -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-auto">
+            {% if vendor.logo %}
+                <img src="{{ vendor.logo.url }}" alt="{{ vendor.company_name }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #0284C7; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            {% else %}
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: linear-gradient(135deg, #0284C7 0%, #06B6D4 100%); color: white; font-size: 40px; font-weight: bold; border: 3px solid #0284C7; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    {{ vendor.company_name|first|upper }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="col">
+            <h1 class="fw-bold mb-1" style="color: #0284C7; font-size: 28px;">{{ vendor.company_name }}</h1>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                {% if vendor.verification_status == 'verified' %}
+                    <span class="badge bg-success">Verified</span>
+                {% endif %}
+                <div class="d-flex align-items-center" style="color: #f59e0b;">
+                    <i class="fas fa-star me-1"></i>
+                    <span class="fw-bold">{{ vendor.rating|default:4.8 }}</span>
+                </div>
+                <span class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ vendor.city.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Cards in One Row -->
+    <div class="row mb-4">
+        <!-- Card 1: Location Map -->
+        <div class="col-md-4">
+            <div class="card h-100" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-height: 380px;">
+                <div class="card-header bg-white py-2">
+                    <h6 class="mb-0 fw-bold" style="font-size: 13px;">Location</h6>
+                </div>
+                <div class="card-body p-0" style="flex-grow: 1;">
+                    <div id="vendor-map" style="width: 100%; height: 100%; min-height: 200px; background: #e0e0e0;"></div>
+                </div>
+                <div class="p-2 pt-0">
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ vendor.address|urlencode }},{{ vendor.city.name|urlencode }}" target="_blank" class="btn btn-outline-primary btn-sm w-100" style="font-size: 11px;">
+                        <i class="fas fa-directions me-1"></i>Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Business Information -->
+        <div class="col-md-4">
+            <div class="card h-100" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-height: 380px;">
+                <div class="card-header bg-white py-2">
+                    <h6 class="mb-0 fw-bold" style="font-size: 16px;">About</h6>
+                </div>
+                <div class="card-body p-2">
+                    <p class="mb-2" style="font-size: 14px;"><strong>Phone:</strong> <a href="tel:{{ vendor.phone }}" class="text-decoration-none text-primary">{{ vendor.phone }}</a></p>
+
+                    <p class="mb-1" style="font-size: 14px;"><strong>Address:</strong></p>
+                    <p class="mb-2 small" style="font-size: 13px;">{{ vendor.address }}</p>
+
+                    <p class="mb-1" style="font-size: 14px;"><strong>City:</strong></p>
+                    <p class="mb-2 small" style="font-size: 13px;">{{ vendor.city.name }}</p>
+
+                    {% if vendor.license_number %}
+                    <p class="mb-1" style="font-size: 14px;"><strong>License:</strong></p>
+                    <p class="mb-2 small" style="font-size: 13px;">{{ vendor.license_number }}</p>
+                    {% endif %}
+
+                    <p class="mb-2" style="font-size: 14px;"><strong>Search Related Sectors:</strong></p>
+                    <p class="small text-muted mb-3 categories-list" style="font-size: 13px;">
+                        {% for vendor_service in vendor_services %}
+                            {% if vendor_service.subservice %}
+                            <a href="{% url 'service_detail' vendor_service.subservice.id %}" class="text-decoration-none text-primary">{{ vendor_service.subservice.name }}</a>{% if not forloop.last %}, {% endif %}
+                            {% endif %}
+                        {% empty %}
+                            No categories listed.
+                        {% endfor %}
+                    </p>
+
+                    <!-- Send Enquiry Button -->
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-success btn-sm w-100" id="enquiryToggleButton" data-bs-toggle="collapse" data-bs-target="#enquiryFormSection" style="font-size: 13px;">
+                            <i class="fas fa-envelope me-1"></i>Send Enquiry
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Services Offered -->
+        <div class="col-md-4">
+            <div class="card h-100" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-height: 380px;">
+                <div class="card-header bg-white py-2">
+                    <h6 class="mb-0 fw-bold" style="font-size: 18px;">Services Offered</h6>
+                </div>
+                <div class="card-body p-2">
+                    <div class="row g-2">
+                        {% for vendor_service in vendor_services %}
+                            <div class="col-6">
+                                <div class="service-card-interactive p-2 h-100" style="border-radius: 8px; border: 1px solid #dee2e6; transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column;">
+                                    <!-- Service Icon -->
+                                    <div class="text-center">
+                                        <div class="service-icon-wrapper mb-2 mx-auto" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #0891B2 100%); display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-cogs text-white" style="font-size: 18px;"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Service Name -->
+                                    <h6 class="fw-bold text-center service-name-highlight" style="font-size: 14px; color: #0284C7;">{{ vendor_service.subservice.name }}</h6>
+                                    <!-- Description -->
+                                    {% if vendor_service.description %}
+                                    <div class="text-center service-description-wrapper">
+                                        <p class="text-muted service-description" style="font-size: 11px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; max-height: 2.8em;">{{ vendor_service.description }}</p>
+                                        {% if vendor_service.description|wordcount > 10 %}
+                                        <a href="javascript:void(0)" class="text-primary see-more-toggle" style="font-size: 10px; cursor: pointer;" onclick="toggleDescription(this)">See more</a>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                    <!-- Price -->
+                                    {% if vendor_service.subservice.per_feet_amount %}
+                                    <p class="fw-bold text-center per-feet-highlight" style="font-size: 13px; color: #f59e0b; background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%); padding: 3px 8px; border-radius: 4px;">₹{{ vendor_service.subservice.per_feet_amount }}/feet</p>
+                                    {% else %}
+                                    <p class="fw-bold text-center ask-price-highlight" style="font-size: 13px; color: #6c757d; background: linear-gradient(90deg, rgba(108, 117, 125, 0.15) 0%, rgba(108, 117, 125, 0.05) 100%); padding: 3px 8px; border-radius: 4px;">Ask Price</p>
+                                    {% endif %}
+                                    <!-- Enquiry Button -->
+                                    <div class="mt-auto pt-2">
+                                        {% if user.is_authenticated %}
+                                        <a href="{% url 'send_enquiry' vendor.id %}?subservice={{ vendor_service.subservice.id }}" class="btn btn-primary btn-sm w-100" style="font-size: 11px; padding: 0.4rem 0.6rem; border-radius: 4px;">
+                                            <i class="fas fa-envelope" style="font-size: 10px;"></i> Enquiry
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm w-100" style="font-size: 11px; padding: 0.4rem 0.6rem; border-radius: 4px;">
+                                            <i class="fas fa-envelope" style="font-size: 10px;"></i> Enquiry
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p class="text-muted small text-center" style="font-size: 13px;">No services listed yet.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enquiry Form Section (Hidden by default) -->
+    <div class="collapse mb-4" id="enquiryFormSection">
+        <div class="card" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="fas fa-envelope me-2"></i>Send Enquiry to {{ vendor.company_name }}</h6>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'send_enquiry' vendor.id %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="enquiryName" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="enquiryName" value="{{ user.username }}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="enquiryEmail" class="form-label">Your Email</label>
+                                <input type="email" class="form-control" id="enquiryEmail" value="{{ user.email }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="enquiryPhone" class="form-label">Your Phone</label>
+                                <input type="text" class="form-control" id="enquiryPhone" name="phone" placeholder="Enter your phone number" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="enquiryService" class="form-label">Service Interested In</label>
+                                <select class="form-select" id="enquiryService" name="subservice">
+                                    <option value="">Select a service</option>
+                                    {% for vendor_service in vendor_services %}
+                                        <option value="{{ vendor_service.subservice.id }}">{{ vendor_service.subservice.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="enquiryMessage" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="enquiryMessage" name="message" rows="4" placeholder="Tell us about your requirements..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i>Send Enquiry
+                        </button>
+                        <button type="button" class="btn btn-secondary ms-2" onclick="toggleEnquiryForm()">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-info" style="border-radius: 8px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Please <a href="{% url 'login' %}" class="alert-link">login</a> to send an enquiry to {{ vendor.company_name }}.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="card mb-4" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <div class="card-header bg-white py-2">
+            <h6 class="mb-0 fw-bold" style="font-size: 13px;">Write Your Review for {{ vendor.company_name }}</h6>
+        </div>
+        <div class="card-body p-2">
+            <div class="row">
+                <div class="col-md-6">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'add_review' vendor.id %}" class="btn btn-primary btn-sm w-100" style="font-size: 11px;">
+                            <i class="fas fa-pen me-1"></i>Write a Review
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm w-100" style="font-size: 11px;">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login to Write Review
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'vendor_list' %}?city={{ vendor.city.id }}" class="btn btn-outline-secondary btn-sm w-100" style="font-size: 11px;">
+                        <i class="fas fa-search me-1"></i>Browse More Vendors
+                    </a>
+                </div>
+            </div>
+
+            <h6 class="mt-3 mb-2 fw-bold" style="font-size: 12px;">Customer Reviews of {{ vendor.company_name }}</h6>
+            {% for review in reviews %}
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="d-flex align-items-center mb-1">
+                        <div class="text-warning" style="font-size: 11px;">
+                            {% for i in review.rating|stringformat:"s" %}<i class="fas fa-star"></i>{% endfor %}
+                        </div>
+                        <small class="text-muted ms-auto" style="font-size: 10px;">{{ review.created_at|date:"F d, Y" }}</small>
+                    </div>
+                    <p class="mb-1" style="font-size: 12px;">{{ review.comment }}</p>
+                    <small class="text-muted" style="font-size: 10px;">- {{ review.customer.username }}</small>
+                </div>
+            {% empty %}
+                <p class="text-muted" style="font-size: 11px;">No reviews yet. Be the first to review!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+.card {
+    border: 1px solid #dee2e6;
+}
+.card-header {
+    border-bottom: 1px solid #dee2e6;
+}
+#vendor-map {
+    z-index: 1;
+}
+.leaflet-popup-content-wrapper {
+    border-radius: 10px;
+}
+.leaflet-popup-content {
+    margin: 10px;
+    font-size: 12px;
+}
+.leaflet-popup *, .leaflet-popup {
+    max-width: none !important;
+}
+
+.service-card-interactive {
+    background: #fff;
+}
+.service-card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.2);
+    border-color: #06B6D4;
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.05) 0%, rgba(255,255,255,1) 100%);
+}
+.service-card-interactive:hover .service-icon-wrapper {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+.service-icon-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.service-name-highlight {
+    transition: all 0.3s ease;
+}
+.service-card-interactive:hover .service-name-highlight {
+    color: #06B6D4 !important;
+    transform: scale(1.05);
+}
+
+.per-feet-highlight {
+    transition: all 0.3s ease;
+}
+.service-card-interactive:hover .per-feet-highlight {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.1) 100%) !important;
+    transform: scale(1.05);
+}
+
+.ask-price-highlight {
+    transition: all 0.3s ease;
+}
+.service-card-interactive:hover .ask-price-highlight {
+    background: linear-gradient(90deg, rgba(108, 117, 125, 0.25) 0%, rgba(108, 117, 125, 0.1) 100%) !important;
+    color: #495057 !important;
+    transform: scale(1.05);
+}
+
+.category-card-interactive {
+    background: #fff;
+}
+.category-card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b;
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, rgba(255,255,255,1) 100%);
+}
+.category-card-interactive:hover .category-icon-wrapper {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+.category-icon-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.categories-list a {
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+.categories-list a:hover {
+    color: #f59e0b !important;
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleEnquiryForm() {
+    const enquiryFormSection = document.getElementById('enquiryFormSection');
+    if (enquiryFormSection) {
+        // Check if the form is currently shown
+        const isShown = enquiryFormSection.classList.contains('show');
+        if (isShown) {
+            // Collapse the form
+            enquiryFormSection.classList.remove('show');
+        } else {
+            // Expand the form
+            enquiryFormSection.classList.add('show');
+            setTimeout(function() {
+                enquiryFormSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle enquiry form toggle using Bootstrap events
+    const enquiryFormSection = document.getElementById('enquiryFormSection');
+    if (enquiryFormSection) {
+        enquiryFormSection.addEventListener('show.bs.collapse', function() {
+            // Scroll to form when it starts to expand
+            setTimeout(function() {
+                enquiryFormSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        });
+    }
+
+    // Initialize map
+    const map = L.map('vendor-map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    const address = "{{ vendor.address }}, {{ vendor.city.name }}";
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                map.setView([lat, lon], 15);
+                const marker = L.marker([lat, lon]).addTo(map);
+                marker.bindPopup(`<strong>{{ vendor.company_name }}</strong><br><small>{{ vendor.address|truncatewords:8 }}</small>`).openPopup();
+            } else {
+                document.getElementById('vendor-map').innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; color: #6c757d; text-align: center;">
+                        <div><i class="fas fa-map-marker-alt fa-2x mb-2"></i><br><small>Location view available on Google Maps</small></div>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('vendor-map').innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; color: #6c757d; text-align: center;">
+                    <div><i class="fas fa-map-marker-alt fa-2x mb-2"></i><br><small>Location view available on Google Maps</small></div>
+                </div>
+            `;
+        });
+
+    // Toggle service description (See more / See less)
+    function toggleDescription(link) {
+        const wrapper = link.closest('.service-description-wrapper');
+        const description = wrapper.querySelector('.service-description');
+        const isExpanded = description.style.webkitLineClamp === 'unset';
+
+        if (isExpanded) {
+            description.style.webkitLineClamp = '2';
+            description.style.maxHeight = '2.8em';
+            description.style.overflow = 'hidden';
+            link.textContent = 'See more';
+        } else {
+            description.style.webkitLineClamp = 'unset';
+            description.style.maxHeight = 'none';
+            description.style.overflow = 'visible';
+            link.textContent = 'See less';
+        }
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

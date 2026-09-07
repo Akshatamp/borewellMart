@@ -1,0 +1,126 @@
+{% extends "admin/base.html" %}
+
+{% block nav_customers %}active{% endblock %}
+{% block page_title %}Edit Customer{% endblock %}
+{% block page_subtitle %}Edit customer profile information{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="table-container">
+                <div class="table-header">
+                    <h4 class="table-title">Edit Customer: {{ customer.username }}</h4>
+                    <a href="{% url 'admin_all_customers' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back to Customers
+                    </a>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="p-4">
+                        <h5 class="mb-3">User Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Username</label>
+                                <input type="text" class="form-control" value="{{ customer.username }}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{ customer.email }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-semibold">New Password (leave blank to keep current)</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="mb-3">Profile Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label fw-semibold">Phone</label>
+                                <input type="text" name="phone" id="phone" class="form-control" value="{{ profile.phone|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label fw-semibold">City</label>
+                                <select name="city" id="city" class="form-select">
+                                    <option value="">Select City</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city.id }}" {% if profile.city_id == city.id %}selected{% endif %}>{{ city.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label fw-semibold">Address</label>
+                            <textarea name="address" id="address" class="form-control" rows="3">{{ profile.address|default:'' }}</textarea>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="mb-3">Account Status</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Account Status</label>
+                                <div class="form-control-plaintext">
+                                    {% if customer.is_active %}
+                                    <span class="badge badge-verified">Active</span>
+                                    {% else %}
+                                    <span class="badge badge-suspended">Inactive</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Member Since</label>
+                                <div class="form-control-plaintext">{{ profile.created_at|date:"F d, Y" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'admin_all_customers' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="table-container">
+                <div class="table-header">
+                    <h4 class="table-title">Customer Summary</h4>
+                </div>
+                <div class="p-4">
+                    <div class="text-center mb-4">
+                        {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2 mx-auto" style="width: 100px; height: 100px; font-size: 2rem;">
+                            {{ customer.username|first|default:"C" }}
+                        </div>
+                        {% endif %}
+                        <h5>{{ customer.get_full_name|default:customer.username }}</h5>
+                        <p class="text-muted mb-0">{{ customer.email }}</p>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>Total Bookings:</span>
+                            <strong>{{ customer.bookings.count }}</strong>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>Total Enquiries:</span>
+                            <strong>{{ customer.enquiries.count }}</strong>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>Last Login:</span>
+                            <strong>{{ customer.last_login|date:"M d, Y"|default:"Never" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

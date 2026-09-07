@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer Dashboard - BorewellMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <h1 class="mb-4">Customer Dashboard</h1>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-primary text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ total_bookings }}</div>
+                    <div class="small opacity-75">Total Bookings</div>
+                    <div class="mt-2">
+                        <i class="fas fa-calendar-check fa-lg opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-warning text-dark">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ active_bookings }}</div>
+                    <div class="small opacity-75">Active Bookings</div>
+                    <div class="mt-2">
+                        <i class="fas fa-clock fa-lg opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-success text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ completed_bookings }}</div>
+                    <div class="small opacity-75">Completed Bookings</div>
+                    <div class="mt-2">
+                        <i class="fas fa-check-circle fa-lg opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-info text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ favorite_vendors.count }}</div>
+                    <div class="small opacity-75">Favorite Vendors</div>
+                    <div class="mt-2">
+                        <i class="fas fa-heart fa-lg opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'customer_enquiries' %}" class="btn btn-outline-primary h-100 d-flex align-items-center justify-content-center" style="border-radius: 20px;">
+                <i class="fas fa-envelope me-2"></i>View My Enquiries
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'vendor_list' %}" class="btn btn-outline-success h-100 d-flex align-items-center justify-content-center" style="border-radius: 20px;">
+                <i class="fas fa-search me-2"></i>Find Vendors
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <h2 class="mb-4">Recent Bookings</h2>
+    <div class="table-responsive mb-5">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vendor</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>{{ booking.vendor.company_name }}</td>
+                        <td>{{ booking.subservice.name }}</td>
+                        <td>{{ booking.date|date:"Y-m-d" }}</td>
+                        <td>{{ booking.time|time:"H:i" }}</td>
+                        <td>
+                            {% if booking.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% elif booking.status == 'accepted' %}
+                                <span class="badge bg-info">Accepted</span>
+                            {% elif booking.status == 'in_progress' %}
+                                <span class="badge bg-primary">In Progress</span>
+                            {% elif booking.status == 'completed' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'vendor_detail' booking.vendor.id %}" class="btn btn-sm btn-primary">View Vendor</a>
+                            {% if booking.status == 'completed' %}
+                                <a href="{% url 'add_review_with_booking' booking.vendor.id booking.id %}" class="btn btn-sm btn-success">Review</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No bookings yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Communities Section -->
+    <h2 class="mb-4">Communities</h2>
+    <div class="row mb-5">
+        {% for community in communities %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center p-3 h-100" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            {% if community.image %}
+                            <img src="{{ community.image.url }}" class="rounded-circle" alt="{{ community.name }}" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="fas fa-users text-white fa-lg"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title fw-bold mb-2" style="font-size: 15px;">{{ community.name }}</h5>
+                        <div class="d-flex justify-content-center gap-2 mb-2 flex-wrap">
+                            <span class="badge bg-primary"><i class="fas fa-users"></i> {{ community.member_count }} Members</span>
+                            <span class="badge bg-info"><i class="fas fa-file-alt"></i> {{ community.post_count }} Posts</span>
+                        </div>
+                        <p class="card-text text-muted mb-2" style="font-size: 13px;">
+                            {{ community.description|truncatewords:10 }}
+                        </p>
+                        <div class="d-flex gap-2 justify-content-center">
+                            {% if community.id in user_communities %}
+                            <a href="{% url 'community_detail' community.slug %}" class="btn btn-primary btn-sm" style="font-size: 11px; padding: 0.3rem 0.6rem;">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a href="{% url 'leave_community' community.slug %}" class="btn btn-danger btn-sm" style="font-size: 11px; padding: 0.3rem 0.6rem;">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'join_community' community.slug %}" class="btn btn-success btn-sm" style="font-size: 11px; padding: 0.3rem 0.6rem;">
+                                <i class="fas fa-plus me-1"></i>Join
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No communities available yet. Check back later!
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Favorite Vendors -->
+    <h2 class="mb-4">Favorite Vendors</h2>
+    <div class="row">
+        {% for favorite in favorite_vendors %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center p-3" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            {% if favorite.vendor.logo %}
+                                <img src="{{ favorite.vendor.logo.url }}" class="rounded-circle" alt="{{ favorite.vendor.company_name }}" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px; background: var(--gradient-primary);">
+                                    <i class="fas fa-building text-white fa-lg"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title fw-bold mb-2" style="font-size: 15px;">{{ favorite.vendor.company_name }}</h5>
+                        <div class="d-flex justify-content-center gap-2 mb-2 flex-wrap">
+                            {% if favorite.vendor.verification_status == 'verified' %}
+                                <span class="badge bg-success"><i class="fas fa-check-circle"></i></span>
+                            {% endif %}
+                            <span class="badge bg-info"><i class="fas fa-map-marker-alt"></i> {{ favorite.vendor.city.name }}</span>
+                            <span class="badge bg-warning"><i class="fas fa-star"></i> {{ favorite.vendor.rating }}</span>
+                        </div>
+                        <p class="card-text text-muted mb-2" style="font-size: 13px;">
+                            <i class="fas fa-cogs me-1"></i>{{ favorite.vendor.services_count }} Services
+                        </p>
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="{% url 'vendor_detail' favorite.vendor.id %}" class="btn btn-primary btn-sm" style="font-size: 11px; padding: 0.3rem 0.6rem;">View Profile</a>
+                            <a href="{% url 'remove_favorite' favorite.vendor.id %}" class="btn btn-danger btn-sm" style="font-size: 11px; padding: 0.3rem 0.6rem;">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>No favorite vendors yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

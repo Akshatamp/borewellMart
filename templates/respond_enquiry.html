@@ -1,0 +1,459 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}Respond to Enquiry #{{ enquiry.id }} - BorewellMart{% endblock %}
+{% block nav_enquiries %}active{% endblock %}
+{% block page_title %}Respond to Enquiry{% endblock %}
+{% block page_subtitle %}Send detailed pricing and service information{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --section: #f8fafc;
+        --gradient-primary: linear-gradient(135deg, #06B6D4 0%, #0891b2 100%);
+        --gradient-secondary: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        --primary: #06B6D4;
+        --accent: #06B6D4;
+        --success: #10b981;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .enquiry-container {
+        background: var(--section);
+        min-height: calc(100vh - 200px);
+        padding: 30px 0;
+    }
+
+    .enquiry-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 25px 30px;
+        border-radius: 12px 12px 0 0;
+        margin-bottom: 0;
+    }
+
+    .enquiry-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .enquiry-header .badge {
+        background: rgba(255,255,255,0.2);
+        font-size: 14px;
+    }
+
+    .info-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .info-card .card-header {
+        background: white;
+        border-bottom: 2px solid #f0f0f0;
+        padding: 20px;
+        font-weight: 600;
+    }
+
+    .info-card .card-header i {
+        margin-right: 10px;
+    }
+
+    .info-card .card-body {
+        padding: 20px;
+    }
+
+    .customer-card {
+        border-left: 4px solid var(--primary);
+    }
+
+    .customer-card .card-header {
+        border-left-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .service-card {
+        border-left: 4px solid var(--accent);
+    }
+
+    .service-card .card-header {
+        border-left-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .message-box {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--accent);
+    }
+
+    .message-box .customer-message {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    .response-box {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        border-left: 4px solid var(--success);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #e9ecef !important;
+        padding: 12px 15px;
+        transition: all 0.3s;
+        background: white !important;
+        color: #212529 !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.15) !important;
+    }
+
+    /* Ensure form is visible */
+    form {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .detail-row {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: #6c757d;
+        font-size: 14px;
+        min-width: 100px;
+    }
+
+    .detail-value {
+        color: #212529;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary) !important;
+        border: none !important;
+        padding: 14px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        color: white !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        background: var(--gradient-secondary) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        color: white !important;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        padding: 14px 30px;
+        font-weight: 600;
+        border: 2px solid #06B6D4 !important;
+        color: #06B6D4 !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent !important;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #06B6D4 !important;
+        color: white !important;
+    }
+
+    .tips-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+        border: 1px solid #c8e6c9;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .tips-box h6 {
+        color: var(--success);
+        margin-bottom: 10px;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-responded {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-closed {
+        background: #d6d8db;
+        color: #383d41;
+    }
+
+    /* Button container styling */
+    .d-flex.gap-3 {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Ensure buttons are visible on all backgrounds */
+    .btn-lg {
+        font-size: 1.125rem;
+        padding: 14px 30px;
+        min-height: 54px;
+    }
+
+    /* Fix any potential z-index issues */
+    .response-box {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="enquiry-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="enquiry-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2><i class="fas fa-reply me-3"></i>Respond to Enquiry #{{ enquiry.id }}</h2>
+                    <p class="mb-0 mt-2 opacity-75">Provide detailed pricing and service information to the customer</p>
+                </div>
+                <div>
+                    <span class="status-badge status-{{ enquiry.status }}">
+                        {% if enquiry.status == 'pending' %}⏳ Pending
+                        {% elif enquiry.status == 'responded' %}✓ Responded
+                        {% else %}✕ Closed{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="border-radius: 0 0 12px 12px; border-top: none;">
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <!-- Left Column - Customer & Service Info -->
+                    <div class="col-lg-4" style="background: #fafbfc; border-right: 1px solid #e9ecef;">
+                        <div class="p-4">
+                            <!-- Customer Details Card -->
+                            <div class="info-card customer-card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-user-circle text-success"></i>Customer Details
+                                </div>
+                                <div class="card-body">
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-primary">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Name</div>
+                                            <div class="detail-value">{{ enquiry.customer.username }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-info">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Email</div>
+                                            <div class="detail-value">{{ enquiry.customer.email }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-warning">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Enquiry Date</div>
+                                            <div class="detail-value">{{ enquiry.created_at|date:"M d, Y H:i" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Service Details Card -->
+                            <div class="info-card service-card">
+                                <div class="card-header">
+                                    <i class="fas fa-cogs text-danger"></i>Service Enquired
+                                </div>
+                                <div class="card-body">
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-success">
+                                            <i class="fas fa-water"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Service</div>
+                                            <div class="detail-value">{% if enquiry.subservice %}{{ enquiry.subservice.name }}{% else %}N/A{% endif %}</div>
+                                        </div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-info">
+                                            <i class="fas fa-tag"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Category</div>
+                                            <div class="detail-value">{% if enquiry.subservice and enquiry.subservice.service and enquiry.subservice.service.sector %}{{ enquiry.subservice.service.sector.name }}{% else %}N/A{% endif %}</div>
+                                        </div>
+                                    </div>
+                                    {% if enquiry.subservice and enquiry.subservice.description %}
+                                    <div class="detail-row">
+                                        <div class="info-icon bg-light text-secondary">
+                                            <i class="fas fa-info"></i>
+                                        </div>
+                                        <div>
+                                            <div class="detail-label">Description</div>
+                                            <div class="detail-value small text-muted">{{ enquiry.subservice.description|truncatewords:20 }}</div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Message & Response Form -->
+                    <div class="col-lg-8">
+                        <div class="p-4">
+                            <!-- Customer's Message -->
+                            <div class="message-box">
+                                <h5 class="mb-3" style="color: #495057;">
+                                    <i class="fas fa-comment-dots me-2" style="color: #ffc107;"></i>Customer's Enquiry Message
+                                </h5>
+                                <div class="customer-message">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div style="width: 45px; height: 45px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 18px;">
+                                                {{ enquiry.customer.username|first|upper }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold mb-1">{{ enquiry.customer.username }}</div>
+                                            <div class="text-muted small mb-2">{{ enquiry.created_at|date:"F d, Y • H:i A" }}</div>
+                                            <p class="mb-0">{{ enquiry.message }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tips Box -->
+                            <div class="tips-box">
+                                <h6><i class="fas fa-lightbulb me-2"></i>Tips for a Good Response</h6>
+                                <ul class="small mb-0" style="padding-left: 20px;">
+                                    <li>Provide detailed pricing breakdown (drilling charges, pipe charges per foot, labor costs)</li>
+                                    <li>Mention estimated total cost for the expected work</li>
+                                    <li>Include any additional charges that may apply</li>
+                                    <li>Specify your availability and estimated timeline</li>
+                                    <li>Be clear about what's included in your quoted price</li>
+                                </ul>
+                            </div>
+
+                            <!-- Response Form -->
+                            <div class="response-box">
+                                <h5 class="mb-4" style="color: var(--success);">
+                                    <i class="fas fa-reply-all me-2"></i>Your Response
+                                </h5>
+
+                                <form method="POST">
+                                    {% csrf_token %}
+
+                                    <div class="mb-4">
+                                        <label for="{{ form.vendor_response.id_for_label }}" class="form-label">
+                                            <i class="fas fa-file-alt me-1"></i>Detailed Response & Pricing Information
+                                        </label>
+                                        {{ form.vendor_response }}
+                                        {% if form.vendor_response.errors %}
+                                            <div class="text-danger small mt-1">{{ form.vendor_response.errors }}</div>
+                                        {% endif %}
+                                        <small class="text-muted">Example: "Drilling: ₹100/foot, Pipes: ₹50/foot, Labor: ₹500/day. For 300ft borewell: ₹45,000 (including all charges)"</small>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <label for="{{ form.quoted_amount.id_for_label }}" class="form-label">
+                                                <i class="fas fa-rupee-sign me-1"></i>Total Quoted Amount (₹)
+                                            </label>
+                                            {{ form.quoted_amount }}
+                                            {% if form.quoted_amount.errors %}
+                                                <div class="text-danger small mt-1">{{ form.quoted_amount.errors }}</div>
+                                            {% endif %}
+                                            <small class="text-muted">Enter the final amount you want to charge</small>
+                                        </div>
+                                        <div class="col-md-6 mb-4 d-flex align-items-end">
+                                            <div class="alert alert-success w-100 mb-0">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                <strong>Auto-update:</strong> Status will change to "Responded"
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-3">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-paper-plane me-2"></i>Send Response
+                                        </button>
+                                        <a href="{% url 'vendor_enquiries' %}" class="btn btn-outline-secondary btn-lg">
+                                            <i class="fas fa-arrow-left me-2"></i>Back to Enquiries
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

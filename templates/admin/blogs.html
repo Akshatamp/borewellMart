@@ -1,0 +1,391 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Blog Management{% endblock %}
+{% block page_subtitle %}Manage blog posts and articles{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-file-text-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_blogs }}</div>
+        <div class="stat-label">Total Blogs</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-tag-fill"></i>
+        </div>
+        <div class="stat-value">{{ categories_count }}</div>
+        <div class="stat-label">Categories</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div class="stat-value">{{ authors_count }}</div>
+        <div class="stat-label">Authors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon purple">
+            <i class="bi bi-calendar-fill"></i>
+        </div>
+        <div class="stat-value">{{ this_month|default:0 }}</div>
+        <div class="stat-label">This Month</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="table-container" style="margin-bottom: 1.5rem;">
+    <div class="table-header">
+        <h4 class="table-title">Filters</h4>
+    </div>
+    <div class="p-3">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label small">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    <option value="borewell_maintenance" {% if category_filter == 'borewell_maintenance' %}selected{% endif %}>Borewell Maintenance</option>
+                    <option value="water_conservation" {% if category_filter == 'water_conservation' %}selected{% endif %}>Water Conservation</option>
+                    <option value="pump_maintenance" {% if category_filter == 'pump_maintenance' %}selected{% endif %}>Pump Maintenance</option>
+                    <option value="government_schemes" {% if category_filter == 'government_schemes' %}selected{% endif %}>Government Schemes</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Search blogs..." value="{{ request.GET.search }}">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a href="{% url 'admin_blogs' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Blogs Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4 class="table-title">All Blog Posts</h4>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBlogModal">
+            <i class="bi bi-plus-lg"></i> Add Blog
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for blog in blogs %}
+                <tr>
+                    <td>
+                        {% if blog.image %}
+                        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-file-text text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ blog.title }}</strong>
+                        <div class="text-muted small">/{{ blog.slug }}/</div>
+                        <div class="text-muted small">{{ blog.content|striptags|truncatewords:10 }}</div>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">{{ blog.get_category_display }}</span>
+                    </td>
+                    <td>{{ blog.author.username }}</td>
+                    <td>{{ blog.created_at|date:"M d, Y" }}</td>
+                    <td>{{ blog.updated_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-sm btn-table" onclick="editBlog({{ blog.id }})">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-table" onclick="viewBlog({{ blog.id }})">
+                                <i class="bi bi-eye"></i> View
+                            </button>
+                            <button class="btn btn-sm btn-table text-danger" onclick="deleteBlog({{ blog.id }}, '{{ blog.title|escapejs }}')">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-3">No blogs found</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if blogs.has_other_pages %}
+    <nav aria-label="Blogs pagination" class="mt-3">
+        <ul class="pagination pagination-sm justify-content-center">
+            {% if blogs.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ blogs.previous_page_number }}&category={{ category_filter }}&search={{ search_query }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in blogs.paginator.page_range %}
+            {% if blogs.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}&category={{ category_filter }}&search={{ search_query }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if blogs.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ blogs.next_page_number }}&category={{ category_filter }}&search={{ search_query }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Add Blog Modal -->
+<div class="modal fade" id="addBlogModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Blog Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'admin_blog_add' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title *</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Slug *</label>
+                            <input type="text" name="slug" class="form-control" required placeholder="e.g. how-to-maintain-borewell">
+                            <div class="form-text">URL-friendly version of title</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category *</label>
+                            <select name="category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="borewell_maintenance">Borewell Maintenance</option>
+                                <option value="water_conservation">Water Conservation</option>
+                                <option value="pump_maintenance">Pump Maintenance</option>
+                                <option value="government_schemes">Government Schemes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Content *</label>
+                        <textarea name="content" class="form-control" rows="10" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Publish Blog</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Blog Modal -->
+<div class="modal fade" id="editBlogModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Blog Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editBlogForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="blog_id" id="editBlogId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title *</label>
+                        <input type="text" name="title" id="editBlogTitle" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Slug *</label>
+                            <input type="text" name="slug" id="editBlogSlug" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category *</label>
+                            <select name="category" id="editBlogCategory" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="borewell_maintenance">Borewell Maintenance</option>
+                                <option value="water_conservation">Water Conservation</option>
+                                <option value="pump_maintenance">Pump Maintenance</option>
+                                <option value="government_schemes">Government Schemes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Content *</label>
+                        <textarea name="content" id="editBlogContent" class="form-control" rows="10" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep current image</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Blog</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Blog Modal -->
+<div class="modal fade" id="viewBlogModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewBlogTitle">Blog Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="viewBlogContent">
+                    <!-- Blog content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editBlog(blogId) {
+    console.log('editBlog called with blogId:', blogId, 'type:', typeof blogId);
+    const url = `/dashboard/admin/blogs/${blogId}/data/`;
+    console.log('Fetch URL:', url);
+    fetch(url)
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Blog data:', data);
+            document.getElementById('editBlogId').value = data.id;
+            document.getElementById('editBlogTitle').value = data.title;
+            document.getElementById('editBlogSlug').value = data.slug;
+            document.getElementById('editBlogCategory').value = data.category;
+            document.getElementById('editBlogContent').value = data.content;
+            document.getElementById('editBlogForm').action = "{% url 'admin_blogs' %}";
+
+            const modal = new bootstrap.Modal(document.getElementById('editBlogModal'));
+            modal.show();
+        })
+        .catch(err => {
+            console.error('Error loading blog data:', err);
+            alert('Error loading blog data: ' + err.message);
+        });
+}
+
+function deleteBlog(id, title) {
+    if (confirm(`Are you sure you want to delete "${title}"?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_blogs' %}";
+        const actionInput = document.createElement('input');
+        actionInput.name = 'action';
+        actionInput.value = 'delete';
+        const blogIdInput = document.createElement('input');
+        blogIdInput.name = 'blog_id';
+        blogIdInput.value = id;
+        const csrfToken = document.createElement('input');
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(actionInput);
+        form.appendChild(blogIdInput);
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function viewBlog(blogId) {
+    console.log('viewBlog called with blogId:', blogId);
+    const url = `/dashboard/admin/blogs/${blogId}/data/`;
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Blog data for view:', data);
+            document.getElementById('viewBlogTitle').textContent = data.title;
+
+            // Format the content for display
+            let contentHtml = '';
+            if (data.image) {
+                contentHtml += `<img src="${data.image}" alt="${data.title}" class="img-fluid rounded mb-3" style="max-height: 300px; object-fit: cover;">`;
+            }
+            contentHtml += `<div class="mb-3">
+                <span class="badge bg-primary">${data.category.replace('_', ' ').toUpperCase()}</span>
+                <span class="text-muted ms-2">Slug: /${data.slug}</span>
+            </div>`;
+            contentHtml += `<div class="blog-content">${data.content.replace(/\n/g, '<br>')}</div>`;
+
+            document.getElementById('viewBlogContent').innerHTML = contentHtml;
+
+            const modal = new bootstrap.Modal(document.getElementById('viewBlogModal'));
+            modal.show();
+        })
+        .catch(err => {
+            console.error('Error loading blog for view:', err);
+            alert('Error loading blog data: ' + err.message);
+        });
+}
+</script>
+{% endblock %}

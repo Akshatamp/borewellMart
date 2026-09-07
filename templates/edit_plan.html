@@ -1,0 +1,76 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}Edit Plan - {{ plan.plan_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Edit Plan: {{ plan.plan_name }}</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="plan_name" class="font-weight-bold">Plan Name *</label>
+                            <input type="text" class="form-control" id="plan_name" name="plan_name" value="{{ plan.plan_name }}" placeholder="e.g., Monthly Premium Plan" required>
+                            <small class="form-text text-muted">Customize your plan name</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-bold">Price (₹)</label>
+                            <input type="text" class="form-control" value="₹{{ plan.price }}" disabled>
+                            <small class="form-text text-muted">Price cannot be changed after creation</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Start Date</label>
+                                    <input type="text" class="form-control" value="{{ plan.start_date }}" disabled>
+                                    <small class="form-text text-muted">Cannot be modified</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">End Date</label>
+                                    <input type="text" class="form-control" value="{{ plan.end_date }}" disabled>
+                                    <small class="form-text text-muted">Cannot be modified</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-bold">Status</label>
+                            <input type="text" class="form-control" value="{{ plan.get_status_display }}" disabled>
+                            <small class="form-text text-muted">Current plan status</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="font-weight-bold">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe your plan features and benefits...">{{ plan.description }}</textarea>
+                            <small class="form-text text-muted">Update the features and benefits of this plan</small>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Limited Editing:</strong> Only the plan name and description can be modified. To change dates or price, please renew the plan.
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <a href="{% url 'plan_detail' plan.id %}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

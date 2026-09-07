@@ -1,0 +1,1501 @@
+{
+  "service_categories": [
+    {
+      "id": "agriculture",
+      "name": "Agriculture",
+      "description": "Complete agricultural water management and irrigation solutions",
+      "icon": "agriculture",
+      "order": 1,
+      "subcategories": [
+        {
+          "id": "irrigation_services",
+          "name": "Irrigation Services",
+          "description": "Complete irrigation services for farms",
+          "icon": "water_drop",
+          "order": 1,
+          "services": [
+            {
+              "id": "drip_irrigation",
+              "name": "Drip Irrigation",
+              "description": "Drip irrigation system installation and maintenance",
+              "features": ["Water efficient", "Fertigation compatible", "Low maintenance", "High yield"],
+              "popular": true
+            },
+            {
+              "id": "sprinkler_irrigation",
+              "name": "Sprinkler Irrigation",
+              "description": "Sprinkler irrigation system setup",
+              "features": ["Uniform coverage", "Area efficient", "Automation ready", "Weather adaptive"]
+            },
+            {
+              "id": "micro_irrigation",
+              "name": "Micro Irrigation",
+              "description": "Micro irrigation for precision farming",
+              "features": ["Precision watering", "Root zone targeting", "Fertilizer saving", "Labor saving"]
+            },
+            {
+              "id": "farm_pipeline_installation",
+              "name": "Farm Pipeline Installation",
+              "description": "Complete farm pipeline setup for water distribution",
+              "features": ["Custom layout", "Leak-proof joints", "Multiple outlets", "Easy maintenance"]
+            },
+            {
+              "id": "irrigation_automation",
+              "name": "Irrigation Automation",
+              "description": "Automated irrigation control systems",
+              "features": ["Timer based", "Sensor integrated", "Mobile controlled", "Weather smart"]
+            },
+            {
+              "id": "irrigation_maintenance",
+              "name": "Irrigation Maintenance",
+              "description": "Regular maintenance and repair of irrigation systems",
+              "features": ["System checkup", "Filter cleaning", "Leak repair", "Seasonal servicing"]
+            }
+          ]
+        },
+        {
+          "id": "water_management",
+          "name": "Water Management",
+          "description": "Farm water storage and conservation solutions",
+          "icon": "water",
+          "order": 2,
+          "services": [
+            {
+              "id": "rainwater_harvesting",
+              "name": "Rainwater Harvesting",
+              "description": "Rainwater collection and storage systems",
+              "features": ["Rooftop collection", "Filter system", "Storage tank", "Groundwater recharge"]
+            },
+            {
+              "id": "farm_pond_development",
+              "name": "Farm Pond Development",
+              "description": "Farm pond construction for water storage",
+              "features": ["Custom sizing", "Lining options", "Inlet/outlet design", "Fish farming compatible"]
+            },
+            {
+              "id": "water_storage_tanks",
+              "name": "Water Storage Tanks",
+              "description": "Water tank installation for farms",
+              "features": ["Various capacities", "HDPE/Concrete", "Overhead/Underground", "Durability guaranteed"]
+            },
+            {
+              "id": "water_distribution_systems",
+              "name": "Water Distribution Systems",
+              "description": "Complete water distribution network",
+              "features": ["Pipeline layout", "Pump station", "Valve chambers", "Multiple outlets"]
+            },
+            {
+              "id": "water_quality_testing_agri",
+              "name": "Water Quality Testing",
+              "description": "Agricultural water quality analysis",
+              "features": ["pH testing", "TDS check", "Contaminant screening", "Irrigation suitability"]
+            }
+          ]
+        },
+        {
+          "id": "pumps_motors",
+          "name": "Pumps & Motors",
+          "description": "Agricultural pump and motor solutions",
+          "icon": "settings",
+          "order": 3,
+          "services": [
+            {
+              "id": "agricultural_pumps",
+              "name": "Agricultural Pumps",
+              "description": "Various types of agricultural water pumps",
+              "features": ["Centrifugal pumps", "Submersible options", "Flow rate selection", "Energy efficient"]
+            },
+            {
+              "id": "solar_pumps",
+              "name": "Solar Pumps",
+              "description": "Solar-powered water pumping solutions",
+              "features": ["No electricity needed", "Subsidy eligible", "Low maintenance", "Eco friendly"],
+              "popular": true
+            },
+            {
+              "id": "pump_installation_agri",
+              "name": "Pump Installation",
+              "description": "Professional pump installation service",
+              "features": ["Site assessment", "Pump selection", "Piping connection", "Testing"]
+            },
+            {
+              "id": "pump_repair_agri",
+              "name": "Pump Repair",
+              "description": "Pump repair and maintenance services",
+              "features": ["All pump types", "On-site service", "Spare parts", "Warranty on repairs"]
+            },
+            {
+              "id": "motor_rewinding",
+              "name": "Motor Rewinding",
+              "description": "Electric motor rewinding services",
+              "features": ["Stator rewinding", "Rotor repair", "Testing", "Warranty"]
+            },
+            {
+              "id": "control_panels",
+              "name": "Control Panels",
+              "description": "Pump control panel installation",
+              "features": ["Starter", "Auto manual", "Dry run protection", "Phase failure protection"]
+            }
+          ]
+        },
+        {
+          "id": "agricultural_services",
+          "name": "Agricultural Services",
+          "description": "Comprehensive agricultural support services",
+          "icon": "agriculture",
+          "order": 4,
+          "services": [
+            {
+              "id": "soil_testing",
+              "name": "Soil Testing",
+              "description": "Soil analysis and testing services",
+              "features": ["Nutrient analysis", "pH testing", "Organic matter", "Recommendations"]
+            },
+            {
+              "id": "land_preparation",
+              "name": "Land Preparation",
+              "description": "Agricultural land preparation services",
+              "features": ["Plowing", "Leveling", "Bed formation", "Irrigation layout"]
+            },
+            {
+              "id": "crop_advisory",
+              "name": "Crop Advisory",
+              "description": "Professional crop consultation services",
+              "features": ["Crop selection", "Planting schedule", "Fertilizer plan", "Pest management"]
+            },
+            {
+              "id": "farm_consultation",
+              "name": "Farm Consultation",
+              "description": "Complete farm management consultation",
+              "features": ["Farm planning", "Resource optimization", "Technology adoption", "Profit maximization"]
+            },
+            {
+              "id": "pest_disease_management",
+              "name": "Pest & Disease Management",
+              "description": "Crop protection and pest control",
+              "features": ["Identification", "Treatment plan", "Prevention", "Monitoring"]
+            },
+            {
+              "id": "fertilizer_recommendation",
+              "name": "Fertilizer Recommendation",
+              "description": "Soil-based fertilizer recommendations",
+              "features": ["Soil-based plan", "Crop specific", "Growth stage", "Organic options"]
+            }
+          ]
+        },
+        {
+          "id": "farm_infrastructure",
+          "name": "Farm Infrastructure",
+          "description": "Farm structure and infrastructure development",
+          "icon": "home",
+          "order": 5,
+          "services": [
+            {
+              "id": "greenhouse",
+              "name": "Greenhouse",
+              "description": "Greenhouse construction for controlled farming",
+              "features": ["Steel structure", "UV film", "Ventilation", "Irrigation system"]
+            },
+            {
+              "id": "polyhouse",
+              "name": "Polyhouse",
+              "description": "Polyhouse construction for protected cultivation",
+              "features": ["Galvanized structure", "Poly sheet covering", "Climate control", "Drip irrigation"]
+            },
+            {
+              "id": "shade_net",
+              "name": "Shade Net",
+              "description": "Shade net house installation",
+              "features": ["UV stabilized", "Various shade percentages", "Galvanized structure", "Easy installation"]
+            },
+            {
+              "id": "farm_fencing",
+              "name": "Farm Fencing",
+              "description": "Farm boundary fencing solutions",
+              "features": ["Barbed wire", "Chain link", "Solar fencing", "Live posts"]
+            },
+            {
+              "id": "water_tanks_farm",
+              "name": "Water Tanks",
+              "description": "Farm water tank installation",
+              "features": ["Various capacities", "HDPE/Concrete", "Custom fabrication", "Tank stand"]
+            },
+            {
+              "id": "farm_roads",
+              "name": "Farm Roads",
+              "description": "Farm road construction",
+              "features": ["Gravel roads", "Metal roads", "Concrete roads", "Drainage"]
+            }
+          ]
+        },
+        {
+          "id": "farm_equipment_rental",
+          "name": "Farm Equipment Rental",
+          "description": "Agricultural machinery rental services",
+          "icon": "tractor",
+          "order": 6,
+          "services": [
+            {
+              "id": "tractor_rental",
+              "name": "Tractor",
+              "description": "Tractor rental for farming operations",
+              "features": ["Various HP options", "With/without driver", "Hourly/Daily rates", "Well maintained"]
+            },
+            {
+              "id": "rotavator_rental",
+              "name": "Rotavator",
+              "description": "Rotavator rental for land preparation",
+              "features": ["Different sizes", "Field preparation", "Fuel efficient", "Quick work"]
+            },
+            {
+              "id": "cultivator_rental",
+              "name": "Cultivator",
+              "description": "Cultivator rental for tillage operations",
+              "features": ["Multiple tynes", "Depth adjustment", "Strong build", "High efficiency"]
+            },
+            {
+              "id": "seed_drill_rental",
+              "name": "Seed Drill",
+              "description": "Seed drill rental for precision sowing",
+              "features": ["Even sowing", "Depth control", "Fertilizer attachment", "Time saving"]
+            },
+            {
+              "id": "harvester_rental",
+              "name": "Harvester",
+              "description": "Combine harvester rental",
+              "features": ["Various crops", "Threshing", "Cleaning", "Bag filling"]
+            },
+            {
+              "id": "sprayer_rental",
+              "name": "Sprayer",
+              "description": "Agricultural sprayer rental",
+              "features": ["High capacity", "Uniform coverage", "Adjustable nozzle", "Easy operation"]
+            },
+            {
+              "id": "power_tiller_rental",
+              "name": "Power Tiller",
+              "description": "Power tiller rental for small farms",
+              "features": ["Compact size", "Multipurpose", "Fuel efficient", "Easy handling"]
+            }
+          ]
+        },
+        {
+          "id": "seed_dealers",
+          "name": "Seed Dealers",
+          "description": "Quality seed suppliers for various crops",
+          "icon": "eco",
+          "order": 7,
+          "services": [
+            {
+              "id": "seed_dealers_service",
+              "name": "Seed Dealers",
+              "description": "Quality seed suppliers for various crops",
+              "features": ["Certified seeds", "High germination", "Disease free", "Various crops"]
+            },
+            {
+              "id": "hybrid_seeds",
+              "name": "Hybrid Seeds",
+              "description": "Hybrid seed suppliers for high yield",
+              "features": ["High yield", "Disease resistant", "Uniform growth", "Quality assured"]
+            },
+            {
+              "id": "vegetable_seeds",
+              "name": "Vegetable Seeds",
+              "description": "Vegetable seeds for home and commercial farming",
+              "features": ["All varieties", "Season specific", "High yield", "Organic options"]
+            },
+            {
+              "id": "fruit_seeds",
+              "name": "Fruit Seeds",
+              "description": "Fruit seeds and saplings suppliers",
+              "features": ["Grafted plants", "True to type", "Disease free", "Expert guidance"]
+            },
+            {
+              "id": "grain_seeds",
+              "name": "Grain Seeds",
+              "description": "Cereal and grain seeds",
+              "features": ["Paddy", "Wheat", "Maize", "Millets"]
+            },
+            {
+              "id": "fodder_seeds",
+              "name": "Fodder Seeds",
+              "description": "Fodder crop seeds for livestock",
+              "features": ["High protein", "Fast growing", "Palatable", "Perennial options"]
+            },
+            {
+              "id": "organic_seeds",
+              "name": "Organic Seeds",
+              "description": "Organic and heirloom seed varieties",
+              "features": ["Chemical free", "Open pollinated", "Traditional varieties", "Sustainable"]
+            }
+          ]
+        },
+        {
+          "id": "fertilizer_dealers",
+          "name": "Fertilizer Dealers",
+          "description": "Fertilizer and nutrient suppliers",
+          "icon": "science",
+          "order": 8,
+          "services": [
+            {
+              "id": "urea",
+              "name": "Urea",
+              "description": "Urea fertilizer suppliers",
+              "features": ["Nitrogen rich", "Fast growth", "Foliar spray", "Soil application"]
+            },
+            {
+              "id": "dap",
+              "name": "DAP",
+              "description": "Diammonium Phosphate fertilizer",
+              "features": ["NPK source", "Root development", "Flowering", "Balanced nutrition"]
+            },
+            {
+              "id": "npk_fertilizers",
+              "name": "NPK Fertilizers",
+              "description": "Balanced NPK fertilizer blends",
+              "features": ["Custom ratios", "Crop specific", "Water soluble", "Slow release"]
+            },
+            {
+              "id": "potash",
+              "name": "Potash",
+              "description": "Potassium fertilizers for crop quality",
+              "features": ["Fruit quality", "Disease resistance", "Drought tolerance", "Yield improvement"]
+            },
+            {
+              "id": "micronutrients",
+              "name": "Micronutrients",
+              "description": "Micronutrient fertilizers",
+              "features": ["Zinc", "Iron", "Manganese", "Boron"]
+            },
+            {
+              "id": "organic_fertilizers",
+              "name": "Organic Fertilizers",
+              "description": "Organic manure and compost",
+              "features": ["Chemical free", "Soil health", "Slow release", "Sustainable"]
+            },
+            {
+              "id": "bio_fertilizers",
+              "name": "Bio Fertilizers",
+              "description": "Biofertilizers for sustainable farming",
+              "features": ["Nitrogen fixing", "Phosphate solubilizing", "Growth promotion", "Soil enrichment"]
+            }
+          ]
+        },
+        {
+          "id": "crop_protection_dealers",
+          "name": "Crop Protection Dealers",
+          "description": "Pesticides and crop protection suppliers",
+          "icon": "shield",
+          "order": 9,
+          "services": [
+            {
+              "id": "insecticides",
+              "name": "Insecticides",
+              "description": "Insect control products",
+              "features": ["Contact", "Systemic", "Broad spectrum", "Selective"]
+            },
+            {
+              "id": "fungicides",
+              "name": "Fungicides",
+              "description": "Fungal disease control products",
+              "features": ["Preventive", "Curative", "Broad spectrum", "Safe use"]
+            },
+            {
+              "id": "herbicides",
+              "name": "Herbicides",
+              "description": "Weed control herbicides",
+              "features": ["Pre emergence", "Post emergence", "Selective", "Non selective"]
+            },
+            {
+              "id": "weedicides",
+              "name": "Weedicides",
+              "description": "Weed killing solutions",
+              "features": ["Broad leaf", "Grassy weeds", "Non-selective", "Safe for crops"]
+            },
+            {
+              "id": "plant_growth_regulators",
+              "name": "Plant Growth Regulators",
+              "description": "Growth promotion products",
+              "features": ["Flowering", "Fruiting", "Root growth", "Stress relief"]
+            },
+            {
+              "id": "bio_pesticides",
+              "name": "Bio Pesticides",
+              "description": "Organic pest control solutions",
+              "features": ["Eco friendly", "Safe for beneficials", "No residue", "Sustainable"]
+            }
+          ]
+        },
+        {
+          "id": "irrigation_dealers",
+          "name": "Irrigation Dealers",
+          "description": "Irrigation equipment suppliers",
+          "icon": "water_drop",
+          "order": 10,
+          "services": [
+            {
+              "id": "drip_irrigation_kits",
+              "name": "Drip Irrigation Kits",
+              "description": "Complete drip irrigation kits",
+              "features": ["Various sizes", "Easy installation", "DIY friendly", "Accessories included"]
+            },
+            {
+              "id": "sprinkler_systems_kits",
+              "name": "Sprinkler Systems",
+              "description": "Sprinkler system components",
+              "features": ["Pop-up sprinklers", "Impact sprinklers", "Rain guns", "Pipe fittings"]
+            },
+            {
+              "id": "hdpe_pipes",
+              "name": "HDPE Pipes",
+              "description": "HDPE pipes for irrigation",
+              "features": ["Various diameters", "Pressure ratings", "UV resistant", "Long lasting"]
+            },
+            {
+              "id": "pvc_pipes_agri",
+              "name": "PVC Pipes",
+              "description": "PVC pipes for water distribution",
+              "features": ["Multiple sizes", "Pressure classes", "UV stable", "Easy fitting"]
+            },
+            {
+              "id": "valves_fittings",
+              "name": "Valves & Fittings",
+              "description": "Irrigation valves and fittings",
+              "features": ["Ball valves", "Gate valves", "Check valves", "Pipe fittings"]
+            },
+            {
+              "id": "filters_irrigation",
+              "name": "Filters",
+              "description": "Irrigation filters and screens",
+              "features": ["Disk filters", "Screen filters", "Sand filters", "Hydro cyclones"]
+            }
+          ]
+        },
+        {
+          "id": "farm_tool_dealers",
+          "name": "Farm Tool Dealers",
+          "description": "Farm equipment and tool suppliers",
+          "icon": "handyman",
+          "order": 11,
+          "services": [
+            {
+              "id": "hand_tools",
+              "name": "Hand Tools",
+              "description": "Agricultural hand tools",
+              "features": ["Spades", "Shovels", "Hoes", "Pruning tools"]
+            },
+            {
+              "id": "power_tools",
+              "name": "Power Tools",
+              "description": "Power tools for farming",
+              "features": ["Chainsaws", "Brush cutters", "Augers", "Tillers"]
+            },
+            {
+              "id": "sprayers_equipment",
+              "name": "Sprayers",
+              "description": "Agricultural sprayers",
+              "features": ["Knapsack", "Hand compression", "Battery operated", "High capacity"]
+            },
+            {
+              "id": "pumps_small",
+              "name": "Pumps",
+              "description": "Small pumps for various uses",
+              "features": ["Monobloc", "Centrifugal", "Submersible", "Jet pumps"]
+            },
+            {
+              "id": "garden_equipment",
+              "name": "Garden Equipment",
+              "description": "Garden and lawn equipment",
+              "features": ["Lawn mowers", "Hedge trimmers", "Leaf blowers", "Brush cutters"]
+            }
+          ]
+        },
+        {
+          "id": "animal_dairy_inputs",
+          "name": "Animal & Dairy Inputs",
+          "description": "Livestock and dairy farming inputs",
+          "icon": "pets",
+          "order": 12,
+          "services": [
+            {
+              "id": "cattle_feed",
+              "name": "Cattle Feed",
+              "description": "Nutritional feed for cattle",
+              "features": ["Balanced nutrition", "High yield", "Health boost", "Various types"]
+            },
+            {
+              "id": "poultry_feed",
+              "name": "Poultry Feed",
+              "description": "Poultry nutrition and feed",
+              "features": ["Starter", "Grower", "Layer", "Broiler"]
+            },
+            {
+              "id": "mineral_mixtures",
+              "name": "Mineral Mixtures",
+              "description": "Mineral supplements for livestock",
+              "features": ["Calcium", "Phosphorus", "Trace minerals", "Health improvement"]
+            },
+            {
+              "id": "veterinary_medicines",
+              "name": "Veterinary Medicines",
+              "description": "Animal health medicines",
+              "features": ["Vaccines", "Antibiotics", "Dewormers", "Supplements"]
+            },
+            {
+              "id": "dairy_equipment",
+              "name": "Dairy Equipment",
+              "description": "Dairy farming equipment",
+              "features": ["Milking machines", "Coolers", "Churns", "Storage tanks"]
+            }
+          ]
+        },
+        {
+          "id": "agriculture_marketplace",
+          "name": "Agriculture Marketplace",
+          "description": "New equipment marketplace for farmers",
+          "icon": "storefront",
+          "order": 13,
+          "services": [
+            {
+              "id": "marketplace_seeds",
+              "name": "Seeds",
+              "description": "Quality seeds for all crops",
+              "features": ["Certified", "High germination", "Disease free", "Wide variety"]
+            },
+            {
+              "id": "marketplace_fertilizers",
+              "name": "Fertilizers",
+              "description": "Complete range of fertilizers",
+              "features": ["NPK", "Micronutrients", "Organic", "Bio fertilizers"]
+            },
+            {
+              "id": "marketplace_pesticides",
+              "name": "Pesticides",
+              "description": "Crop protection products",
+              "features": ["Insecticides", "Fungicides", "Herbicides", "Bio pesticides"]
+            },
+            {
+              "id": "marketplace_irrigation_equipment",
+              "name": "Irrigation Equipment",
+              "description": "Irrigation systems and components",
+              "features": ["Drip kits", "Sprinklers", "Pipes", "Pumps"]
+            },
+            {
+              "id": "marketplace_farm_machinery",
+              "name": "Farm Machinery",
+              "description": "Farm equipment and machinery",
+              "features": ["Tractors", "Implements", "Harvesters", "Tools"]
+            },
+            {
+              "id": "marketplace_farm_tools",
+              "name": "Farm Tools",
+              "description": "Hand tools and small equipment",
+              "features": ["Hand tools", "Power tools", "Sprayers", "Small pumps"]
+            },
+            {
+              "id": "marketplace_solar_equipment",
+              "name": "Solar Equipment",
+              "description": "Solar pumps and equipment",
+              "features": ["Solar pumps", "Panels", "Controllers", "Batteries"]
+            }
+          ]
+        },
+        {
+          "id": "second_hand_agriculture_equipment",
+          "name": "Second-Hand Agriculture Equipment",
+          "description": "Used farm equipment marketplace",
+          "icon": "recycling",
+          "order": 14,
+          "services": [
+            {
+              "id": "used_tractors",
+              "name": "Used Tractors",
+              "description": "Second-hand tractors for sale",
+              "features": ["Verified condition", "Various HP", "Price negotiation", "Documentation"]
+            },
+            {
+              "id": "used_rotavators",
+              "name": "Used Rotavators",
+              "description": "Pre-owned rotavators",
+              "features": ["Good condition", "Refurbished", "Tested", "Warranty available"]
+            },
+            {
+              "id": "used_harvesters",
+              "name": "Used Harvesters",
+              "description": "Second-hand combine harvesters",
+              "features": ["Field ready", "Various makes", "Inspection report", "Spare parts"]
+            },
+            {
+              "id": "used_seed_drills",
+              "name": "Used Seed Drills",
+              "description": "Pre-owned seed drilling equipment",
+              "features": ["Various sizes", "Calibrated", "Serviced", "Affordable"]
+            },
+            {
+              "id": "used_cultivators",
+              "name": "Used Cultivators",
+              "description": "Second-hand cultivators",
+              "features": ["Multiple tynes", "Adjusted", "Field ready", "Good condition"]
+            },
+            {
+              "id": "used_power_tillers",
+              "name": "Used Power Tillers",
+              "description": "Pre-owned power tillers",
+              "features": ["Engine checked", "Serviced", "Good running", "Negotiable"]
+            },
+            {
+              "id": "used_sprayers",
+              "name": "Used Sprayers",
+              "description": "Second-hand agricultural sprayers",
+              "features": ["Nozzle checked", "Leak tested", "Serviced", "Affordable"]
+            },
+            {
+              "id": "used_pumps_agri",
+              "name": "Used Pumps",
+              "description": "Pre-owned agricultural pumps",
+              "features": ["Rewound", "Tested", "Warranty", "Various types"]
+            },
+            {
+              "id": "used_irrigation_systems",
+              "name": "Used Irrigation Systems",
+              "description": "Second-hand irrigation equipment",
+              "features": ["Pipes checked", "Filters cleaned", "Accessories", "Complete sets"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "borewell",
+      "name": "Borewell",
+      "description": "Complete borewell drilling and maintenance services",
+      "icon": "water",
+      "order": 2,
+      "subcategories": [
+        {
+          "id": "borewell_drilling",
+          "name": "Borewell Drilling",
+          "description": "Professional borewell drilling services",
+          "icon": "drill",
+          "order": 1,
+          "services": [
+            {
+              "id": "residential_borewell_drilling",
+              "name": "Residential Borewell Drilling",
+              "description": "Borewell drilling for homes and residential properties",
+              "features": ["4.5 to 6.5 inch diameter", "Depth up to 1000 feet", "Clean drilling", "All soil types"],
+              "popular": true
+            },
+            {
+              "id": "agricultural_borewell_drilling",
+              "name": "Agricultural Borewell Drilling",
+              "description": "Borewell drilling for farms and irrigation",
+              "features": ["6.5 to 8 inch diameter", "Depth up to 1500 feet", "High yield", "Crop assessment"]
+            },
+            {
+              "id": "commercial_borewell_drilling",
+              "name": "Commercial Borewell Drilling",
+              "description": "Borewell drilling for commercial establishments",
+              "features": ["8 to 10 inch diameter", "High capacity", "Deep drilling", "Industrial casing"]
+            },
+            {
+              "id": "industrial_borewell_drilling",
+              "name": "Industrial Borewell Drilling",
+              "description": "Heavy-duty drilling for industries",
+              "features": ["8 to 12 inch diameter", "Beyond 1500 feet", "Maximum yield", "Industrial grade"]
+            },
+            {
+              "id": "borewell_site_survey",
+              "name": "Borewell Site Survey",
+              "description": "Scientific site survey before drilling",
+              "features": ["Geological study", "Water table analysis", "Site marking", "Depth prediction"]
+            },
+            {
+              "id": "hydrogeological_survey",
+              "name": "Hydrogeological Survey",
+              "description": "Scientific groundwater survey",
+              "features": ["Aquifer mapping", "Yield estimation", "Risk assessment", "Report provided"]
+            },
+            {
+              "id": "new_borewell_installation",
+              "name": "New Borewell Installation",
+              "description": "Complete new borewell setup",
+              "features": ["Drilling", "Casing", "Development", "Testing"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_cleaning",
+          "name": "Borewell Cleaning",
+          "description": "Borewell cleaning and maintenance services",
+          "icon": "cleaning_services",
+          "order": 2,
+          "services": [
+            {
+              "id": "air_compressor_cleaning",
+              "name": "Air Compressor Cleaning",
+              "description": "High pressure air cleaning of borewells",
+              "features": ["Debris removal", "Silt clearing", "Flow improvement", "Blockage removal"]
+            },
+            {
+              "id": "bore_flushing",
+              "name": "Bore Flushing",
+              "description": "Complete borewell flushing service",
+              "features": ["Water jetting", "Sediment removal", "Yield improvement", "Quality testing"]
+            },
+            {
+              "id": "sand_removal",
+              "name": "Sand Removal",
+              "description": "Sand removal from borewells",
+              "features": ["Specialized equipment", "Complete removal", "Casing protection", "Flow restoration"]
+            },
+            {
+              "id": "silt_removal",
+              "name": "Silt Removal",
+              "description": "Silt and sediment removal",
+              "features": ["Sludge removal", "Pumping methods", "Chemical treatment", "Flushing"]
+            },
+            {
+              "id": "mud_removal",
+              "name": "Mud Removal",
+              "description": "Mud and clay removal from borewells",
+              "features": ["Mud extraction", "Water circulation", "Settlement removal", "Clearing"]
+            },
+            {
+              "id": "borewell_camera_inspection",
+              "name": "Borewell Camera Inspection",
+              "description": "CCTV camera inspection of borewells",
+              "features": ["Visual inspection", "Problem identification", "Video recording", "Depth measurement"]
+            },
+            {
+              "id": "water_yield_improvement",
+              "name": "Water Yield Improvement",
+              "description": "Techniques to improve water yield",
+              "features": ["Development methods", "Fracturing", "Yield testing", "Optimization"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_repair_maintenance",
+          "name": "Borewell Repair & Maintenance",
+          "description": "Borewell repair and maintenance services",
+          "icon": "build",
+          "order": 3,
+          "services": [
+            {
+              "id": "borewell_restoration",
+              "name": "Borewell Restoration",
+              "description": "Complete restoration of old borewells",
+              "features": ["Cleaning", "Development", "Casing repair", "Yield improvement"]
+            },
+            {
+              "id": "borewell_casing_repair",
+              "name": "Borewell Casing Repair",
+              "description": "Casing pipe repair services",
+              "features": ["Leak sealing", "Pipe replacement", "Corrosion treatment", "Joint repair"]
+            },
+            {
+              "id": "borewell_leakage_repair",
+              "name": "Borewell Leakage Repair",
+              "description": "Leak detection and repair",
+              "features": ["Leak location", "Sealing methods", "Pressure testing", "Waterproofing"]
+            },
+            {
+              "id": "borewell_blockage_removal",
+              "name": "Borewell Blockage Removal",
+              "description": "Blockage removal from borewells",
+              "features": ["Obstruction clearing", "Debris removal", "Flushing", "Air lifting"]
+            },
+            {
+              "id": "water_flow_restoration",
+              "name": "Water Flow Restoration",
+              "description": "Restoration of water flow",
+              "features": ["Flow analysis", "Blockage removal", "Development", "Testing"]
+            },
+            {
+              "id": "periodic_maintenance",
+              "name": "Periodic Maintenance",
+              "description": "Regular borewell maintenance",
+              "features": ["Scheduled visits", "Performance check", "Preventive care", "Reporting"]
+            },
+            {
+              "id": "borewell_health_inspection",
+              "name": "Borewell Health Inspection",
+              "description": "Complete health check of borewell",
+              "features": ["Camera inspection", "Water testing", "Structure check", "Recommendations"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_deepening_re_boring",
+          "name": "Borewell Deepening & Re-Boring",
+          "description": "Deepening and re-boring services",
+          "icon": "arrow_downward",
+          "order": 4,
+          "services": [
+            {
+              "id": "borewell_deepening",
+              "name": "Borewell Deepening",
+              "description": "Deepening existing borewells",
+              "features": ["Depth extension", "New aquifers", "Yield increase", "Cost effective"]
+            },
+            {
+              "id": "re_boring",
+              "name": "Re-Boring",
+              "description": "Re-boring of failed borewells",
+              "features": ["New drilling", "Side tracking", "Yield improvement", "Success guarantee"]
+            },
+            {
+              "id": "casing_pipe_extension",
+              "name": "Casing Pipe Extension",
+              "description": "Extension of casing pipes",
+              "features": ["Additional casing", "Joint welding", "Sealing", "Testing"]
+            },
+            {
+              "id": "yield_improvement_deepening",
+              "name": "Yield Improvement",
+              "description": "Yield improvement through deepening",
+              "features": ["Aquifer tapping", "Development", "Testing", "Optimization"]
+            },
+            {
+              "id": "borewell_rehabilitation",
+              "name": "Borewell Rehabilitation",
+              "description": "Complete rehabilitation services",
+              "features": ["Assessment", "Cleaning", "Repair", "Development"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_recharge",
+          "name": "Borewell Recharge",
+          "description": "Groundwater recharge solutions",
+          "icon": "water_drop",
+          "order": 5,
+          "services": [
+            {
+              "id": "recharge_pit_construction",
+              "name": "Recharge Pit Construction",
+              "description": "Recharge pit for groundwater recharge",
+              "features": ["Custom sizing", "Filter media", "Inlet/outlet", "Maintenance access"]
+            },
+            {
+              "id": "recharge_shaft_installation",
+              "name": "Recharge Shaft Installation",
+              "description": "Recharge shaft for direct recharge",
+              "features": ["Direct injection", "Filter system", "High capacity", "Efficient recharge"]
+            },
+            {
+              "id": "rainwater_recharge_system",
+              "name": "Rainwater Recharge System",
+              "description": "Complete rainwater recharge setup",
+              "features": ["Collection system", "Filtration", "Distribution", "Monitoring"]
+            },
+            {
+              "id": "recharge_bore_construction",
+              "name": "Recharge Bore Construction",
+              "description": "Special recharge borewell construction",
+              "features": ["Shallow borewell", "Filter assembly", "Perforated casing", "Efficient recharge"]
+            },
+            {
+              "id": "groundwater_recharge_solutions",
+              "name": "Groundwater Recharge Solutions",
+              "description": "Complete groundwater recharge solutions",
+              "features": ["Site assessment", "System design", "Implementation", "Monitoring"]
+            },
+            {
+              "id": "recharge_filter_installation",
+              "name": "Recharge Filter Installation",
+              "description": "Filter installation for recharge systems",
+              "features": ["Multi-layer filter", "Screen assembly", "Easy maintenance", "High efficiency"]
+            }
+          ]
+        },
+        {
+          "id": "submersible_pumps_motors",
+          "name": "Submersible Pumps & Motors",
+          "description": "Pump and motor installation and services",
+          "icon": "settings",
+          "order": 6,
+          "services": [
+            {
+              "id": "submersible_pump_installation",
+              "name": "Pump Installation",
+              "description": "Complete submersible pump installation",
+              "features": ["1HP to 20HP", "Stainless steel", "Energy efficient", "Control panel"]
+            },
+            {
+              "id": "submersible_pump_repair",
+              "name": "Pump Repair",
+              "description": "Submersible pump repair services",
+              "features": ["All brands", "On-site service", "Spare parts", "Warranty"]
+            },
+            {
+              "id": "submersible_pump_replacement",
+              "name": "Pump Replacement",
+              "description": "Old pump replacement service",
+              "features": ["Pump removal", "New installation", "Testing", "Disposal of old pump"]
+            },
+            {
+              "id": "pump_pulling_reinstallation",
+              "name": "Pump Pulling & Reinstallation",
+              "description": "Pump pulling and reinstallation service",
+              "features": ["Safe extraction", "Inspection", "Reinstallation", "Testing"]
+            },
+            {
+              "id": "motor_installation",
+              "name": "Motor Installation",
+              "description": "Submersible motor installation",
+              "features": ["Various ratings", "Coupling alignment", "Cable connection", "Testing"]
+            },
+            {
+              "id": "motor_repair",
+              "name": "Motor Repair",
+              "description": "Electric motor repair services",
+              "features": ["Winding check", "Bearing replacement", "Sealing", "Testing"]
+            },
+            {
+              "id": "motor_rewinding_borewell",
+              "name": "Motor Rewinding",
+              "description": "Motor rewinding services",
+              "features": ["Stator rewinding", "Quality wire", "Impregnation", "Testing"]
+            },
+            {
+              "id": "pump_capacity_upgrade",
+              "name": "Pump Capacity Upgrade",
+              "description": "Pump capacity upgrade service",
+              "features": ["Assessment", "New pump selection", "Installation", "Efficiency improvement"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_electrical_services",
+          "name": "Borewell Electrical Services",
+          "description": "Electrical services for borewells",
+          "icon": "electrical_services",
+          "order": 7,
+          "services": [
+            {
+              "id": "starter_panel_installation",
+              "name": "Starter Panel Installation",
+              "description": "Starter panel for pump motors",
+              "features": ["DOL starter", "Star delta starter", "Overload protection", "Phase failure"]
+            },
+            {
+              "id": "control_panel_installation_borewell",
+              "name": "Control Panel Installation",
+              "description": "Advanced control panel installation",
+              "features": ["Auto/manual", "Timer", "Level controller", "Protection"]
+            },
+            {
+              "id": "borewell_wiring",
+              "name": "Borewell Wiring",
+              "description": "Complete borewell wiring",
+              "features": ["Submersible cable", "Waterproof joints", "Proper sizing", "Safety compliance"]
+            },
+            {
+              "id": "cable_replacement",
+              "name": "Cable Replacement",
+              "description": "Old cable replacement service",
+              "features": ["Faulty cable removal", "New cable installation", "Testing", "Waterproofing"]
+            },
+            {
+              "id": "earthing",
+              "name": "Earthing",
+              "description": "Proper earthing installation",
+              "features": ["Earth pit", "Earthing electrode", "Low resistance", "Safety compliance"]
+            },
+            {
+              "id": "electrical_fault_diagnosis",
+              "name": "Electrical Fault Diagnosis",
+              "description": "Fault finding and diagnosis",
+              "features": ["Cable testing", "Continuity check", "Insulation test", "Report"]
+            },
+            {
+              "id": "generator_connection",
+              "name": "Generator Connection",
+              "description": "Generator connection for pumps",
+              "features": ["Changeover switch", "Automatic transfer", "Load management", "Safety interlock"]
+            },
+            {
+              "id": "automatic_pump_controller_installation",
+              "name": "Automatic Pump Controller Installation",
+              "description": "Automatic pump controller setup",
+              "features": ["Auto start/stop", "Dry run protection", "Level sensing", "Manual override"]
+            }
+          ]
+        },
+        {
+          "id": "pipeline_plumbing_services",
+          "name": "Pipeline & Plumbing Services",
+          "description": "Pipeline installation and plumbing services",
+          "icon": "plumbing",
+          "order": 8,
+          "services": [
+            {
+              "id": "hdpe_pipe_installation",
+              "name": "HDPE Pipe Installation",
+              "description": "HDPE pipe installation for water distribution",
+              "features": ["2 to 12 inch", "Fusion welding", "Leak proof", "Long lasting"]
+            },
+            {
+              "id": "pvc_pipe_installation",
+              "name": "PVC Pipe Installation",
+              "description": "PVC pipe installation",
+              "features": ["Multiple sizes", "Solvent welding", "Easy installation", "Cost effective"]
+            },
+            {
+              "id": "gi_pipe_installation",
+              "name": "GI Pipe Installation",
+              "description": "GI pipe installation for durability",
+              "features": ["Threaded joints", "Flanged joints", "High pressure", "Long life"]
+            },
+            {
+              "id": "underground_pipeline",
+              "name": "Underground Pipeline",
+              "description": "Underground water pipeline installation",
+              "features": ["Depth marking", "Trenching", "Pipe laying", "Compaction"]
+            },
+            {
+              "id": "water_distribution_pipeline",
+              "name": "Water Distribution Pipeline",
+              "description": "Complete water distribution network",
+              "features": ["Main line", "Sub mains", "Valves", "Outlets"]
+            },
+            {
+              "id": "valve_installation",
+              "name": "Valve Installation",
+              "description": "Valve installation and setup",
+              "features": ["Gate valves", "Ball valves", "Non-return valves", "Pressure reducing valves"]
+            },
+            {
+              "id": "pipe_leakage_repair",
+              "name": "Pipe Leakage Repair",
+              "description": "Pipe leakage repair services",
+              "features": ["Leak detection", "Pipe repair", "Joint sealing", "Testing"]
+            },
+            {
+              "id": "pipeline_replacement",
+              "name": "Pipeline Replacement",
+              "description": "Old pipeline replacement",
+              "features": ["Old pipe removal", "New installation", "Connection", "Testing"]
+            }
+          ]
+        },
+        {
+          "id": "water_testing_analysis",
+          "name": "Water Testing & Analysis",
+          "description": "Water quality testing services",
+          "icon": "science",
+          "order": 9,
+          "services": [
+            {
+              "id": "drinking_water_testing",
+              "name": "Drinking Water Testing",
+              "description": "Complete drinking water testing",
+              "features": ["Physical parameters", "Chemical analysis", "Bacterial test", "Report"]
+            },
+            {
+              "id": "agricultural_water_testing",
+              "name": "Agricultural Water Testing",
+              "description": "Agricultural water suitability testing",
+              "features": ["EC/pH", "SAR", "RSC", "Irrigation suitability"]
+            },
+            {
+              "id": "tds_testing",
+              "name": "TDS Testing",
+              "description": "Total dissolved solids testing",
+              "features": ["TDS measurement", "Hardness", "Mineral content", "Recommendations"]
+            },
+            {
+              "id": "ph_testing",
+              "name": "pH Testing",
+              "description": "Water pH level testing",
+              "features": ["pH measurement", "Acidity/alkalinity", "Correction methods", "Monitoring"]
+            },
+            {
+              "id": "water_quality_analysis",
+              "name": "Water Quality Analysis",
+              "description": "Complete water quality analysis",
+              "features": ["Full parameter test", "Standards comparison", "Recommendations", "Certification"]
+            },
+            {
+              "id": "laboratory_testing",
+              "name": "Laboratory Testing",
+              "description": "NABL accredited laboratory testing",
+              "features": ["Accredited lab", "Multiple parameters", "Certified results", "Detailed report"]
+            },
+            {
+              "id": "water_purity_consultation",
+              "name": "Water Purity Consultation",
+              "description": "Water purity expert consultation",
+              "features": ["Source assessment", "Treatment options", "System design", "Monitoring plan"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_equipment_rental",
+          "name": "Borewell Equipment Rental",
+          "description": "Equipment rental for borewell work",
+          "icon": "construction",
+          "order": 10,
+          "services": [
+            {
+              "id": "drilling_rig_rental",
+              "name": "Drilling Rig Rental",
+              "description": "Drilling rig on rent",
+              "features": ["Various depths", "With operator", "Well maintained", "Site mobilization"]
+            },
+            {
+              "id": "air_compressor_rental",
+              "name": "Air Compressor Rental",
+              "description": "Air compressor for borewell cleaning",
+              "features": ["High pressure", "Portable", "With hoses", "Operator optional"]
+            },
+            {
+              "id": "borewell_camera_rental",
+              "name": "Borewell Camera Rental",
+              "description": "Borewell camera inspection equipment",
+              "features": ["High resolution", "Depth measurement", "Recording", "Monitor"]
+            },
+            {
+              "id": "generator_rental",
+              "name": "Generator Rental",
+              "description": "Generator for drilling sites",
+              "features": ["Various KVA", "Silent generator", "Fuel efficient", "Delivery available"]
+            },
+            {
+              "id": "pipe_lifting_equipment_rental",
+              "name": "Pipe Lifting Equipment Rental",
+              "description": "Equipment for lifting heavy pipes",
+              "features": ["Safe operation", "Various capacities", "Trained operator", "Site safety"]
+            },
+            {
+              "id": "crane_rental",
+              "name": "Crane Rental",
+              "description": "Crane for heavy lifting",
+              "features": ["Various tonnage", "Trained operator", "Site assessment", "Safety certified"]
+            },
+            {
+              "id": "dewatering_pump_rental",
+              "name": "Dewatering Pump Rental",
+              "description": "Dewatering pump for site drainage",
+              "features": ["High capacity", "Self priming", "Trash handling", "Hose included"]
+            }
+          ]
+        },
+        {
+          "id": "borewell_equipment_dealers",
+          "name": "Borewell Equipment Dealers",
+          "description": "Borewell equipment suppliers and dealers",
+          "icon": "store",
+          "order": 11,
+          "services": [
+            {
+              "id": "dealer_submersible_pumps",
+              "name": "Submersible Pumps",
+              "description": "Quality submersible pumps",
+              "features": ["All brands", "Various HP", "Stainless steel", "Warranty"]
+            },
+            {
+              "id": "dealer_openwell_pumps",
+              "name": "Openwell Pumps",
+              "description": "Open well and monobloc pumps",
+              "features": ["Centrifugal", "Monobloc", "Jet pumps", "Self priming"]
+            },
+            {
+              "id": "dealer_monoblock_pumps",
+              "name": "Monoblock Pumps",
+              "description": "Compact monoblock pumps",
+              "features": ["Various HP", "Energy efficient", "Easy installation", "Low maintenance"]
+            },
+            {
+              "id": "dealer_submersible_motors",
+              "name": "Submersible Motors",
+              "description": "Quality submersible motors",
+              "features": ["Various ratings", "Oil filled", "Water filled", "Long life"]
+            },
+            {
+              "id": "dealer_surface_motors",
+              "name": "Surface Motors",
+              "description": "Surface motors for various applications",
+              "features": ["Various HP", "Single/Three phase", "TEFC", "Standard efficiency"]
+            },
+            {
+              "id": "dealer_hdpe_pipes",
+              "name": "HDPE Pipes",
+              "description": "HDPE pipes for borewells",
+              "features": ["Pressure rated", "Various sizes", "Fusion weldable", "Long lasting"]
+            },
+            {
+              "id": "dealer_pvc_pipes",
+              "name": "PVC Pipes",
+              "description": "PVC pipes and fittings",
+              "features": ["Multiple sizes", "Pressure classes", "Fittings available", "Cost effective"]
+            },
+            {
+              "id": "dealer_gi_pipes",
+              "name": "GI Pipes",
+              "description": "Galvanized iron pipes",
+              "features": ["Various sizes", "Medium/heavy", "Threaded", "Long life"]
+            },
+            {
+              "id": "dealer_casing_pipes",
+              "name": "Casing Pipes",
+              "description": "PVC and MS casing pipes",
+              "features": ["PVC/MS", "Screened/slotted", "Various sizes", "Food grade"]
+            },
+            {
+              "id": "dealer_column_pipes",
+              "name": "Column Pipes",
+              "description": "Column pipes for submersible pumps",
+              "features": ["PVC/MDPE", "High pressure", "Threaded", "Leak proof"]
+            },
+            {
+              "id": "dealer_starter_panels",
+              "name": "Starter Panels",
+              "description": "Motor starter panels",
+              "features": ["DOL", "Star delta", "Soft start", "VFD"]
+            },
+            {
+              "id": "dealer_control_panels",
+              "name": "Control Panels",
+              "description": "Advanced control panels",
+              "features": ["Automatic", "Timer based", "Level controller", "Protection"]
+            },
+            {
+              "id": "dealer_pump_controllers",
+              "name": "Pump Controllers",
+              "description": "Automatic pump controllers",
+              "features": ["Auto start/stop", "Dry run protection", "Level sensors", "Digital display"]
+            },
+            {
+              "id": "dealer_cables",
+              "name": "Cables",
+              "description": "Submersible flat cables",
+              "features": ["Various sizes", "Waterproof", "Heat resistant", "ISI marked"]
+            },
+            {
+              "id": "dealer_capacitors",
+              "name": "Capacitors",
+              "description": "Motor run and start capacitors",
+              "features": ["Various ratings", "Single/Three phase", "Long life", "High quality"]
+            },
+            {
+              "id": "dealer_bore_caps",
+              "name": "Bore Caps",
+              "description": "Borewell caps and covers",
+              "features": ["Various materials", "Lockable", "Child safe", "Durable"]
+            },
+            {
+              "id": "dealer_clamps",
+              "name": "Clamps",
+              "description": "Pipe clamps and supports",
+              "features": ["Various sizes", "Galvanized", "Stainless", "Heavy duty"]
+            },
+            {
+              "id": "dealer_valves",
+              "name": "Valves",
+              "description": "All types of valves",
+              "features": ["Gate/Ball/Check", "Various sizes", "High pressure", "Brass/CI"]
+            },
+            {
+              "id": "dealer_pipe_fittings",
+              "name": "Pipe Fittings",
+              "description": "Pipe fittings and connectors",
+              "features": ["Various types", "Multiple sizes", "Brass/GI/PVC", "Standard"]
+            },
+            {
+              "id": "dealer_cable_guards",
+              "name": "Cable Guards",
+              "description": "Cable guards for protection",
+              "features": ["Various sizes", "Heavy duty", "Long lasting", "Easy installation"]
+            }
+          ]
+        },
+        {
+          "id": "second_hand_borewell_equipment",
+          "name": "Second-Hand Borewell Equipment",
+          "description": "Used borewell equipment marketplace",
+          "icon": "recycling",
+          "order": 12,
+          "services": [
+            {
+              "id": "used_drilling_rigs",
+              "name": "Used Drilling Rigs",
+              "description": "Second-hand drilling rigs",
+              "features": ["Verified condition", "Various depths", "Documentation", "Negotiable"]
+            },
+            {
+              "id": "used_air_compressors",
+              "name": "Used Air Compressors",
+              "description": "Pre-owned air compressors",
+              "features": ["Good condition", "Serviced", "Capacity checked", "Warranty"]
+            },
+            {
+              "id": "used_mud_pumps",
+              "name": "Used Mud Pumps",
+              "description": "Second-hand mud pumps",
+              "features": ["Working condition", "Reconditioned", "Various capacities", "Affordable"]
+            },
+            {
+              "id": "used_submersible_pumps_equipment",
+              "name": "Used Submersible Pumps",
+              "description": "Pre-owned submersible pumps",
+              "features": ["Rewound", "Tested", "Various HP", "Warranty"]
+            },
+            {
+              "id": "used_motors_equipment",
+              "name": "Used Motors",
+              "description": "Second-hand motors",
+              "features": ["Rewound", "Tested", "Various ratings", "Good condition"]
+            },
+            {
+              "id": "used_generators_equipment",
+              "name": "Used Generators",
+              "description": "Pre-owned generators",
+              "features": ["Various KVA", "Tested", "Serviced", "Documentation"]
+            },
+            {
+              "id": "used_drill_rods",
+              "name": "Used Drill Rods",
+              "description": "Second-hand drill rods",
+              "features": ["Various lengths", "Good threads", "Inspected", "Bundle price"]
+            },
+            {
+              "id": "used_borewell_cameras",
+              "name": "Used Borewell Cameras",
+              "description": "Pre-owned inspection cameras",
+              "features": ["Working condition", "Accessories", "Depth rating", "Affordable"]
+            },
+            {
+              "id": "used_starter_panels_equipment",
+              "name": "Used Starter Panels",
+              "description": "Second-hand starter panels",
+              "features": ["Reconditioned", "Various types", "Tested", "Warranty"]
+            },
+            {
+              "id": "used_control_panels_equipment",
+              "name": "Used Control Panels",
+              "description": "Pre-owned control panels",
+              "features": ["Tested", "Refurbished", "Various functions", "Cost effective"]
+            },
+            {
+              "id": "used_pipe_handling_equipment",
+              "name": "Used Pipe Handling Equipment",
+              "description": "Second-hand pipe handling tools",
+              "features": ["Various types", "Good condition", "Safe", "Affordable"]
+            },
+            {
+              "id": "used_water_tankers",
+              "name": "Used Water Tankers",
+              "description": "Pre-owned water tankers",
+              "features": ["Various capacities", "Tested", "Documentation", "Negotiable"]
+            }
+          ]
+        },
+        {
+          "id": "emergency_borewell_services",
+          "name": "Emergency Borewell Services",
+          "description": "24/7 emergency borewell services",
+          "icon": "emergency",
+          "order": 13,
+          "services": [
+            {
+              "id": "emergency_pump_breakdown",
+              "name": "Emergency Pump Breakdown",
+              "description": "Emergency pump repair service",
+              "features": ["24/7 available", "Quick response", "Spare parts", "Temporary solutions"]
+            },
+            {
+              "id": "no_water_in_borewell",
+              "name": "No Water in Borewell",
+              "description": "Emergency service for dry borewells",
+              "features": ["Diagnosis", "Immediate action", "Pump check", "Development"]
+            },
+            {
+              "id": "pump_stuck_in_borewell",
+              "name": "Pump Stuck in Borewell",
+              "description": "Emergency pump removal",
+              "features": ["Specialized equipment", "Safe extraction", "Damage prevention", "Reinstallation"]
+            },
+            {
+              "id": "cable_breakage",
+              "name": "Cable Breakage",
+              "description": "Emergency cable repair",
+              "features": ["Quick response", "Splicing", "Replacement", "Testing"]
+            },
+            {
+              "id": "borewell_collapse_assistance",
+              "name": "Borewell Collapse Assistance",
+              "description": "Emergency collapse response",
+              "features": ["Assessment", "Stabilization", "Rehabilitation", "Prevention"]
+            },
+            {
+              "id": "emergency_technician_visit",
+              "name": "Emergency Technician Visit",
+              "description": "Urgent technician visit",
+              "features": ["Quick dispatch", "Expert technician", "Problem diagnosis", "Solution"]
+            },
+            {
+              "id": "24_7_support",
+              "name": "24×7 Support",
+              "description": "Round the clock support",
+              "features": ["Hotline available", "Expert advice", "Coordination", "Follow-up"]
+            }
+          ]
+        },
+        {
+          "id": "annual_maintenance_contract",
+          "name": "Annual Maintenance Contract (AMC)",
+          "description": "Comprehensive annual maintenance contracts",
+          "icon": "event_repeat",
+          "order": 14,
+          "services": [
+            {
+              "id": "annual_borewell_maintenance",
+              "name": "Annual Borewell Maintenance",
+              "description": "Complete annual maintenance package",
+              "features": ["4 visits per year", "Complete checkup", "Cleaning included", "Priority support"]
+            },
+            {
+              "id": "pump_inspection_amc",
+              "name": "Pump Inspection",
+              "description": "Regular pump inspection under AMC",
+              "features": ["Performance check", "Vibration analysis", "Current check", "Report"]
+            },
+            {
+              "id": "motor_inspection_amc",
+              "name": "Motor Inspection",
+              "description": "Motor inspection under AMC",
+              "features": ["Winding check", "Bearing check", "Insulation test", "Recommendations"]
+            },
+            {
+              "id": "electrical_inspection",
+              "name": "Electrical Inspection",
+              "description": "Complete electrical inspection",
+              "features": ["Cable check", "Panel inspection", "Earthing test", "Safety compliance"]
+            },
+            {
+              "id": "pipeline_inspection",
+              "name": "Pipeline Inspection",
+              "description": "Pipeline inspection under AMC",
+              "features": ["Leak detection", "Pressure test", "Valve check", "Joint inspection"]
+            },
+            {
+              "id": "preventive_maintenance",
+              "name": "Preventive Maintenance",
+              "description": "Preventive maintenance visits",
+              "features": ["Scheduled visits", "Proactive checks", "Issue prevention", "Documentation"]
+            },
+            {
+              "id": "scheduled_servicing",
+              "name": "Scheduled Servicing",
+              "description": "Regular scheduled servicing",
+              "features": ["Seasonal service", "Monsoon preparation", "Summer check", "Winter service"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Visitor Tracking{% endblock %}
+{% block page_subtitle %}View detailed visitor analytics{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon indigo">
+            <i class="bi bi-eye-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_visitors }}</div>
+        <div class="stat-label">Total Visitors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-calendar-day"></i>
+        </div>
+        <div class="stat-value">{{ today_visitors }}</div>
+        <div class="stat-label">Today</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon cyan">
+            <i class="bi bi-calendar-week"></i>
+        </div>
+        <div class="stat-value">{{ this_week }}</div>
+        <div class="stat-label">This Week</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon purple">
+            <i class="bi bi-arrow-repeat"></i>
+        </div>
+        <div class="stat-value">{{ repeat_visitors }}</div>
+        <div class="stat-label">Repeat Visitors</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="table-container" style="margin-bottom: 1.5rem;">
+    <div class="table-header">
+        <h4 class="table-title">Filters</h4>
+    </div>
+    <div class="p-3">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label small">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="IP, username, or session..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">From Date</label>
+                <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">To Date</label>
+                <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a href="{% url 'admin_visitors' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Visitors Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4 class="table-title">All Visitors</h4>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Visitor</th>
+                    <th>IP Address</th>
+                    <th>User Agent</th>
+                    <th>First Visit</th>
+                    <th>Last Visit</th>
+                    <th>Visit Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visitor in visitors %}
+                <tr>
+                    <td>
+                        {% if visitor.user %}
+                            <i class="bi bi-person-check text-success"></i>
+                            <strong>{{ visitor.user.username }}</strong>
+                        {% else %}
+                            <i class="bi bi-person text-muted"></i>
+                            <span class="text-muted">Anonymous</span>
+                        {% endif %}
+                    </td>
+                    <td><code class="small">{{ visitor.ip_address|default:"N/A" }}</code></td>
+                    <td><span class="text-muted small" title="{{ visitor.user_agent }}">{{ visitor.user_agent|slice:":50" }}{% if visitor.user_agent|length > 50 %}...{% endif %}</span></td>
+                    <td>{{ visitor.first_visit|date:"M d, Y H:i" }}</td>
+                    <td>{{ visitor.last_visit|date:"M d, Y H:i" }}</td>
+                    <td>
+                        <span class="badge {% if visitor.visit_count > 1 %}badge-completed{% else %}badge-pending{% endif %}">
+                            {{ visitor.visit_count }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i> No visitors found
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if visitors.has_other_pages %}
+    <nav aria-label="Page navigation" class="p-3">
+        <ul class="pagination justify-content-center">
+            {% if visitors.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ visitors.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">Page {{ visitors.number }} of {{ visitors.paginator.num_pages }}</span>
+            </li>
+
+            {% if visitors.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ visitors.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ visitors.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Last</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}

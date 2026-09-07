@@ -1,0 +1,1218 @@
+/* Custom Styles for BorewellMart */
+
+/* Navbar Search Form */
+.navbar .input-group-text {
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+.navbar .form-control {
+    border-color: #dee2e6;
+}
+
+.navbar .form-select {
+    border-color: #dee2e6;
+}
+
+.navbar .input-group .form-control:focus,
+.navbar .input-group .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.navbar .input-group .btn-primary {
+    border-radius: 0 4px 4px 0;
+}
+
+
+
+.navbar .input-group {
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    gap: 0.4rem;
+}
+
+.navbar .input-group .form-control,
+.navbar .input-group .form-select,
+.navbar .input-group .btn-primary {
+    min-width: 0;
+}
+
+@media (max-width: 991px) {
+    .navbar-brand img {
+        max-height: 90px !important;
+    }
+
+    .navbar .form-control,
+    .navbar .form-select,
+    .navbar .btn-primary {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar .input-group .form-control,
+    .navbar .input-group .form-select,
+    .navbar .input-group .btn-primary {
+        width: 100%;
+    }
+
+    .navbar .input-group .btn-primary {
+        border-radius: 0 0 4px 4px;
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section */
+.hero-section {
+    background-size: cover;
+    background-position: center;
+}
+
+/* Card Styles */
+.city-card,
+.service-card,
+.vendor-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.city-card:hover,
+.service-card:hover,
+.vendor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Rectangular Images for Cities and Services */
+.city-card .card-img-top,
+.service-card .card-img-top {
+    border-radius: 6px !important;
+    width: 100% !important;
+    height: 60px !important;
+    object-fit: cover !important;
+    display: block !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Card Body - Extra Small Size */
+.city-card .card-body,
+.service-card .card-body,
+.vendor-card .card-body {
+    padding: 0.5rem !important;
+    text-align: center;
+}
+
+/* Card Title - Extra Small */
+.city-card .card-title,
+.vendor-card .card-title {
+    font-size: 0.75rem !important;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+/* Card Text - Extra Small */
+.city-card .card-text,
+.service-card .card-text,
+.vendor-card .card-text {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Buttons - Extra Small */
+.city-card .btn,
+.service-card .btn,
+.vendor-card .btn {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.4rem !important;
+}
+
+/* Badge Styles */
+.badge-lg {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Form Styles */
+form input,
+form select,
+form textarea {
+    border-radius: 8px;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.services-dropdown-menu {
+    min-width: 260px;
+    padding: 0.5rem 0;
+    background-color: #212529;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.services-dropdown-menu .dropdown-item {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.55rem 1rem;
+    white-space: normal;
+}
+
+.services-dropdown-menu .dropdown-item:hover,
+.services-dropdown-menu .dropdown-item:focus {
+    color: #fff;
+    background-color: rgba(13, 110, 253, 0.35);
+}
+
+.services-dropdown-menu .dropdown-divider {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Blog Content */
+.blog-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        height: auto;
+        padding: 100px 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    /* Mobile logo adjustments */
+    .navbar-brand img {
+        max-height: 60px !important;
+    }
+
+    /* Mobile navbar */
+    .navbar {
+        height: auto !important;
+        min-height: 60px;
+    }
+
+    /* Mobile spacing */
+    section {
+        padding: 2rem 0;
+    }
+
+    /* Mobile cards */
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    /* Mobile tables */
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+
+    /* Mobile forms */
+    .form-control, .form-select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+
+    /* Mobile buttons */
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar-brand img {
+        max-height: 80px !important;
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+
+    /* Tablet adjustments */
+    .container {
+        max-width: 90%;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .navbar-brand img {
+        max-height: 50px !important;
+    }
+
+    .hero-section h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Compact spacing for small phones */
+    section {
+        padding: 1.5rem 0;
+    }
+}
+
+.navbar .input-group {
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    gap: 0.4rem;
+}
+
+.navbar .input-group .form-control,
+.navbar .input-group .form-select,
+.navbar .input-group .btn-primary {
+    min-width: 0;
+}
+
+@media (max-width: 991px) {
+    .navbar-brand img {
+        max-height: 90px !important;
+    }
+
+    .navbar .form-control,
+    .navbar .form-select,
+    .navbar .btn-primary {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar .input-group .form-control,
+    .navbar .input-group .form-select,
+    .navbar .input-group .btn-primary {
+        width: 100%;
+    }
+
+    .navbar .input-group .btn-primary {
+        border-radius: 0 0 4px 4px;
+    }
+}
+
+/* Table Styles */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 8px;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+}
+
+/* Auth Button - Blue Gradient */
+.btn-auth {
+    background: linear-gradient(135deg, #0284C7 0%, #06B6D4 100%) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 10px;
+    padding: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(2, 132, 199, 0.4);
+    color: white !important;
+}
+
+/* Card Image */
+.card-img-top {
+    border-top-left-radius: calc(0.375rem - 1px);
+    border-top-right-radius: calc(0.375rem - 1px);
+}
+
+/* Stats Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-warning,
+.card.bg-info,
+.card.bg-danger {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Rating Stars */
+.text-warning {
+    color: #ffc107 !important;
+}
+
+/* Emergency Badge */
+.badge.bg-danger {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* WhatsApp Button */
+.btn-success {
+    background-color: #25D366;
+    border-color: #25D366;
+}
+
+.btn-success:hover {
+    background-color: #128C7E;
+    border-color: #128C7E;
+}
+
+/* Form Check */
+.form-check-input {
+    cursor: pointer;
+}
+
+/* Loading Spinner */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Modal */
+.modal-content {
+    border-radius: 12px;
+}
+
+/* Pagination */
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+/* Search Bar */
+.hero-section .card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Image Gallery */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.gallery-item img {
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Dashboard Stats */
+.dashboard-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.dashboard-stat h2 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+/* Booking Status */
+.booking-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.booking-accepted {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.booking-in-progress {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.booking-completed {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.booking-cancelled {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Vendor Verification */
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+
+    .table-responsive .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Touch-friendly tap targets */
+@media (max-width: 768px) {
+    .nav-link, .dropdown-item, .btn {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Services Dropdown Menu Alignment */
+.services-dropdown-menu {
+    min-width: 280px;
+    max-width: 320px;
+}
+
+.services-dropdown-menu .dropdown-item {
+    padding: 0.6rem 1rem;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+/* Global Content Alignment Fixes */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card Content Alignment */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Section Spacing */
+section {
+    padding: 3rem 0;
+}
+
+/* Nested Dropdown Styles */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0.375rem;
+    display: none;
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 320px;
+}
+
+.dropdown-submenu .dropdown-menu .dropdown-item {
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 0.6rem 1rem;
+    line-height: 1.4;
+}
+
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+}
+
+/* Show nested dropdown on hover for desktop */
+@media (min-width: 992px) {
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+        position: absolute;
+    }
+
+    .dropdown-submenu > .dropdown-toggle:after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+
+    .dropdown-submenu > .dropdown-toggle:after {
+        transform: rotate(-90deg);
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+    }
+}
+
+/* Mobile nested dropdown adjustments */
+@media (max-width: 991px) {
+    /* Main Services dropdown menu on mobile */
+    .navbar-nav .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 !important;
+        padding: 0.5rem 0;
+        background-color: rgba(248, 249, 250, 0.95);
+        box-shadow: none !important;
+        border: none !important;
+        border-left: 3px solid #0284C7 !important;
+    }
+
+    /* All nested dropdowns - VISIBLE when show class is present */
+    .dropdown-submenu .dropdown-menu {
+        position: static !important;
+        display: none !important;
+        margin: 0 !important;
+        margin-left: 0 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .dropdown-submenu .dropdown-menu.show {
+        display: block !important;
+    }
+
+    /* Category level (first nesting) - White background with blue border */
+    .navbar-nav .dropdown-menu > .dropdown-submenu > .dropdown-menu {
+        background-color: #ffffff;
+        border-left: 4px solid #0284C7 !important;
+        margin: 0.25rem 0 !important;
+        padding: 0.5rem 0 0.5rem 0.5rem !important;
+        width: 100%;
+    }
+
+    /* Subcategory level (second nesting) - Light blue background with cyan border */
+    .navbar-nav .dropdown-menu > .dropdown-submenu > .dropdown-menu > .dropdown-submenu > .dropdown-menu {
+        background-color: #f0f8ff;
+        border-left: 4px solid #06B6D4 !important;
+        margin: 0.25rem 0 !important;
+        padding: 0.5rem 0 0.5rem 0.5rem !important;
+        width: 100%;
+    }
+
+    /* Service level (third nesting) - Light gray background */
+    .navbar-nav .dropdown-menu > .dropdown-submenu > .dropdown-menu > .dropdown-submenu > .dropdown-menu > .dropdown-submenu > .dropdown-menu {
+        background-color: #e9ecef;
+        border-left: 4px solid #6c757d !important;
+        margin: 0.25rem 0 !important;
+        padding: 0.5rem 0 0.5rem 0.5rem !important;
+        width: 100%;
+    }
+
+    /* Enhanced mobile dropdown toggle styling */
+    .dropdown-submenu > .dropdown-toggle {
+        position: relative;
+        width: 100%;
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-weight: 600 !important;
+    }
+
+    .dropdown-submenu > .dropdown-toggle:after {
+        content: "\f078";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 12px;
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+        opacity: 0.7;
+    }
+
+    .dropdown-submenu.open > .dropdown-toggle:after {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    /* Dropdown items styling */
+    .navbar-nav .dropdown-item {
+        padding: 0.75rem 1rem !important;
+        min-height: 44px;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        min-height: 44px;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+    }
+
+    /* Third level - services under subcategories */
+    .dropdown-submenu .dropdown-menu .dropdown-submenu .dropdown-menu .dropdown-menu {
+        background-color: #dee2e6;
+        border-left: 3px solid #6c757d !important;
+        padding: 0.25rem 0 0.25rem 1rem !important;
+    }
+
+    .dropdown-submenu .dropdown-menu .dropdown-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* MAXIMUM SPECIFICITY - Force show class to work */
+    .navbar-nav .dropdown-menu .dropdown-menu.show {
+        display: block !important;
+        position: static !important;
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Force hide when show class is not present */
+    .navbar-nav .dropdown-menu .dropdown-menu:not(.show) {
+        display: none !important;
+    }
+
+    /* Ensure the main Services dropdown toggle is visible on mobile */
+    .navbar-nav > .dropdown > .dropdown-toggle {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100%;
+        min-height: 44px;
+        padding: 0.75rem 1rem !important;
+    }
+
+    .navbar-nav > .dropdown > .dropdown-toggle::after {
+        margin-left: auto !important;
+    }
+
+    /* Make sure all dropdown items are clickable */
+    .dropdown-submenu > a.dropdown-item,
+    .dropdown-submenu > .dropdown-toggle {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        user-select: none !important;
+    }
+
+    /* Prevent dropdown from being hidden behind other elements */
+    .navbar-collapse.show .dropdown-menu {
+        z-index: 1000 !important;
+    }
+
+    /* Make the Services dropdown more prominent on mobile */
+    .navbar-nav > .dropdown {
+        width: 100%;
+    }
+
+    .navbar-nav > .dropdown > .dropdown-toggle {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin: 0.25rem 0;
+    }
+
+    .navbar-nav > .dropdown > .dropdown-toggle:hover,
+    .navbar-nav > .dropdown > .dropdown-toggle:focus {
+        background-color: #e9ecef;
+    }
+
+    /* Ensure dropdown items are clearly visible */
+    .dropdown-item {
+        color: #212529 !important;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background-color: rgba(13, 110, 253, 0.1) !important;
+        color: #0d6efd !important;
+    }
+
+    /* Make sure dropdown dividers are visible */
+    .dropdown-divider {
+        border-top-color: #dee2e6 !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    /* Ensure bold text in dropdowns is visible */
+    .dropdown-item strong {
+        color: #0d6efd !important;
+        font-weight: 600;
+    }
+}
+
+/* Placeholder Styles for Cities and Blogs without Images */
+.city-placeholder,
+.blog-placeholder {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.city-placeholder span {
+    font-size: 1.5rem;
+    letter-spacing: 0.1rem;
+}
+
+.blog-placeholder span {
+    font-size: 2rem;
+}
+
+.city-placeholder::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: placeholderShine 3s ease-in-out infinite;
+}
+
+@keyframes placeholderShine {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(20%, 20%);
+    }
+}
+
+/* ========================================
+   MOBILE NAVBAR FIXES
+   ======================================== */
+
+@media (max-width: 991px) {
+    /* Hide navbar-brand (logo) on mobile when navbar is open */
+    .navbar-brand {
+        position: relative !important;
+        z-index: 1002 !important;
+        display: flex !important;
+        align-items: center !important;
+        max-width: 180px !important;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    /* Hide logo when navbar is open on mobile */
+    body.navbar-open .navbar-brand {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Adjust logo size for mobile (when visible) */
+    .navbar-brand img {
+        max-height: 60px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    /* Ensure navbar container maintains proper layout on mobile */
+    .navbar {
+        position: relative !important;
+        min-height: auto !important;
+    }
+
+    .navbar .container {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+
+    /* Ensure navbar toggler (hamburger) is always visible and accessible */
+    .navbar-toggler {
+        position: relative !important;
+        z-index: 1003 !important;
+        border: none !important;
+        padding: 0.5rem !important;
+    }
+
+    /* Fix navbar-collapse positioning and overflow */
+    .navbar-collapse {
+        position: relative !important;
+        width: 100% !important;
+        flex-basis: 100% !important;
+        flex-grow: 1 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin-top: 1rem !important;
+        z-index: 1001 !important;
+    }
+
+    .navbar-collapse.show {
+        display: block !important;
+        overflow: visible !important;
+        max-height: none !important;
+    }
+
+    /* Mobile close button styling */
+    .btn-close-mobile {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 0.5rem !important;
+        padding: 0.5rem 1rem !important;
+        background: transparent !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 8px !important;
+        color: #6c757d !important;
+        font-size: 0.9rem !important;
+        transition: all 0.3s ease !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .btn-close-mobile:hover {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+        border-color: #adb5bd !important;
+    }
+
+    /* Allow body scroll when navbar is open so all content is accessible */
+    body.navbar-open {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* ========================================
+       FIX DROPDOWN CONTENT OVERFLOW
+       ======================================== */
+
+    /* Ensure navbar-collapse contains all dropdown content */
+    .navbar-collapse {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        /* Allow height to be dynamic based on content */
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .navbar-collapse.show {
+        /* Remove fixed max-height - let content determine height */
+        max-height: none !important;
+        height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+
+    /* When navbar is open, allow page scroll instead of navbar scroll */
+    .navbar-collapse.collapsing {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Ensure all dropdown menus stay within screen */
+    .navbar-nav .dropdown-menu {
+        max-width: 100% !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ensure nested dropdowns stay within screen */
+    .dropdown-submenu .dropdown-menu {
+        max-width: 100% !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ensure dropdown items don't overflow */
+    .dropdown-item,
+    .dropdown-toggle {
+        max-width: 100% !important;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        white-space: normal !important;
+    }
+
+    /* Ensure icons and text in dropdowns wrap properly */
+    .dropdown-item i,
+    .dropdown-toggle i {
+        flex-shrink: 0 !important;
+    }
+
+    /* Fix for long category/subcategory names */
+    .dropdown-item,
+    .dropdown-submenu > .dropdown-toggle {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Ensure container doesn't cause overflow */
+    .navbar .container {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Prevent horizontal scroll on entire page */
+    body,
+    html {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+    }
+
+    /* CRITICAL: Force all dropdowns to be static on mobile and contained */
+    .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Force all nested dropdowns to be static */
+    .dropdown-submenu .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        left: auto !important;
+        right: auto !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Force dropdown items to wrap and stay within bounds */
+    .dropdown-item,
+    .dropdown-toggle {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        overflow: hidden !important;
+    }
+
+    /* Ensure navbar container contains everything */
+    .navbar .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    /* Force viewport constraint */
+    * {
+        max-width: 100vw !important;
+    }
+
+    /* ========================================
+       VERTICAL NAV ITEMS ON MOBILE (ONE PER LINE)
+       ======================================== */
+
+    /* Make all nav items stack vertically, one per line */
+    .navbar-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 0 !important;
+    }
+
+    /* Each nav item takes full width */
+    .navbar-nav .nav-item,
+    .navbar-nav > .dropdown {
+        display: flex !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+
+    /* Nav links take full width of their item */
+    .navbar-nav .nav-link {
+        display: flex !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        align-items: center !important;
+    }
+
+    /* Services dropdown toggle takes full width */
+    .navbar-nav > .dropdown > .dropdown-toggle {
+        display: flex !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    /* Dropdown menu appears below when toggled */
+    .navbar-nav > .dropdown > .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 0 !important;
+        border-top: 1px solid #dee2e6 !important;
+        border-radius: 0 !important;
+    }
+
+    /* Remove last border */
+    .navbar-nav .nav-item:last-child,
+    .navbar-nav > .dropdown:last-child {
+        border-bottom: none !important;
+    }
+
+    /* ========================================
+       SEARCH BAR IN ONE LINE ON MOBILE
+       ======================================== */
+
+    /* Search form stays in one line */
+    .navbar-nav .nav-item form {
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+    }
+
+    /* Input group stays in one line */
+    .navbar-nav .input-group {
+        flex-wrap: nowrap !important;
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    /* Search icon takes minimal space */
+    .navbar-nav .input-group-text {
+        flex: 0 0 auto !important;
+        padding: 0.25rem 0.5rem !important;
+        width: auto !important;
+    }
+
+    /* Search input takes remaining space */
+    .navbar-nav .form-control {
+        flex: 1 1 auto !important;
+        min-width: 60px !important;
+        font-size: 0.85rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+
+    /* City select takes fixed width */
+    .navbar-nav .form-select {
+        flex: 0 0 auto !important;
+        width: 80px !important;
+        max-width: 80px !important;
+        min-width: 80px !important;
+        font-size: 0.85rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+
+    /* Search button takes minimal space */
+    .navbar-nav .input-group .btn {
+        flex: 0 0 auto !important;
+        padding: 0.25rem 0.5rem !important;
+        width: auto !important;
+    }
+
+    /* Ensure search nav item doesn't have extra spacing */
+    .navbar-nav .nav-item.w-100 {
+        margin: 0 !important;
+        padding: 0.5rem 0 !important;
+    }
+}

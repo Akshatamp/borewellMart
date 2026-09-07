@@ -1,0 +1,351 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}Ask Question - BorewellMart Forum{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #0284C7;
+        --secondary-color: #06B6D4;
+        --primary-dark: #0369a1;
+        --primary-light: #06B6D4;
+    }
+
+    .create-thread-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 2rem 2rem;
+    }
+
+    .form-container {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, rgba(0,198,255,0.1), rgba(0,114,255,0.1));
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .form-section {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0,198,255,0.25);
+    }
+
+    .category-card {
+        border: 2px solid #dee2e6;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover {
+        border-color: var(--primary-color);
+        background: rgba(0,198,255,0.02);
+    }
+
+    .category-card.selected {
+        border-color: var(--primary-color);
+        background: rgba(0,198,255,0.1);
+    }
+
+    .category-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 10px;
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .tips-card {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+        border: 1px solid rgba(40, 167, 69, 0.3);
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+    .tips-card h6 {
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+
+    .tips-card ul {
+        margin-bottom: 0;
+    }
+
+    .tips-card li {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-section {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Override breadcrumb styles for forum pages */
+    .create-thread-header .breadcrumb,
+    .create-thread-header .breadcrumb-item a,
+    .create-thread-header .breadcrumb-item.active {
+        background: transparent !important;
+        color: white !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .create-thread-header .breadcrumb-item a:hover {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Create Thread Header -->
+<div class="create-thread-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'forum_home' %}" class="text-white">Forum</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Ask Question</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 fw-bold">
+            <i class="fas fa-question-circle me-2"></i>Ask a Question
+        </h1>
+        <p class="mb-0">Get answers from verified borewell experts and community members.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Main Form -->
+        <div class="col-lg-8">
+            <div class="card form-container">
+                <div class="form-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Compose Your Question
+                    </h5>
+                </div>
+
+                <form method="POST" class="form-section">
+                    {% csrf_token %}
+
+                    <!-- Category Selection -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-folder me-1"></i>Category *
+                        </label>
+                        <select name="category" class="form-select" required>
+                            <option value="">Select a category...</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if form.category.value == category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                    {% if category.is_service_related %}(Service){% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.category.errors %}
+                            <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Choose the most relevant category for your question.</small>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-heading me-1"></i>Question Title *
+                        </label>
+                        <input type="text" name="title" class="form-control"
+                               placeholder="e.g., Why is my borewell water muddy after rain?"
+                               value="{{ form.title.value|default:'' }}" required>
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Be specific and concise. Include key details.</small>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Details *
+                        </label>
+                        <textarea name="content" class="form-control" rows="8"
+                                  placeholder="Describe your issue in detail. Include symptoms, what you've tried, and what you need help with..." required>{{ form.content.value|default:'' }}</textarea>
+                        {% if form.content.errors %}
+                            <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">The more details you provide, the better answers you'll get.</small>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-tags me-1"></i>Tags (Optional)
+                        </label>
+                        <div class="row">
+                            {% for tag in all_tags %}
+                                <div class="col-md-6 mb-2">
+                                    <label class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" name="tags" value="{{ tag.id }}"
+                                               {% if tag.id in selected_tags %}checked{% endif %}>
+                                        <span>{{ tag.name }}</span>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">Select relevant tags to help others find your question.</small>
+                    </div>
+
+                    <!-- Services Link -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-cogs me-1"></i>Related Services (Optional)
+                        </label>
+                        <div class="row">
+                            {% for service in services %}
+                                <div class="col-md-6 mb-2">
+                                    <label class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" name="services" value="{{ service.id }}">
+                                        <span>{{ service.name }}</span>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">Link to specific services if your question is about them.</small>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Post Question
+                        </button>
+                        <a href="{% url 'forum_home' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Tips -->
+            <div class="tips-card mb-4">
+                <h6>
+                    <i class="fas fa-lightbulb me-2"></i>Tips for Getting Good Answers
+                </h6>
+                <ul>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Be specific about your problem
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Include details like borewell depth, location, symptoms
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Mention what you've already tried
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Add relevant tags for better visibility
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Choose the most appropriate category
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Guidelines -->
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-book me-2 text-primary"></i>Forum Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="small mb-0">
+                        <li class="mb-2">Be respectful to all community members</li>
+                        <li class="mb-2">Post in the correct category</li>
+                        <li class="mb-2">Search before asking to avoid duplicates</li>
+                        <li class="mb-2">Don't share personal contact information</li>
+                        <li class="mb-2">Mark helpful answers as best solution</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const title = document.querySelector('input[name="title"]');
+    const content = document.querySelector('textarea[name="content"]');
+    const category = document.querySelector('select[name="category"]');
+
+    if (!category.value) {
+        e.preventDefault();
+        alert('Please select a category');
+        return false;
+    }
+
+    if (title.value.trim().length < 10) {
+        e.preventDefault();
+        alert('Please provide a more descriptive title (at least 10 characters)');
+        return false;
+    }
+
+    if (content.value.trim().length < 20) {
+        e.preventDefault();
+        alert('Please provide more details about your question (at least 20 characters)');
+        return false;
+    }
+});
+
+// Character counter for title
+const titleInput = document.querySelector('input[name="title"]');
+if (titleInput) {
+    titleInput.addEventListener('input', function() {
+        const length = this.value.length;
+        if (length < 10) {
+            this.style.borderColor = '#ffc107';
+        } else if (length >= 10 && length < 200) {
+            this.style.borderColor = '#28a745';
+        } else {
+            this.style.borderColor = '#dc3545';
+        }
+    });
+}
+</script>
+{% endblock %}

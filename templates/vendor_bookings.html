@@ -1,0 +1,94 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}Bookings - Vendor Dashboard{% endblock %}
+{% block nav_bookings %}active{% endblock %}
+{% block page_title %}Bookings{% endblock %}
+{% block page_subtitle %}Manage customer booking requests{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="h2 fw-bold mb-1">{{ total_bookings }}</div>
+                <div>Total Bookings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 bg-warning text-dark h-100">
+            <div class="card-body">
+                <div class="h2 fw-bold mb-1">{{ pending_requests }}</div>
+                <div>Pending Requests</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 bg-success text-white h-100">
+            <div class="card-body">
+                <div class="h2 fw-bold mb-1">{{ completed_bookings }}</div>
+                <div>Completed Bookings</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="table-header">
+        <h2 class="table-title">All Bookings</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Emergency</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>#{{ booking.id }}</td>
+                    <td>{{ booking.customer.username }}</td>
+                    <td>{{ booking.subservice.name }}</td>
+                    <td>{{ booking.date|date:"Y-m-d" }}</td>
+                    <td>{{ booking.time|time:"H:i" }}</td>
+                    <td><span class="badge bg-secondary">{{ booking.get_status_display }}</span></td>
+                    <td>
+                        {% if booking.is_emergency %}
+                            <span class="badge bg-danger">Yes</span>
+                        {% else %}
+                            <span class="badge bg-light text-dark">No</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if booking.status == 'pending' %}
+                                <a href="{% url 'booking_update_status' booking.id 'accepted' %}" class="btn btn-sm btn-success">Accept</a>
+                                <a href="{% url 'booking_update_status' booking.id 'cancelled' %}" class="btn btn-sm btn-danger">Reject</a>
+                            {% elif booking.status == 'accepted' %}
+                                <a href="{% url 'booking_update_status' booking.id 'in_progress' %}" class="btn btn-sm btn-primary">Start</a>
+                            {% elif booking.status == 'in_progress' %}
+                                <a href="{% url 'booking_update_status' booking.id 'completed' %}" class="btn btn-sm btn-success">Complete</a>
+                            {% else %}
+                                <span class="text-muted small">No action</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">No bookings yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

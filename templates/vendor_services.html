@@ -1,0 +1,413 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}Services - Vendor Dashboard{% endblock %}
+{% block nav_services %}active{% endblock %}
+{% block page_title %}Services{% endblock %}
+{% block page_subtitle %}View and manage your listed services{% endblock %}
+
+{% block content %}
+<style>
+/* Service Cards Styles */
+.service-cards-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+    .service-cards-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .service-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .service-cards-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.service-card {
+    max-width: 100%;
+}
+
+.service-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    border-color: #0284C7;
+}
+
+.service-card-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.service-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.service-card-title {
+    flex: 1;
+}
+
+.service-card-title h6 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1f2937;
+}
+
+.service-card-title small {
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.service-card-body {
+    padding: 1.25rem;
+}
+
+.service-card-body p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.service-card-footer {
+    padding: 1rem 1.25rem;
+    background: #f9fafb;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.service-card-footer .date {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.service-card-footer .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.service-card-footer .actions a {
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.service-card-footer .actions .btn-edit {
+    background: #0284C7;
+    color: white;
+}
+
+.service-card-footer .actions .btn-edit:hover {
+    background: #0369a1;
+}
+
+.service-card-footer .actions .btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.service-card-footer .actions .btn-delete:hover {
+    background: #dc2626;
+}
+
+/* Category Badge Colors */
+.category-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.category-borewell {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+}
+
+.category-agriculture {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+}
+
+.category-construction {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.category-water {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+}
+
+.category-default {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+
+/* Category Section Header */
+.category-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.category-section-header.borewell {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+}
+
+.category-section-header.agriculture {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.category-section-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.category-section-header .icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.category-section-header .count {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #d1d5db;
+}
+
+.empty-state p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+}
+
+/* Filter Loading Animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.filter-loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+</style>
+
+<div class="table-container">
+    <div class="table-header">
+        <h2 class="table-title">My Services</h2>
+        <a href="{% url 'vendor_service_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add Service
+        </a>
+    </div>
+
+    <!-- Category Filter Buttons -->
+    <div class="mb-4">
+        <style>
+        .filter-buttons-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-buttons-wrapper .btn {
+            flex: 0 1 auto;
+        }
+
+        @media (max-width: 576px) {
+            .filter-buttons-wrapper .btn {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.75rem;
+            }
+        }
+        </style>
+        <div class="filter-buttons-wrapper" role="group" aria-label="Service category filter">
+            <button type="button" class="category-filter-btn btn {% if category_filter == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}" data-category="all">
+                All
+            </button>
+            {% for category in categories %}
+            <button type="button" class="category-filter-btn btn {% if category_filter == category.id %}btn-primary{% else %}btn-outline-primary{% endif %}" data-category="{{ category.id }}">
+                {{ category.name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Service Cards Container (for AJAX updates) -->
+    <div id="serviceCardsContainer">
+
+    {% if grouped_services %}
+        {% for category_name, category_data in grouped_services.items %}
+        <div class="category-section mb-4">
+            {% with category_lower=category_data.category.name|lower %}
+            <div class="category-section-header {% if 'borewell' in category_lower %}borewell{% elif 'agri' in category_lower %}agriculture{% elif 'construct' in category_lower %}construction{% elif 'water' in category_lower %}water{% else %}category-default{% endif %}">
+                <div class="icon">
+                    <i class="bi bi-{{ category_data.category.icon|default:'folder' }}"></i>
+                </div>
+                <div>
+                    <h3>{{ category_data.category.name }}</h3>
+                    <small>{{ category_data.category.description|truncatewords:8 }}</small>
+                </div>
+                <div class="count">
+                    {{ category_data.total_subservices }} subservices
+                </div>
+            </div>
+            {% endwith %}
+
+            <div class="service-cards-container">
+                {% for subcategory_name, subcategory_data in category_data.subcategories.items %}
+                    {% for vendor_service in subcategory_data.services %}
+                    <div class="service-card">
+                        <div class="service-card-header">
+                            <div class="service-card-icon {% if 'borewell' in category_data.category.name|lower %}category-borewell{% elif 'agri' in category_data.category.name|lower %}category-agriculture{% else %}category-default{% endif %}">
+                                <i class="bi bi-{{ subcategory_data.subcategory.icon|default:'gear' }}"></i>
+                            </div>
+                            <div class="service-card-title">
+                                <h6>{{ vendor_service.subservice.name }}</h6>
+                                <small>{{ subcategory_data.subcategory.name }}</small>
+                            </div>
+                        </div>
+                        <div class="service-card-body">
+                            <p>{{ vendor_service.description|default:"No description provided"|truncatewords:20 }}</p>
+                        </div>
+                        <div class="service-card-footer">
+                            <span class="date">Added {{ vendor_service.created_at|date:"M d, Y" }}</span>
+                            <div class="actions">
+                                <a href="{% url 'vendor_service_edit' vendor_service.id %}" class="btn-edit">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'vendor_service_delete' vendor_service.id %}" class="btn-delete">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h3>No Services Yet</h3>
+            <p>Start adding your services to reach more customers.</p>
+            <a href="{% url 'vendor_service_add' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-1"></i>Add Your First Service
+            </a>
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+<script>
+// AJAX Category Filter - No Page Reload
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.category-filter-btn');
+    const container = document.getElementById('serviceCardsContainer');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+
+            // Update button states
+            filterButtons.forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-primary');
+
+            // Add loading state
+            container.classList.add('filter-loading');
+
+            // Fetch filtered services via AJAX
+            fetch(`{% url 'vendor_services' %}?category=${category}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                container.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Filter error:', error);
+                // Show error message
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Error loading services. Please try again.
+                    </div>
+                `;
+            })
+            .finally(() => {
+                container.classList.remove('filter-loading');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

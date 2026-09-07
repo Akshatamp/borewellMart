@@ -1,0 +1,333 @@
+{% extends "admin/base.html" %}
+
+{% block nav_services_list %}active{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-card-icon blue">
+            <i class="bi bi-layer-fill"></i>
+        </div>
+        <div class="stat-value">{{ total_sectors }}</div>
+        <div class="stat-label">Sectors</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon green">
+            <i class="bi bi-list-nested"></i>
+        </div>
+        <div class="stat-value">{{ total_services }}</div>
+        <div class="stat-label">Services</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon yellow">
+            <i class="bi bi-tools"></i>
+        </div>
+        <div class="stat-value">{{ total_subservices }}</div>
+        <div class="stat-label">Total Subservices</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="table-container" style="margin-bottom: 1.5rem;">
+    <div class="table-header">
+        <h4 class="table-title">Filters</h4>
+    </div>
+    <div class="p-3">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small">Sector</label>
+                <select name="sector" class="form-select">
+                    <option value="">All Sectors</option>
+                    {% for sector in all_sectors %}
+                    <option value="{{ sector.id }}" {% if sector_filter == sector.id|stringformat:"s" %}selected{% endif %}>{{ sector.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Search services..." value="{{ request.GET.search }}">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a href="{% url 'admin_services_list' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Services Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4 class="table-title">Services</h4>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+            <i class="bi bi-plus-lg"></i> Add Service
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sector</th>
+                    <th>Name</th>
+                    <th>Subservices</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>
+                        <span class="badge bg-light text-dark">{{ service.sector.name }}</span>
+                    </td>
+                    <td>
+                        <strong>{{ service.name }}</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-info">{{ service.subservices.count }}</span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-sm btn-table" onclick="editService('{{ service.id }}', '{{ service.name|escapejs }}', '{{ service.description|escapejs }}', '{{ service.icon|default:""|escapejs }}', {{ service.order }}, '{{ service.sector.id }}')">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-table text-danger" onclick="deleteService('{{ service.id }}', '{{ service.name|escapejs }}')">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i> No services
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if services.has_other_pages %}
+    <nav aria-label="Services pagination" class="mt-3">
+        <ul class="pagination pagination-sm justify-content-center">
+            {% if services.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ services.previous_page_number }}&sector={{ sector_filter }}&search={{ search_query }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in services.paginator.page_range %}
+            {% if services.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}&sector={{ sector_filter }}&search={{ search_query }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if services.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ services.next_page_number }}&sector={{ sector_filter }}&search={{ search_query }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="addServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'admin_services_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_service">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sector *</label>
+                        <select name="sector" class="form-select" required>
+                            {% for sector in all_sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ID *</label>
+                        <input type="text" name="id" class="form-control" required placeholder="e.g. drilling">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" id="serviceNameInput" class="form-control" required oninput="checkServiceName()">
+                        <div id="serviceNameError" class="text-danger small mt-1" style="display: none;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" class="form-control" placeholder="e.g. gear">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="addServiceBtn" class="btn btn-primary">Add Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Service Modal -->
+<div class="modal fade" id="editServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editServiceForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_service">
+                <input type="hidden" name="service_id" id="editServiceId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sector *</label>
+                        <select name="sector" id="editServiceSector" class="form-select" required>
+                            {% for sector in all_sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" name="id" id="editServiceOriginalId" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" id="editServiceName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" id="editServiceDesc" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Icon</label>
+                            <input type="text" name="icon" id="editServiceIcon" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" id="editServiceOrder" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep current image</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const existingServices = [
+    {% for service in services %}
+    "{{ service.name|escapejs }}",
+    {% endfor %}
+];
+
+function checkServiceName() {
+    const nameInput = document.getElementById('serviceNameInput');
+    const errorDiv = document.getElementById('serviceNameError');
+    const submitBtn = document.getElementById('addServiceBtn');
+    const name = nameInput.value.trim().toLowerCase();
+
+    if (name === '') {
+        errorDiv.style.display = 'none';
+        submitBtn.disabled = false;
+        return;
+    }
+
+    const exists = existingServices.some(serviceName => serviceName.toLowerCase() === name);
+
+    if (exists) {
+        errorDiv.textContent = 'Service with this name already exists.';
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = true;
+    } else {
+        errorDiv.style.display = 'none';
+        submitBtn.disabled = false;
+    }
+}
+
+function editService(id, name, desc, icon, order, sectorId) {
+    document.getElementById('editServiceId').value = id;
+    document.getElementById('editServiceOriginalId').value = id;
+    document.getElementById('editServiceName').value = name;
+    document.getElementById('editServiceDesc').value = desc || '';
+    document.getElementById('editServiceIcon').value = icon || '';
+    document.getElementById('editServiceOrder').value = order;
+    document.getElementById('editServiceSector').value = sectorId;
+    document.getElementById('editServiceForm').action = "{% url 'admin_services_list' %}";
+
+    const modal = new bootstrap.Modal(document.getElementById('editServiceModal'));
+    modal.show();
+}
+
+function deleteService(id, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This will affect all subservices in this service.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_services_list' %}";
+        const actionInput = document.createElement('input');
+        actionInput.name = 'action';
+        actionInput.value = 'delete_service';
+        const serviceIdInput = document.createElement('input');
+        serviceIdInput.name = 'service_id';
+        serviceIdInput.value = id;
+        const csrfToken = document.createElement('input');
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(actionInput);
+        form.appendChild(serviceIdInput);
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

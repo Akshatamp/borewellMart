@@ -1,0 +1,263 @@
+{% extends 'vendor_base.html' %}
+{% load static %}
+
+{% block title %}Communities - Vendor Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .vendor-community-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+    }
+
+    .community-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .community-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .community-card-header {
+        height: 100px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .community-card-header-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(16, 185, 129, 0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .community-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 4px solid white;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin: -35px auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        z-index: 10;
+    }
+
+    .community-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .community-avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .stat-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .stat-badge-members {
+        background: rgba(6, 182, 212, 0.1);
+        color: var(--primary-color);
+    }
+
+    .stat-badge-posts {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    .info-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(16, 185, 129, 0.05));
+        border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .verification-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.1));
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .vendor-community-header {
+            padding: 1.5rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Vendor Communities Header -->
+<div class="container">
+    <div class="vendor-community-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-1">
+                        <i class="fas fa-users me-2"></i>Communities
+                    </h2>
+                    <p class="mb-0 opacity-75">Connect with customers and other vendors</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    {% if vendor.verification_status == 'verified' %}
+                    <a href="{% url 'vendor_plans' %}" class="btn btn-light">
+                        <i class="fas fa-crown me-2"></i>Upgrade Plan
+                    </a>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Account Pending Verification</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if vendor.verification_status != 'verified' %}
+    <div class="verification-card mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle text-warning me-3 fa-2x"></i>
+                <div>
+                    <h6 class="mb-1">Account Pending Verification</h6>
+                    <p class="text-muted small mb-0">Your account is pending verification. Once verified, you can purchase a plan to access full vendor features.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if communities %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for community in communities %}
+        <div class="col">
+            <div class="community-card">
+                <div class="community-card-header">
+                    {% if community.cover_image %}
+                    <img src="{{ community.cover_image.url }}" class="w-100 h-100" alt="{{ community.name }}" style="object-fit: cover;">
+                    {% else %}
+                    <div class="community-card-header-placeholder">
+                        <i class="fas fa-users fa-3x" style="color: var(--primary-color); opacity: 0.3;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="community-avatar">
+                            {% if community.image %}
+                            <img src="{{ community.image.url }}" alt="{{ community.name }}">
+                            {% else %}
+                            <div class="community-avatar-placeholder">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h5 class="card-title text-center fw-semibold mb-2">{{ community.name }}</h5>
+                    <p class="card-text text-muted text-center small mb-3">{{ community.description|truncatewords:15 }}</p>
+
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <span class="stat-badge stat-badge-members">
+                            <i class="fas fa-users"></i>
+                            {{ community.member_count }} members
+                        </span>
+                        <span class="stat-badge stat-badge-posts">
+                            <i class="fas fa-file-alt"></i>
+                            {{ community.post_count }} posts
+                        </span>
+                    </div>
+
+                    <div class="d-grid">
+                        {% if community.id in user_communities %}
+                        <div class="btn-group">
+                            <a href="{% url 'community_detail' community.slug %}" class="btn btn-primary">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a href="{% url 'leave_community' community.slug %}" class="btn btn-outline-danger">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'join_community' community.slug %}" class="btn btn-success">
+                            <i class="fas fa-plus me-1"></i>Join Community
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px; background: rgba(6, 182, 212, 0.1);">
+            <i class="fas fa-users fa-3x text-muted"></i>
+        </div>
+        <h5 class="text-muted mb-2">No Communities Available</h5>
+        <p class="text-muted">Check back later for new communities.</p>
+    </div>
+    {% endif %}
+
+    {% if vendor.verification_status == 'verified' %}
+    <div class="info-card mt-4">
+        <div class="card-body">
+            <div class="d-flex align-items-start">
+                <i class="fas fa-crown text-warning me-3 fa-2x"></i>
+                <div class="flex-grow-1">
+                    <h6 class="mb-2">Want to access more features?</h6>
+                    <p class="text-muted small mb-2">Purchase a plan to access:</p>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <ul class="small mb-0">
+                                <li><i class="fas fa-check text-success me-2"></i>Bookings management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Enquiries handling</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="small mb-0">
+                                <li><i class="fas fa-check text-success me-2"></i>Service management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>And more...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="{% url 'vendor_plans' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-crown me-1"></i>View Plans
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
