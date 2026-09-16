@@ -1,0 +1,112 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Partner Coupons - Admin{% endblock %}
+{% block page_title %}Partner Coupons{% endblock %}
+{% block page_subtitle %}Manage all partner coupon codes{% endblock %}
+{% block nav_partner_coupons %}active{% endblock %}
+
+{% block content %}
+<!-- Create Coupon -->
+<div class="table-container">
+    <div class="table-header">
+        <h5 class="table-title"><i class="bi bi-plus-circle me-2"></i>Create Coupon for Partner</h5>
+    </div>
+    <div class="p-4">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Partner</label>
+                    <select class="form-select" name="partner_id" required>
+                        <option value="">Select Partner</option>
+                        {% for p in partners %}
+                        <option value="{{ p.id }}">{{ p.company_name }} ({{ p.referral_code }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Code (optional - auto-generated if blank)</label>
+                    <input type="text" class="form-control" name="code" placeholder="e.g. BOREWELL20" maxlength="20">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold">Max Uses</label>
+                    <input type="number" class="form-control" name="max_uses" min="1" placeholder="Unlimited">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-circle me-1"></i>Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Coupons List -->
+<div class="table-container">
+    <div class="table-header">
+        <h5 class="table-title"><i class="bi bi-ticket-perforated-fill me-2"></i>All Coupons ({{ coupons|length }})</h5>
+        <a href="{% url 'admin_partners' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-people-fill me-1"></i>Partners
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Partner</th>
+                    <th>Status</th>
+                    <th>Partner Status</th>
+                    <th>Used</th>
+                    <th>Limit</th>
+                    <th>Vendors Referred</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                <tr>
+                    <td><code>{{ coupon.code }}</code></td>
+                    <td>{{ coupon.partner.company_name }}</td>
+                    <td>
+                        {% if coupon.is_active %}
+                            <span class="badge badge-completed">Active</span>
+                        {% else %}
+                            <span class="badge badge-failed">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ coupon.partner.status|title }}</td>
+                    <td>{{ coupon.times_used }}</td>
+                    <td>{{ coupon.max_uses|default:"Unlimited" }}</td>
+                    <td>{{ coupon.referral_count }}</td>
+                    <td>{{ coupon.created_at|date:"d M Y" }}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle">
+                                <input type="hidden" name="coupon_id" value="{{ coupon.id }}">
+                                {% if coupon.is_active %}
+                                <button type="submit" class="btn btn-warning btn-sm" title="Deactivate"><i class="bi bi-pause-fill"></i></button>
+                                {% else %}
+                                <button type="submit" class="btn btn-success btn-sm" title="Activate"><i class="bi bi-play-fill"></i></button>
+                                {% endif %}
+                            </form>
+                            <form method="POST" onsubmit="return confirm('Delete coupon {{ coupon.code }}?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="coupon_id" value="{{ coupon.id }}">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" class="text-center text-muted py-4">No coupons yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

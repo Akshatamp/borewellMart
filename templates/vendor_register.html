@@ -109,6 +109,18 @@
                                 <div class="text-danger">{{ form.is_emergency_available.errors }}</div>
                             {% endif %}
                         </div>
+                        {% if referral_code %}
+                        <div class="mb-3 p-3 rounded" style="background-color: rgba(2, 132, 199, 0.08); border: 1px solid #0284C7;">
+                            <i class="fas fa-gift me-2" style="color: #0284C7;"></i>
+                            <span>Referral code <code>{{ referral_code }}</code> will be applied to your account</span>
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label for="referralCode" class="form-label">Referral / Coupon Code (Optional)</label>
+                            <input type="text" class="form-control" id="referralCode" name="referral_code"
+                                   placeholder="Enter partner coupon code if you have one"
+                                   value="{{ referral_code|default:'' }}">
+                        </div>
                         <button type="submit" class="btn btn-primary w-100">Submit for Verification</button>
                     </form>
                 </div>

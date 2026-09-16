@@ -454,6 +454,14 @@
                     <i class="bi bi-person-fill"></i>
                     <span>Customers</span>
                 </a>
+                <a href="{% url 'admin_partners' %}" class="sidebar-link {% block nav_partners %}{% endblock %}">
+                    <i class="bi bi-handshake"></i>
+                    <span>Partners</span>
+                </a>
+                <a href="{% url 'admin_partner_coupons' %}" class="sidebar-link {% block nav_partner_coupons %}{% endblock %}">
+                    <i class="bi bi-ticket-perforated"></i>
+                    <span>Coupons</span>
+                </a>
                 <a href="{% url 'vendor_payments_list' %}" class="sidebar-link {% block nav_payments %}{% endblock %}">
                     <i class="bi bi-credit-card-fill"></i>
                     <span>Payments</span>

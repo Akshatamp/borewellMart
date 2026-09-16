@@ -184,6 +184,10 @@
         background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     }
 
+    .choice-card.partner::before {
+        background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
+    }
+
     .choice-card:hover {
         transform: translateY(-10px);
         box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
@@ -208,6 +212,10 @@
 
     .choice-card.vendor .icon-wrapper {
         background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+
+    .choice-card.partner .icon-wrapper {
+        background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
     }
 
     .choice-card h3 {
@@ -268,6 +276,16 @@
         transform: translateY(-2px);
     }
 
+    .choice-card.partner .btn {
+        background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
+        color: white;
+    }
+
+    .choice-card.partner .btn:hover {
+        box-shadow: 0 10px 25px rgba(8, 145, 178, 0.4);
+        transform: translateY(-2px);
+    }
+
     @keyframes slideInUp {
         from {
             opacity: 0;
@@ -304,6 +322,10 @@
 
     .choice-card.vendor {
         animation-delay: 0.2s;
+    }
+
+    .choice-card.partner {
+        animation-delay: 0.4s;
     }
 
     /* Responsive */
@@ -387,6 +409,26 @@
                     </ul>
                     <button class="btn btn-primary w-100">
                         <i class="fas fa-arrow-right me-2"></i>Register as Vendor
+                    </button>
+                </div>
+            </a>
+
+            <!-- Partner Card -->
+            <a href="{% url 'partner_user_register' %}" class="choice-card partner">
+                <div class="card-body text-center p-4">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Partner</h3>
+                    <p>Register as a partner to refer vendors and track your referrals with coupons.</p>
+                    <ul class="features list-unstyled">
+                        <li><i class="fas fa-check-circle"></i> Unique referral link</li>
+                        <li><i class="fas fa-check-circle"></i> Create &amp; share coupons</li>
+                        <li><i class="fas fa-check-circle"></i> Track registrations</li>
+                        <li><i class="fas fa-check-circle"></i> See conversions live</li>
+                    </ul>
+                    <button class="btn btn-primary w-100">
+                        <i class="fas fa-arrow-right me-2"></i>Register as Partner
                     </button>
                 </div>
             </a>

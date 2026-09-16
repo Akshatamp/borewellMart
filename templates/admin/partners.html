@@ -1,0 +1,211 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Partners - Admin{% endblock %}
+{% block page_title %}Partners{% endblock %}
+{% block page_subtitle %}Manage referral partners and their activity{% endblock %}
+{% block nav_partners %}active{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon purple"><i class="bi bi-people-fill"></i></div>
+        <div class="stat-value">{{ total_partners }}</div>
+        <div class="stat-label">Total Partners</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon green"><i class="bi bi-person-check-fill"></i></div>
+        <div class="stat-value">{{ active_partners }}</div>
+        <div class="stat-label">Active Partners</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon blue"><i class="bi bi-diagram-3-fill"></i></div>
+        <div class="stat-value">{{ total_referrals }}</div>
+        <div class="stat-label">Total Referrals</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon cyan"><i class="bi bi-cash-coin"></i></div>
+        <div class="stat-value">{{ total_conversions }}</div>
+        <div class="stat-label">Converted (Paid Vendors)</div>
+    </div>
+</div>
+
+<!-- Create Partner -->
+<div class="table-container">
+    <div class="table-header">
+        <h5 class="table-title"><i class="bi bi-person-plus-fill me-2"></i>Create Partner</h5>
+    </div>
+    <div class="p-4">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold">Username</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold">Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold">Password</label>
+                    <input type="text" class="form-control" name="password" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold">Name / Company</label>
+                    <input type="text" class="form-control" name="company_name" required>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label small fw-semibold">Phone</label>
+                    <input type="text" class="form-control" name="phone" required>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label small fw-semibold">Max Coupons</label>
+                    <input type="number" class="form-control" name="max_coupons" value="10" min="0">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">
+                <i class="bi bi-plus-circle me-1"></i>Create &amp; Activate Partner
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Partners List -->
+<div class="table-container">
+    <div class="table-header">
+        <h5 class="table-title"><i class="bi bi-people-fill me-2"></i>All Partners</h5>
+        <a href="{% url 'admin_partner_coupons' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-ticket-perforated me-1"></i>Manage Coupons
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Partner</th>
+                    <th>Referral Code</th>
+                    <th>Status</th>
+                    <th>Referrals</th>
+                    <th>Converted</th>
+                    <th>Coupons</th>
+                    <th>Coupon Limit</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in partner_stats %}
+                {% with p=item.partner %}
+                <tr>
+                    <td>
+                        <div class="fw-semibold">{{ p.company_name }}</div>
+                        <small class="text-muted">{{ p.user.email }} | {{ p.phone }}</small>
+                    </td>
+                    <td><code>{{ p.referral_code }}</code></td>
+                    <td>
+                        {% if p.status == 'active' %}
+                            <span class="badge badge-verified">Active</span>
+                        {% elif p.status == 'pending' %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% else %}
+                            <span class="badge badge-suspended">Suspended</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.total_referrals }}</td>
+                    <td><span class="badge badge-completed">{{ item.converted }}</span></td>
+                    <td>{{ item.coupon_count }}</td>
+                    <td>
+                        <form method="POST" class="d-flex gap-1" style="max-width:130px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="max_coupons">
+                            <input type="hidden" name="partner_id" value="{{ p.id }}">
+                            <input type="number" class="form-control form-control-sm" name="max_coupons" value="{{ p.max_coupons }}" min="0">
+                            <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-check"></i></button>
+                        </form>
+                    </td>
+                    <td>{{ p.created_at|date:"d M Y" }}</td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+                            {% if p.status != 'active' %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="status">
+                                <input type="hidden" name="partner_id" value="{{ p.id }}">
+                                <input type="hidden" name="status" value="active">
+                                <button type="submit" class="btn btn-success btn-sm" title="Approve / Activate"><i class="bi bi-check-lg"></i></button>
+                            </form>
+                            {% endif %}
+                            {% if p.status != 'suspended' %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="status">
+                                <input type="hidden" name="partner_id" value="{{ p.id }}">
+                                <input type="hidden" name="status" value="suspended">
+                                <button type="submit" class="btn btn-warning btn-sm" title="Suspend"><i class="bi bi-pause-fill"></i></button>
+                            </form>
+                            {% endif %}
+                            <form method="POST" onsubmit="return confirm('Delete partner {{ p.company_name }}? This will remove all their referral records.');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="partner_id" value="{{ p.id }}">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% empty %}
+                <tr><td colspan="9" class="text-center text-muted py-4">No partners yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Referrals -->
+<div class="table-container">
+    <div class="table-header">
+        <h5 class="table-title"><i class="bi bi-activity me-2"></i>Recent Referral Activity</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Partner</th>
+                    <th>Referred Vendor</th>
+                    <th>Source</th>
+                    <th>Coupon</th>
+                    <th>Vendor Payment</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ref in recent_referrals %}
+                <tr>
+                    <td class="fw-semibold">{{ ref.partner.company_name }}</td>
+                    <td>{{ ref.vendor.company_name }}</td>
+                    <td>{{ ref.get_source_display }}</td>
+                    <td>{{ ref.coupon.code|default:'—' }}</td>
+                    <td>
+                        {% with payment=ref.vendor.payment %}
+                            {% if payment and payment.status == 'completed' %}
+                                <span class="badge badge-completed">Converted</span>
+                            {% elif payment %}
+                                <span class="badge badge-pending">{{ payment.status|title }}</span>
+                            {% else %}
+                                <span class="badge badge-failed">Not Paid</span>
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                    <td>{{ ref.created_at|date:"d M Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No referral activity yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

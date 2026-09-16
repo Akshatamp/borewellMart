@@ -21,19 +21,21 @@ import razorpay
 import json
 import hashlib
 import hmac
+from urllib.parse import quote
 from .models import (
     City, SubService, Sector, Service, Vendor, VendorService, Booking, Review,
     UserProfile, VendorGallery, FavoriteVendor, Blog, Enquiry, VendorPayment, VendorPlan, PlanNotification, BookingPayment,
     ForumCategory, ForumThread, ForumPost, ForumVote, ForumTag, ForumThreadTag, ForumThreadService,
     Community, CommunityMember, CommunityPost, CommunityComment, CommunityLike,
-    VendorEquipment, EquipmentInquiry, VisitorTracking
+    VendorEquipment, EquipmentInquiry, VisitorTracking,
+    Partner, PartnerCoupon, PartnerReferral
 )
 from .forms import (
     UserRegisterForm, VendorUserRegisterForm, CustomerProfileForm, VendorProfileForm, VendorServiceForm,
     BookingForm, ReviewForm, VendorGalleryForm, CityForm, SubServiceForm, BlogForm,
     EnquiryForm, EnquiryResponseForm, BulkVendorRegistrationForm, BookingPaymentForm,
     ForumThreadForm, ForumPostForm, ForumCategoryForm, CommunityForm, CommunityPostForm, CommunityCommentForm,
-    VendorEquipmentForm, EquipmentInquiryForm
+    VendorEquipmentForm, EquipmentInquiryForm, PartnerUserRegisterForm, PartnerCouponForm
 )
 from .utils import (
     send_registration_email,
@@ -1292,20 +1294,24 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # This is the customer registration page - force the account type.
+            # Vendor/partner signups must use their dedicated pages
+            # (/register/vendor/ and /register/partner/) which track referrals.
+            profile = user.userprofile
+            if profile.user_type != 'customer':
+                profile.user_type = 'customer'
+                profile.save(update_fields=['user_type'])
             login(request, user)
             messages.success(request, 'Registration successful!')
 
             # Send registration email
             try:
-                send_registration_email(user, user_type=user.userprofile.user_type)
+                send_registration_email(user, user_type='customer')
             except Exception as e:
                 # Log error but don't prevent registration
                 print(f"Failed to send registration email: {e}")
 
-            if user.userprofile.user_type == 'vendor':
-                return redirect('vendor_register')
-            else:
-                return redirect('home')
+            return redirect('home')
     else:
         form = UserRegisterForm()
 
@@ -1354,11 +1360,51 @@ def customer_register(request):
 
 
 def register_choice(request):
-    """Render the registration choice page with customer and vendor options."""
+    """Render the registration choice page with customer, vendor and partner options."""
     return render(request, 'register_choice.html')
 
 
+def _record_partner_referral(request, vendor):
+    """Create a permanent PartnerReferral if a referral code/coupon was used.
+    Priority: coupon code entered by vendor > referral link stored in session."""
+    code = (request.POST.get('referral_code') or '').strip().upper()
+    if not code:
+        code = (request.session.get('partner_ref_code') or '').strip().upper()
+
+    if not code:
+        return None
+
+    coupon = PartnerCoupon.objects.filter(code=code).select_related('partner').first()
+    if coupon and coupon.is_available:
+        referral = PartnerReferral.objects.create(
+            partner=coupon.partner,
+            vendor=vendor,
+            source='coupon',
+            coupon=coupon,
+        )
+        PartnerCoupon.objects.filter(pk=coupon.pk).update(times_used=coupon.times_used + 1)
+        request.session.pop('partner_ref_code', None)
+        return referral
+
+    partner = Partner.objects.filter(referral_code=code, status='active').first()
+    if partner:
+        referral = PartnerReferral.objects.create(
+            partner=partner,
+            vendor=vendor,
+            source='link',
+        )
+        request.session.pop('partner_ref_code', None)
+        return referral
+
+    return None
+
+
 def vendor_user_register(request):
+    # Capture referral code from ?ref= link into session
+    ref_code = request.GET.get('ref', '').strip().upper()
+    if ref_code:
+        request.session['partner_ref_code'] = ref_code
+
     if request.method == 'POST':
         form = VendorUserRegisterForm(request.POST)
         email = request.POST.get('email')
@@ -1366,11 +1412,24 @@ def vendor_user_register(request):
         # Check if email is verified in session
         if not email or request.session.get('otp_verified_email') != email:
             messages.error(request, 'Please verify your email address using OTP first.')
-            return render(request, 'vendor_user_register.html', {'form': form})
+            states = City.objects.values_list('state', flat=True).distinct().exclude(state='').exclude(state__isnull=True).order_by('state')
+            return render(request, 'vendor_user_register.html', {
+                'form': form,
+                'states': states,
+                'referral_code': request.session.get('partner_ref_code', ''),
+            })
 
         if form.is_valid():
             user = form.save()
             login(request, user)
+
+            # Permanently record partner attribution (referral link or coupon)
+            try:
+                referral = _record_partner_referral(request, user.vendor)
+                if referral:
+                    messages.info(request, f'Referral code applied successfully. Referred by {referral.partner.company_name}.')
+            except Exception as e:
+                print(f"Failed to record partner referral: {e}")
 
             # Clear verified OTP data from session
             request.session.pop('otp_verified_email', None)
@@ -1405,7 +1464,8 @@ def vendor_user_register(request):
 
     return render(request, 'vendor_user_register.html', {
         'form': form,
-        'states': states
+        'states': states,
+        'referral_code': request.session.get('partner_ref_code', ''),
     })
 
 
@@ -1413,6 +1473,8 @@ def custom_login(request):
     # If user is already logged in, redirect to appropriate dashboard
     if request.user.is_authenticated:
         try:
+            if request.user.userprofile.user_type == 'partner':
+                return redirect('partner_dashboard')
             if request.user.userprofile.user_type == 'vendor':
                 try:
                     vendor = request.user.vendor
@@ -1437,6 +1499,16 @@ def custom_login(request):
                 return redirect('admin_dashboard')
 
             try:
+                if user.userprofile.user_type == 'partner':
+                    try:
+                        if user.partner_profile.status == 'suspended':
+                            from django.contrib.auth import logout
+                            logout(request)
+                            messages.error(request, 'Your partner account has been suspended. Please contact admin.')
+                            return redirect('login')
+                    except Partner.DoesNotExist:
+                        pass
+                    return redirect('partner_dashboard')
                 if user.userprofile.user_type == 'vendor':
                     try:
                         vendor = user.vendor
@@ -1458,6 +1530,278 @@ def custom_logout(request):
     from django.contrib.auth import logout
     logout(request)
     return redirect('home')
+
+
+# ==================== Partner Views ====================
+
+def partner_required(view_func):
+    """Decorator: user must be logged in and have a partner profile"""
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        try:
+            if request.user.userprofile.user_type != 'partner':
+                messages.error(request, 'Access denied. Partner account required.')
+                return redirect('home')
+            partner = request.user.partner_profile
+        except (UserProfile.DoesNotExist, Partner.DoesNotExist):
+            messages.error(request, 'Partner profile not found.')
+            return redirect('home')
+        return view_func(request, partner, *args, **kwargs)
+    return wrapper
+
+
+def partner_user_register(request):
+    if request.method == 'POST':
+        form = PartnerUserRegisterForm(request.POST)
+        email = request.POST.get('email')
+
+        # Check if email is verified in session
+        if not email or request.session.get('otp_verified_email') != email:
+            messages.error(request, 'Please verify your email address using OTP first.')
+            return render(request, 'partner_user_register.html', {'form': form})
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+
+            # Clear verified OTP data from session
+            request.session.pop('otp_verified_email', None)
+            request.session.pop('otp_code', None)
+            request.session.pop('otp_email', None)
+            request.session.pop('otp_timestamp', None)
+
+            messages.success(request, 'Partner registration successful! Your account is pending admin approval.')
+
+            try:
+                send_registration_email(user, user_type='partner')
+            except Exception as e:
+                print(f"Failed to send partner registration email: {e}")
+
+            return redirect('partner_dashboard')
+    else:
+        form = PartnerUserRegisterForm()
+
+    return render(request, 'partner_user_register.html', {'form': form})
+
+
+@partner_required
+def partner_dashboard(request, partner):
+    referrals = partner.referrals.select_related('vendor__user', 'vendor__payment', 'coupon').all()
+
+    total_referrals = referrals.count()
+    converted_referrals = referrals.filter(vendor__payment__status='completed').count()
+    pending_vendors = referrals.filter(vendor__verification_status='pending').count()
+    verified_vendors = referrals.filter(vendor__verification_status='verified').count()
+
+    coupons = partner.coupons.annotate(
+        referral_count=Count('referrals')
+    ).order_by('-created_at')
+
+    total_coupon_uses = sum(c.times_used for c in coupons)
+
+    referral_link = partner.get_referral_link(request)
+    base = settings.FRONTEND_URL.rstrip('/')
+
+    def wa_share(text):
+        return f'https://wa.me/?text={quote(text)}'
+
+    whatsapp_text = (
+        f"Hello! Register your borewell business on BorewellMart - India's trusted borewell marketplace. "
+        f"Use my referral link: {referral_link}"
+    )
+
+    coupon_share_data = []
+    for c in coupons:
+        coupon_link = f"{base}/register/vendor/?ref={c.code}"
+        c.share_link = coupon_link
+        c.share_whatsapp = wa_share(
+            f"Register your borewell business on BorewellMart with my coupon code {c.code}.\n\n"
+            f"Open link: {coupon_link}"
+        )
+
+    context = {
+        'partner': partner,
+        'referral_link': referral_link,
+        'whatsapp_share_url': wa_share(whatsapp_text),
+        'total_referrals': total_referrals,
+        'converted_referrals': converted_referrals,
+        'pending_vendors': pending_vendors,
+        'verified_vendors': verified_vendors,
+        'coupons': coupons,
+        'total_coupon_uses': total_coupon_uses,
+        'referrals': referrals,
+        'coupon_form': PartnerCouponForm(),
+        'coupon_limit_reached': coupons.count() >= partner.max_coupons,
+    }
+    return render(request, 'partner/dashboard.html', context)
+
+
+@partner_required
+def partner_coupon_add(request, partner):
+    if request.method != 'POST':
+        return redirect('partner_dashboard')
+
+    if partner.coupons.count() >= partner.max_coupons:
+        messages.error(request, f'You have reached your coupon limit ({partner.max_coupons}).')
+        return redirect('partner_dashboard')
+
+    form = PartnerCouponForm(request.POST)
+    if form.is_valid():
+        code = form.cleaned_data.get('code') or None
+        max_uses = form.cleaned_data.get('max_uses')
+        if code and (PartnerCoupon.objects.filter(code=code).exists() or Partner.objects.filter(referral_code=code).exists()):
+            form.add_error('code', 'This code is already in use. Please choose another.')
+            messages.error(request, 'This code is already in use.')
+            return redirect('partner_dashboard')
+        coupon = PartnerCoupon.objects.create(partner=partner, code=code, max_uses=max_uses)
+        messages.success(request, f'Coupon "{coupon.code}" created successfully!')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, error)
+    return redirect('partner_dashboard')
+
+
+@partner_required
+def partner_coupon_delete(request, partner, coupon_id):
+    if request.method != 'POST':
+        return redirect('partner_dashboard')
+
+    coupon = get_object_or_404(PartnerCoupon, pk=coupon_id, partner=partner)
+    coupon.delete()
+    messages.success(request, f'Coupon "{coupon.code}" deleted.')
+    return redirect('partner_dashboard')
+
+
+# ==================== Admin Partner Management ====================
+
+def _admin_required(view_func):
+    """Decorator: user must be a superuser"""
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_superuser:
+            messages.error(request, 'Access denied. Admin only.')
+            return redirect('home')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+@_admin_required
+def admin_partners(request):
+    """Admin page: manage partners and their activity"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'create':
+            username = request.POST.get('username', '').strip()
+            email = request.POST.get('email', '').strip()
+            password = request.POST.get('password', '').strip()
+            company_name = request.POST.get('company_name', '').strip()
+            phone = request.POST.get('phone', '').strip()
+            max_coupons = int(request.POST.get('max_coupons') or 10)
+
+            if not all([username, email, password, company_name, phone]):
+                messages.error(request, 'All fields are required to create a partner.')
+            elif User.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists.')
+            elif User.objects.filter(email=email).exists():
+                messages.error(request, 'Email already exists.')
+            else:
+                with transaction.atomic():
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    UserProfile.objects.create(user=user, phone=phone, user_type='partner')
+                    Partner.objects.create(
+                        user=user, company_name=company_name, phone=phone,
+                        max_coupons=max_coupons, status='active',
+                    )
+                messages.success(request, f'Partner "{company_name}" created and activated.')
+
+        elif action == 'status':
+            partner = get_object_or_404(Partner, pk=request.POST.get('partner_id'))
+            new_status = request.POST.get('status')
+            if new_status in dict(Partner.STATUS_CHOICES):
+                partner.status = new_status
+                partner.save(update_fields=['status'])
+                messages.success(request, f'{partner.company_name} is now {new_status}.')
+
+        elif action == 'max_coupons':
+            partner = get_object_or_404(Partner, pk=request.POST.get('partner_id'))
+            try:
+                partner.max_coupons = max(0, int(request.POST.get('max_coupons')))
+                partner.save(update_fields=['max_coupons'])
+                messages.success(request, f'Coupon limit updated for {partner.company_name}.')
+            except (TypeError, ValueError):
+                messages.error(request, 'Invalid coupon limit.')
+
+        elif action == 'delete':
+            partner = get_object_or_404(Partner, pk=request.POST.get('partner_id'))
+            partner.user.delete()  # cascades to Partner, UserProfile
+            messages.success(request, f'Partner "{partner.company_name}" deleted.')
+
+        return redirect('admin_partners')
+
+    partners = Partner.objects.select_related('user').prefetch_related('referrals', 'coupons').order_by('-created_at')
+    partner_stats = []
+    for p in partners:
+        partner_stats.append({
+            'partner': p,
+            'total_referrals': p.referrals.count(),
+            'converted': p.referrals.filter(vendor__payment__status='completed').count(),
+            'coupon_count': p.coupons.count(),
+        })
+
+    recent_referrals = PartnerReferral.objects.select_related('partner', 'vendor', 'coupon').order_by('-created_at')[:20]
+
+    context = {
+        'partner_stats': partner_stats,
+        'recent_referrals': recent_referrals,
+        'total_partners': partners.count(),
+        'active_partners': partners.filter(status='active').count(),
+        'total_referrals': PartnerReferral.objects.count(),
+        'total_conversions': PartnerReferral.objects.filter(vendor__payment__status='completed').count(),
+    }
+    return render(request, 'admin/partners.html', context)
+
+
+@_admin_required
+def admin_coupons(request):
+    """Admin page: manage all partner coupons"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'create':
+            partner = get_object_or_404(Partner, pk=request.POST.get('partner_id'))
+            code = request.POST.get('code', '').strip().upper() or None
+            max_uses = request.POST.get('max_uses') or None
+            if code and (PartnerCoupon.objects.filter(code=code).exists() or Partner.objects.filter(referral_code=code).exists()):
+                messages.error(request, 'This code is already in use.')
+            else:
+                PartnerCoupon.objects.create(partner=partner, code=code, max_uses=max_uses)
+                messages.success(request, 'Coupon created successfully.')
+
+        elif action == 'toggle':
+            coupon = get_object_or_404(PartnerCoupon, pk=request.POST.get('coupon_id'))
+            coupon.is_active = not coupon.is_active
+            coupon.save(update_fields=['is_active'])
+            messages.success(request, f'Coupon "{coupon.code}" {"activated" if coupon.is_active else "deactivated"}.')
+
+        elif action == 'delete':
+            coupon = get_object_or_404(PartnerCoupon, pk=request.POST.get('coupon_id'))
+            coupon.delete()
+            messages.success(request, f'Coupon "{coupon.code}" deleted.')
+
+        return redirect('admin_coupons')
+
+    coupons = PartnerCoupon.objects.select_related('partner__user').annotate(
+        referral_count=Count('referrals')
+    ).order_by('-created_at')
+    partners = Partner.objects.filter(status='active').order_by('company_name')
+
+    context = {
+        'coupons': coupons,
+        'partners': partners,
+    }
+    return render(request, 'admin/coupons.html', context)
 
 
 @login_required
@@ -1839,24 +2183,41 @@ def vendor_payment_callback(request):
 
 @login_required
 def vendor_register(request):
+    # Capture referral code from ?ref= link into session (step-2 completion flow)
+    ref_code = request.GET.get('ref', '').strip().upper()
+    if ref_code:
+        request.session['partner_ref_code'] = ref_code
+
     try:
         vendor = request.user.vendor
         return redirect('vendor_dashboard')
-    except Vendor.DoesNotExist:
+    except (Vendor.DoesNotExist, AttributeError):
         pass
-    
+
     if request.method == 'POST':
         form = VendorProfileForm(request.POST, request.FILES)
         if form.is_valid():
             vendor = form.save(commit=False)
             vendor.user = request.user
             vendor.save()
+
+            # Record partner attribution (referral link session or coupon code field)
+            try:
+                referral = _record_partner_referral(request, vendor)
+                if referral:
+                    messages.info(request, f'Referral code applied successfully. Referred by {referral.partner.company_name}.')
+            except Exception as e:
+                print(f"Failed to record partner referral: {e}")
+
             messages.success(request, 'Vendor registration submitted! Please complete the payment to activate your account.')
             return redirect('vendor_payment_page')
     else:
         form = VendorProfileForm()
-    
-    return render(request, 'vendor_register.html', {'form': form})
+
+    return render(request, 'vendor_register.html', {
+        'form': form,
+        'referral_code': request.session.get('partner_ref_code', ''),
+    })
 
 
 def search(request):

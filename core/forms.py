@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from .models import UserProfile, Vendor, VendorService, Booking, Review, VendorGallery, Blog, City, SubService, Sector, Service, Enquiry, BookingPayment, ForumCategory, ForumThread, ForumPost, ForumTag, ForumThreadService, Community, CommunityPost, CommunityComment, VendorEquipment, EquipmentInquiry
+from .models import UserProfile, Vendor, VendorService, Booking, Review, VendorGallery, Blog, City, SubService, Sector, Service, Enquiry, BookingPayment, ForumCategory, ForumThread, ForumPost, ForumTag, ForumThreadService, Community, CommunityPost, CommunityComment, VendorEquipment, EquipmentInquiry, Partner, PartnerCoupon
 from .utils import validate_image_size, compress_image
 
 
@@ -284,7 +284,7 @@ class VendorProfileForm(forms.ModelForm):
 
     class Meta:
         model = Vendor
-        fields = ['company_name', 'logo', 'cover_image', 'city', 'state', 'experience', 'rating',
+        fields = ['company_name', 'logo', 'cover_image', 'city', 'state', 'experience',
                   'phone', 'email', 'address', 'license_number', 'certifications', 'is_emergency_available']
         widgets = {
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -299,9 +299,6 @@ class VendorProfileForm(forms.ModelForm):
             'license_number': forms.TextInput(attrs={'class': 'form-control'}),
             'certifications': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Enter certifications separated by commas', 'class': 'form-control'}),
             'is_emergency_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }
-        labels = {
-            'rating': 'Initial Rating (0.0 - 5.0)',
         }
 
     def clean_logo(self):
@@ -772,3 +769,59 @@ class EquipmentInquiryForm(forms.ModelForm):
                 'placeholder': 'I am interested in this equipment. Please provide more details about availability and pricing...'
             }),
         }
+
+
+class PartnerUserRegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    phone = forms.CharField(max_length=15, required=True)
+    company_name = forms.CharField(max_length=200, required=True, label='Your Name / Company Name')
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('An account with this email already exists.')
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+            UserProfile.objects.create(
+                user=user,
+                phone=self.cleaned_data['phone'],
+                user_type='partner',
+            )
+            Partner.objects.create(
+                user=user,
+                company_name=self.cleaned_data['company_name'],
+                phone=self.cleaned_data['phone'],
+                status='pending',
+            )
+        return user
+
+
+class PartnerCouponForm(forms.ModelForm):
+    """Form for partners to create tracking coupon codes"""
+    class Meta:
+        model = PartnerCoupon
+        fields = ['code', 'max_uses']
+        widgets = {
+            'max_uses': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+
+    def clean_code(self):
+        import re
+        code = self.cleaned_data.get('code', '').strip().upper()
+        if code:
+            if not re.match(r'^[A-Z0-9]+$', code):
+                raise forms.ValidationError('Code can only contain letters and numbers.')
+            if len(code) < 6:
+                raise forms.ValidationError('Code must be at least 6 characters.')
+            if len(code) > 20:
+                raise forms.ValidationError('Code cannot exceed 20 characters.')
+        return code

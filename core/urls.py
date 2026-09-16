@@ -13,6 +13,7 @@ urlpatterns = [
     path('register/', views.register_choice, name='register_choice'),
     path('register/customer/', views.register, name='register'),
     path('register/vendor/', views.vendor_user_register, name='vendor_user_register'),
+    path('register/partner/', views.partner_user_register, name='partner_user_register'),
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
@@ -49,6 +50,11 @@ urlpatterns = [
     path('dashboard/vendor/bookings/', views.vendor_bookings, name='vendor_bookings'),
     path('dashboard/vendor/services/', views.vendor_services, name='vendor_services'),
     path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
+
+    # Partner
+    path('dashboard/partner/', views.partner_dashboard, name='partner_dashboard'),
+    path('partner/coupon/add/', views.partner_coupon_add, name='partner_coupon_add'),
+    path('partner/coupon/<int:coupon_id>/delete/', views.partner_coupon_delete, name='partner_coupon_delete'),
 
     # Admin vendor management (using dashboard/admin prefix to avoid conflict with Django admin)
     path('dashboard/admin/vendors/all/', views.all_vendors, name='admin_all_vendors'),
@@ -121,6 +127,10 @@ urlpatterns = [
     path('dashboard/admin/services/', views.admin_services, name='admin_services'),
     path('dashboard/admin/blogs/', views.admin_blogs, name='admin_blogs'),
     path('dashboard/admin/visitors/', views.admin_visitors, name='admin_visitors'),
+
+    # Admin Partner Management
+    path('dashboard/admin/partners/', views.admin_partners, name='admin_partners'),
+    path('dashboard/admin/partner-coupons/', views.admin_coupons, name='admin_partner_coupons'),
 
     # City CRUD
     path('dashboard/admin/cities/add/', views.admin_cities, name='admin_city_add'),

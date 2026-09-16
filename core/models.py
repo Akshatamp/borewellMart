@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.core.validators import RegexValidator
 from decimal import Decimal
+import secrets
+import string
 
 
 class City(models.Model):
@@ -146,6 +148,7 @@ class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('customer', 'Customer'),
         ('vendor', 'Vendor'),
+        ('partner', 'Partner'),
         ('admin', 'Admin'),
     ]
 
@@ -1012,3 +1015,121 @@ class VisitorTracking(models.Model):
     def __str__(self):
         identifier = self.user.username if self.user else self.ip_address or 'Anonymous'
         return f"Visitor {identifier} - {self.first_visit.strftime('%Y-%m-%d')}"
+
+
+# ==================== Partner / Referral Models ====================
+
+def generate_partner_code(length=8):
+    """Generate a unique random alphanumeric code"""
+    alphabet = string.ascii_uppercase + string.digits
+    while True:
+        code = ''.join(secrets.choice(alphabet) for _ in range(length))
+        if not Partner.objects.filter(referral_code=code).exists() and \
+           not PartnerCoupon.objects.filter(code=code).exists():
+            return code
+
+
+class Partner(models.Model):
+    """Partner profile - referral agents who onboard vendors"""
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('active', 'Active'),
+        ('suspended', 'Suspended'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='partner_profile')
+    company_name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=15)
+    referral_code = models.CharField(max_length=20, unique=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    max_coupons = models.PositiveIntegerField(default=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Partner'
+        verbose_name_plural = 'Partners'
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.referral_code:
+            self.referral_code = generate_partner_code()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.company_name} ({self.referral_code})"
+
+    @property
+    def is_active(self):
+        return self.status == 'active'
+
+    def get_referral_link(self, request=None):
+        from django.conf import settings
+        base_url = settings.FRONTEND_URL
+        return f"{base_url.rstrip('/')}/register/vendor/?ref={self.referral_code}"
+
+    @property
+    def total_referrals(self):
+        return self.referrals.count()
+
+    @property
+    def converted_referrals(self):
+        """Vendors who completed the registration payment"""
+        return self.referrals.filter(
+            vendor__payment__status='completed'
+        ).count()
+
+
+class PartnerCoupon(models.Model):
+    """Tracking coupon codes created/shared by partners (no discount)"""
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='coupons')
+    code = models.CharField(max_length=20, unique=True)
+    is_active = models.BooleanField(default=True)
+    max_uses = models.PositiveIntegerField(null=True, blank=True, help_text='Leave blank for unlimited')
+    times_used = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Partner Coupon'
+        verbose_name_plural = 'Partner Coupons'
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = generate_partner_code(10)
+        self.code = self.code.upper()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.code
+
+    @property
+    def is_available(self):
+        if not self.is_active:
+            return False
+        if self.partner.status != 'active':
+            return False
+        if self.max_uses is not None and self.times_used >= self.max_uses:
+            return False
+        return True
+
+
+class PartnerReferral(models.Model):
+    """Permanent record of which partner referred which vendor"""
+    SOURCE_CHOICES = [
+        ('link', 'Referral Link'),
+        ('coupon', 'Coupon Code'),
+    ]
+
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='referrals')
+    vendor = models.OneToOneField(Vendor, on_delete=models.CASCADE, related_name='referral')
+    source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='link')
+    coupon = models.ForeignKey(PartnerCoupon, on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Partner Referral'
+        verbose_name_plural = 'Partner Referrals'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.partner.company_name} -> {self.vendor.company_name}"

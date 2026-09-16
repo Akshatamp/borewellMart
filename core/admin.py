@@ -8,7 +8,7 @@ from .models import (
     FavoriteVendor, VendorGallery, VendorPlan, PlanNotification,
     ForumCategory, ForumThread, ForumPost, ForumVote, ForumTag,
     ForumThreadTag, ForumThreadService, Community, CommunityMember,
-    CommunityPost, VisitorTracking
+    CommunityPost, VisitorTracking, Partner, PartnerCoupon, PartnerReferral
 )
 from .utils import send_whatsapp_vendor_approval_notification
 
@@ -811,3 +811,51 @@ class VisitorTrackingAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False  # Read-only
+
+
+# ==================== Partner Admin ====================
+
+class PartnerCouponInline(admin.TabularInline):
+    model = PartnerCoupon
+    extra = 0
+    fields = ['code', 'is_active', 'max_uses', 'times_used', 'created_at']
+    readonly_fields = ['times_used', 'created_at']
+
+
+class PartnerReferralInline(admin.TabularInline):
+    model = PartnerReferral
+    extra = 0
+    fields = ['vendor', 'source', 'coupon', 'created_at']
+    readonly_fields = ['vendor', 'source', 'coupon', 'created_at']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['company_name', 'user', 'referral_code', 'status', 'max_coupons', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['company_name', 'user__username', 'user__email', 'referral_code', 'phone']
+    readonly_fields = ['referral_code', 'created_at']
+    inlines = [PartnerCouponInline, PartnerReferralInline]
+
+
+class PartnerCouponAdmin(admin.ModelAdmin):
+    list_display = ['code', 'partner', 'is_active', 'times_used', 'max_uses', 'created_at']
+    list_filter = ['is_active', 'partner']
+    search_fields = ['code', 'partner__company_name']
+
+
+class PartnerReferralAdmin(admin.ModelAdmin):
+    list_display = ['partner', 'vendor', 'source', 'coupon', 'created_at']
+    list_filter = ['source', 'created_at']
+    search_fields = ['partner__company_name', 'vendor__company_name']
+    autocomplete_fields = ['vendor']
+
+    def has_add_permission(self, request):
+        return False
+
+
+admin.site.register(Partner, PartnerAdmin)
+admin.site.register(PartnerCoupon, PartnerCouponAdmin)
+admin.site.register(PartnerReferral, PartnerReferralAdmin)

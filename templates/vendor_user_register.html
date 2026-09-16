@@ -127,8 +127,38 @@
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         overflow: hidden;
         animation: slideInUp 0.6s ease-out;
-        max-width: 500px;
+        width: 100%;
+    }
+
+    .auth-card-inner {
+        max-width: 560px;
         margin: 0 auto;
+        width: 100%;
+    }
+
+    .referral-banner {
+        background: linear-gradient(135deg, #078492 0%, #06B6D4 100%);
+        color: white;
+        padding: 0.8rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .referral-banner code {
+        background: rgba(255, 255, 255, 0.25);
+        padding: 0.15rem 0.5rem;
+        border-radius: 6px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .referral-field {
+        background: #f0fdff;
+        border: 2px dashed #06B6D4;
+        border-radius: 12px;
+        padding: 1rem;
     }
 
     .auth-header {
@@ -214,13 +244,20 @@
         <div class="bubble"></div>
     </div>
     <div class="row justify-content-center w-100">
-        <div class="col-md-8 col-lg-7">
-            <div class="card auth-card">
+        <div class="col-md-8 col-lg-7 card-wrapper d-flex justify-content-center">
+            <div class="auth-card-inner">
+                <div class="card auth-card">
                 <div class="auth-header">
                     <i class="fas fa-store"></i>
                     <h3 class="mb-0">Vendor Registration</h3>
                     <p class="mb-0 opacity-75">Join as a vendor</p>
                 </div>
+                {% if referral_code %}
+                <div class="referral-banner">
+                    <i class="fas fa-gift"></i>
+                    <span>Referral code <code>{{ referral_code }}</code> will be applied to your account</span>
+                </div>
+                {% endif %}
                 <div class="auth-body">
                     <form method="POST">
                         {% csrf_token %}
@@ -364,6 +401,15 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <div class="referral-field mb-3">
+                            <label for="referralCode" class="form-label fw-semibold">
+                                <i class="fas fa-gift me-2"></i>Referral / Coupon Code (Optional)
+                            </label>
+                            <input type="text" class="form-control" id="referralCode" name="referral_code"
+                                   placeholder="Enter partner coupon code if you have one"
+                                   value="{{ referral_code|default:'' }}">
+                            <small class="text-muted d-block mt-1">Referred by a BorewellMart Partner? Enter their code here.</small>
+                        </div>
                         <button type="submit" class="btn btn-primary w-100 btn-auth">
                             <i class="fas fa-store me-2"></i>Register as Vendor
                         </button>
@@ -375,6 +421,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script>
@@ -604,9 +651,4 @@ togglePassword2.addEventListener('click', function() {
     toggleIcon2.classList.toggle('fa-eye-slash');
 });
 </script>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

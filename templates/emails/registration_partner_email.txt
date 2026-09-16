@@ -1,0 +1,22 @@
+Welcome to BorewellMart Partners!
+
+Dear {{ user.username }},
+
+Thank you for registering as a BorewellMart Partner! Your partner account has been created and is currently pending admin approval.
+
+Account Details:
+- Username: {{ user.username }}
+- Email: {{ user.email }}
+{% if phone %}- Phone: {{ phone }}{% endif %}
+
+Once approved, you can:
+- Get your unique referral link to share with vendors
+- Create and share coupon codes
+- Track how many vendors registered through you
+- Monitor which referred vendors completed their registration payment
+
+You can access your Partner Dashboard here: {{ frontend_url }}{% url 'partner_dashboard' %}
+
+If you have any questions, contact us at support@borewellmart.com
+
+© {% now "Y" %} BorewellMart. All rights reserved.

@@ -160,6 +160,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'forum_home' %}"><i class="fas fa-comments me-1"></i>Community Forum</a>
                         </li>
+                    {% elif user.userprofile.user_type == 'partner' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'partner_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+                        </li>
                     {% elif user.is_superuser %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
@@ -208,7 +212,7 @@
                                 <i class="fas fa-user-circle me-1"></i>{{ user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{% if user.userprofile.user_type == 'customer' %}{% url 'customer_profile' %}{% elif user.userprofile.user_type == 'vendor' %}{% url 'vendor_dashboard' %}{% elif user.is_superuser %}{% url 'admin_dashboard' %}{% endif %}"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% if user.userprofile.user_type == 'customer' %}{% url 'customer_profile' %}{% elif user.userprofile.user_type == 'vendor' %}{% url 'vendor_dashboard' %}{% elif user.userprofile.user_type == 'partner' %}{% url 'partner_dashboard' %}{% elif user.is_superuser %}{% url 'admin_dashboard' %}{% endif %}"><i class="fas fa-user me-2"></i>My Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                             </ul>
@@ -261,6 +265,8 @@
                             <li><a href="{% url 'vendor_dashboard' %}" class="text-white">Dashboard</a></li>
                             <li><a href="{% url 'notifications' %}" class="text-white">Notifications</a></li>
                             <li><a href="{% url 'vendor_profile_edit' %}" class="text-white">Edit Profile</a></li>
+                        {% elif user.is_authenticated and user.userprofile.user_type == 'partner' %}
+                            <li><a href="{% url 'partner_dashboard' %}" class="text-white">Dashboard</a></li>
                         {% else %}
                             <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
                             <li><a href="{% url 'service_list' %}" class="text-white">Services</a></li>
