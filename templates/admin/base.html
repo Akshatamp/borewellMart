@@ -228,6 +228,7 @@
         .stat-card-icon.purple { background: #f3e8ff; color: #9333ea; }
         .stat-card-icon.cyan { background: #cffafe; color: var(--info); }
         .stat-card-icon.indigo { background: #e0e7ff; color: #6366f1; }
+        .stat-card-icon.orange { background: #ffedd5; color: #f97316; }
 
         .stat-value {
             font-size: 2rem;
@@ -497,6 +498,10 @@
                 <a href="{% url 'admin_visitors' %}" class="sidebar-link {% block nav_visitors %}{% endblock %}">
                     <i class="bi bi-eye-fill"></i>
                     <span>Visitor Tracking</span>
+                </a>
+                <a href="{% url 'admin_website_requests' %}" class="sidebar-link {% block nav_website_requests %}{% endblock %}">
+                    <i class="bi bi-globe"></i>
+                    <span>Website Requests</span>
                 </a>
             </div>
 

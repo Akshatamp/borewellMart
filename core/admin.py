@@ -8,7 +8,7 @@ from .models import (
     FavoriteVendor, VendorGallery, VendorPlan, PlanNotification,
     ForumCategory, ForumThread, ForumPost, ForumVote, ForumTag,
     ForumThreadTag, ForumThreadService, Community, CommunityMember,
-    CommunityPost, VisitorTracking, Partner, PartnerCoupon, PartnerReferral
+    CommunityPost, VisitorTracking, Partner, PartnerCoupon, PartnerReferral, WebsiteRequest
 )
 from .utils import send_whatsapp_vendor_approval_notification
 
@@ -859,3 +859,44 @@ class PartnerReferralAdmin(admin.ModelAdmin):
 admin.site.register(Partner, PartnerAdmin)
 admin.site.register(PartnerCoupon, PartnerCouponAdmin)
 admin.site.register(PartnerReferral, PartnerReferralAdmin)
+
+
+# ==================== Website Request Admin ====================
+
+@admin.register(WebsiteRequest)
+class WebsiteRequestAdmin(admin.ModelAdmin):
+    list_display = ['vendor', 'title', 'request_type', 'status', 'created_at', 'updated_at']
+    list_filter = ['status', 'request_type', 'created_at']
+    search_fields = ['vendor__company_name', 'title', 'description']
+    readonly_fields = ['created_at', 'updated_at']
+    autocomplete_fields = ['vendor']
+    
+    fieldsets = (
+        ('Vendor & Request', {
+            'fields': ('vendor', 'request_type', 'title', 'description')
+        }),
+        ('Status & Notes', {
+            'fields': ('status', 'admin_notes')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_as_completed', 'mark_as_in_progress', 'mark_as_rejected']
+    
+    def mark_as_completed(self, request, queryset):
+        queryset.update(status='completed')
+        self.message_user(request, f'{queryset.count()} website requests marked as completed.')
+    mark_as_completed.short_description = 'Mark as completed'
+    
+    def mark_as_in_progress(self, request, queryset):
+        queryset.update(status='in_progress')
+        self.message_user(request, f'{queryset.count()} website requests marked as in progress.')
+    mark_as_in_progress.short_description = 'Mark as in progress'
+    
+    def mark_as_rejected(self, request, queryset):
+        queryset.update(status='rejected')
+        self.message_user(request, f'{queryset.count()} website requests marked as rejected.')
+    mark_as_rejected.short_description = 'Mark as rejected'

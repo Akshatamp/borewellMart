@@ -1133,3 +1133,37 @@ class PartnerReferral(models.Model):
 
     def __str__(self):
         return f"{self.partner.company_name} -> {self.vendor.company_name}"
+
+
+class WebsiteRequest(models.Model):
+    """Website requests from vendors"""
+    REQUEST_TYPE_CHOICES = [
+        ('landing_page', 'Landing Page'),
+        ('full_website', 'Full Website'),
+        ('service_page', 'Service Page'),
+        ('other', 'Other'),
+    ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('rejected', 'Rejected'),
+    ]
+
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='website_requests')
+    request_type = models.CharField(max_length=50, choices=REQUEST_TYPE_CHOICES, default='landing_page')
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    admin_notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Website Request'
+        verbose_name_plural = 'Website Requests'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.vendor.company_name} - {self.title}"

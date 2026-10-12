@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from .models import UserProfile, Vendor, VendorService, Booking, Review, VendorGallery, Blog, City, SubService, Sector, Service, Enquiry, BookingPayment, ForumCategory, ForumThread, ForumPost, ForumTag, ForumThreadService, Community, CommunityPost, CommunityComment, VendorEquipment, EquipmentInquiry, Partner, PartnerCoupon
+from .models import UserProfile, Vendor, VendorService, Booking, Review, VendorGallery, Blog, City, SubService, Sector, Service, Enquiry, BookingPayment, ForumCategory, ForumThread, ForumPost, ForumTag, ForumThreadService, Community, CommunityPost, CommunityComment, VendorEquipment, EquipmentInquiry, Partner, PartnerCoupon, WebsiteRequest
 from .utils import validate_image_size, compress_image
 
 
@@ -825,3 +825,37 @@ class PartnerCouponForm(forms.ModelForm):
             if len(code) > 20:
                 raise forms.ValidationError('Code cannot exceed 20 characters.')
         return code
+
+
+class WebsiteRequestForm(forms.ModelForm):
+    """Form for vendors to submit website requests"""
+    class Meta:
+        model = WebsiteRequest
+        fields = ['request_type', 'title', 'description']
+        widgets = {
+            'request_type': forms.Select(attrs={'class': 'form-select'}),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., My Company Landing Page'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 6,
+                'placeholder': 'Describe your website requirements in detail (e.g., sections needed, features, design preferences, etc.)...'
+            }),
+        }
+
+
+class WebsiteRequestAdminForm(forms.ModelForm):
+    """Form for admins to update website requests"""
+    class Meta:
+        model = WebsiteRequest
+        fields = ['status', 'admin_notes']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'admin_notes': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Add notes about this request (e.g., approval status, requirements, timeline, etc.)...'
+            }),
+        }

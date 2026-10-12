@@ -28,14 +28,15 @@ from .models import (
     ForumCategory, ForumThread, ForumPost, ForumVote, ForumTag, ForumThreadTag, ForumThreadService,
     Community, CommunityMember, CommunityPost, CommunityComment, CommunityLike,
     VendorEquipment, EquipmentInquiry, VisitorTracking,
-    Partner, PartnerCoupon, PartnerReferral
+    Partner, PartnerCoupon, PartnerReferral, WebsiteRequest
 )
 from .forms import (
     UserRegisterForm, VendorUserRegisterForm, CustomerProfileForm, VendorProfileForm, VendorServiceForm,
     BookingForm, ReviewForm, VendorGalleryForm, CityForm, SubServiceForm, BlogForm,
     EnquiryForm, EnquiryResponseForm, BulkVendorRegistrationForm, BookingPaymentForm,
     ForumThreadForm, ForumPostForm, ForumCategoryForm, CommunityForm, CommunityPostForm, CommunityCommentForm,
-    VendorEquipmentForm, EquipmentInquiryForm, PartnerUserRegisterForm, PartnerCouponForm
+    VendorEquipmentForm, EquipmentInquiryForm, PartnerUserRegisterForm, PartnerCouponForm,
+    WebsiteRequestForm, WebsiteRequestAdminForm
 )
 from .utils import (
     send_registration_email,
@@ -303,17 +304,11 @@ def service_list(request):
     if sector_id:
         services = services.filter(sector_id=sector_id)
 
-    # Get featured vendors
-    featured_vendors = Vendor.objects.filter(
-        verification_status='verified'
-    ).order_by('-experience', '-rating')[:6]
-
     context = {
         'services': services,
         'selected_sector': sector_id,
         'sectors': Sector.objects.all(),
         'nav_sectors': Sector.objects.prefetch_related('services').all(),
-        'featured_vendors': featured_vendors,
     }
     return render(request, 'services.html', context)
 
@@ -834,6 +829,10 @@ def vendor_dashboard(request):
         user=request.user
     ).values_list('community_id', flat=True)
 
+    # Get website requests count
+    website_requests_count = WebsiteRequest.objects.filter(vendor=vendor).count()
+    pending_website_requests = WebsiteRequest.objects.filter(vendor=vendor, status='pending').count()
+
     context = {
         'vendor': vendor,
         'bookings': bookings,
@@ -855,6 +854,8 @@ def vendor_dashboard(request):
         'unread_notifications_count': unread_notifications_count,
         'communities': communities,
         'user_communities': user_communities,
+        'website_requests_count': website_requests_count,
+        'pending_website_requests': pending_website_requests,
     }
     return render(request, 'vendor_dashboard.html', context)
 
@@ -2546,6 +2547,11 @@ def admin_dashboard(request):
             'subservice_count': subservice_count
         })
 
+    # Website request statistics
+    total_website_requests = WebsiteRequest.objects.count()
+    pending_website_requests = WebsiteRequest.objects.filter(status='pending').count()
+    total_categories = total_sectors
+
     context = {
         'total_vendors': total_vendors,
         'total_customers': total_customers,
@@ -2580,6 +2586,9 @@ def admin_dashboard(request):
         'today_visitors': today_visitors,
         'unique_visitors': unique_visitors,
         'repeat_visitors': repeat_visitors,
+        'total_website_requests': total_website_requests,
+        'pending_website_requests': pending_website_requests,
+        'total_categories': total_sectors,
     }
     return render(request, 'admin/dashboard.html', context)
 
@@ -5555,6 +5564,107 @@ def admin_visitors(request):
         'search_query': search_query or '',
         'date_from': date_from or '',
         'date_to': date_to or ''
+    })
+
+
+# ==================== WEBSITE REQUEST VIEWS ====================
+
+@login_required
+def vendor_website_request(request):
+    """Form view for vendors to submit new website requests"""
+    try:
+        vendor = request.user.vendor
+    except Vendor.DoesNotExist:
+        messages.error(request, 'You are not registered as a vendor.')
+        return redirect('vendor_register')
+
+    if request.method == 'POST':
+        form = WebsiteRequestForm(request.POST)
+        if form.is_valid():
+            website_request = form.save(commit=False)
+            website_request.vendor = vendor
+            website_request.save()
+            messages.success(request, 'Your website request has been submitted successfully!')
+            return redirect('vendor_website_requests_list')
+    else:
+        form = WebsiteRequestForm()
+
+    return render(request, 'vendor_website_request.html', {'form': form})
+
+
+@login_required
+def vendor_website_requests_list(request):
+    """List view for vendor's own website requests"""
+    try:
+        vendor = request.user.vendor
+    except Vendor.DoesNotExist:
+        messages.error(request, 'You are not registered as a vendor.')
+        return redirect('vendor_register')
+
+    website_requests = WebsiteRequest.objects.filter(vendor=vendor).order_by('-created_at')
+
+    return render(request, 'vendor_website_requests.html', {
+        'website_requests': website_requests,
+        'vendor': vendor
+    })
+
+
+@login_required
+def admin_website_requests(request):
+    """Admin view of all website requests with filtering"""
+    if not request.user.is_superuser:
+        messages.error(request, 'Access denied. Admin only.')
+        return redirect('home')
+
+    # Get filter parameters
+    status_filter = request.GET.get('status', 'all')
+
+    # Base queryset
+    website_requests = WebsiteRequest.objects.select_related('vendor').order_by('-created_at')
+
+    # Apply status filter
+    if status_filter != 'all':
+        website_requests = website_requests.filter(status=status_filter)
+
+    # Statistics
+    total_requests = WebsiteRequest.objects.count()
+    pending_requests = WebsiteRequest.objects.filter(status='pending').count()
+    in_progress_requests = WebsiteRequest.objects.filter(status='in_progress').count()
+    completed_requests = WebsiteRequest.objects.filter(status='completed').count()
+    rejected_requests = WebsiteRequest.objects.filter(status='rejected').count()
+
+    return render(request, 'admin/website_requests.html', {
+        'website_requests': website_requests,
+        'status_filter': status_filter,
+        'total_requests': total_requests,
+        'pending_requests': pending_requests,
+        'in_progress_requests': in_progress_requests,
+        'completed_requests': completed_requests,
+        'rejected_requests': rejected_requests,
+    })
+
+
+@login_required
+def admin_website_request_update(request, request_id):
+    """Admin view to update website request status and notes"""
+    if not request.user.is_superuser:
+        messages.error(request, 'Access denied. Admin only.')
+        return redirect('home')
+
+    website_request = get_object_or_404(WebsiteRequest, id=request_id)
+
+    if request.method == 'POST':
+        form = WebsiteRequestAdminForm(request.POST, instance=website_request)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Website request from {website_request.vendor.company_name} has been updated.')
+            return redirect('admin_website_requests')
+    else:
+        form = WebsiteRequestAdminForm(instance=website_request)
+
+    return render(request, 'admin/website_request_update.html', {
+        'form': form,
+        'website_request': website_request
     })
 
 

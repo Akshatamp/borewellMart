@@ -1,0 +1,88 @@
+{% extends 'vendor_base.html' %}
+
+{% block title %}My Website Requests - BorewellMart{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block page_title %}My Website Requests{% endblock %}
+{% block page_subtitle %}Track your website development requests{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>My Website Requests</h3>
+                <a href="{% url 'vendor_website_request' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>New Request
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-12">
+            {% if website_requests %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                                <th>Admin Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in website_requests %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ request.title }}</strong>
+                                        <div class="text-muted small">{{ request.description|truncatewords:15 }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ request.get_request_type_display }}</span>
+                                    </td>
+                                    <td>
+                                        {% if request.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif request.status == 'in_progress' %}
+                                            <span class="badge bg-primary">In Progress</span>
+                                        {% elif request.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif request.status == 'rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if request.admin_notes %}
+                                            <small class="text-muted">{{ request.admin_notes|truncatewords:10 }}</small>
+                                        {% else %}
+                                            <span class="text-muted">No notes</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    You haven't submitted any website requests yet.
+                    <a href="{% url 'vendor_website_request' %}" class="alert-link">Submit your first request</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

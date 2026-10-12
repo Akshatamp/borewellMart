@@ -75,6 +75,10 @@ urlpatterns = [
     path('dashboard/admin/payments/', views.vendor_payments_list, name='vendor_payments_list'),
     path('dashboard/admin/payments/<int:payment_id>/', views.vendor_payment_detail, name='vendor_payment_detail'),
     
+    # Admin Website Requests
+    path('dashboard/admin/website-requests/', views.admin_website_requests, name='admin_website_requests'),
+    path('dashboard/admin/website-requests/<int:request_id>/update/', views.admin_website_request_update, name='admin_website_request_update'),
+    
     # Vendor management
     path('vendor/', views.vendor_dashboard, name='vendor_redirect'),
     path('vendor/profile/edit/', views.vendor_profile_edit, name='vendor_profile_edit'),
@@ -89,6 +93,10 @@ urlpatterns = [
     path('vendor/service/<int:service_id>/delete/', views.vendor_service_delete, name='vendor_service_delete'),
     path('vendor/gallery/add/', views.vendor_gallery_add, name='vendor_gallery_add'),
     path('vendor/gallery/<int:gallery_id>/delete/', views.vendor_gallery_delete, name='vendor_gallery_delete'),
+    
+    # Vendor Website Requests
+    path('vendor/website-request/', views.vendor_website_request, name='vendor_website_request'),
+    path('vendor/website-requests/', views.vendor_website_requests_list, name='vendor_website_requests_list'),
     
     # Booking status
     path('booking/<int:booking_id>/<str:status>/', views.booking_update_status, name='booking_update_status'),

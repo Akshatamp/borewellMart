@@ -83,6 +83,17 @@
             <i class="bi bi-arrow-up"></i> {{ today_visitors|default:0 }} today
         </div>
     </div>
+
+    <div class="stat-card" onclick="window.location.href='{% url 'admin_website_requests' %}'" style="cursor: pointer;">
+        <div class="stat-card-icon orange">
+            <i class="bi bi-globe"></i>
+        </div>
+        <div class="stat-value">{{ total_website_requests|default:0 }}</div>
+        <div class="stat-label">Website Requests</div>
+        <div class="stat-change positive">
+            <i class="bi bi-arrow-up"></i> {{ pending_website_requests|default:0 }} pending
+        </div>
+    </div>
 </div>
 
 <!-- Charts Section -->

@@ -1,0 +1,146 @@
+{% extends "admin/base.html" %}
+
+{% block nav_dashboard %}active{% endblock %}
+{% block page_title %}Website Requests{% endblock %}
+{% block page_subtitle %}Manage vendor website development requests{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-primary text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ total_requests }}</div>
+                    <div class="small opacity-75">Total Requests</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-warning text-dark">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ pending_requests }}</div>
+                    <div class="small opacity-75">Pending</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-info text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ in_progress_requests }}</div>
+                    <div class="small opacity-75">In Progress</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100 border-0 bg-success text-white">
+                <div class="card-body text-center p-3">
+                    <div class="h2 fw-bold mb-1">{{ completed_requests }}</div>
+                    <div class="small opacity-75">Completed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card" style="border-radius: 12px;">
+                <div class="card-body">
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="fw-semibold">Filter by Status:</span>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'admin_website_requests' %}?status=all" 
+                               class="btn {% if status_filter == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                All
+                            </a>
+                            <a href="{% url 'admin_website_requests' %}?status=pending" 
+                               class="btn {% if status_filter == 'pending' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                Pending
+                            </a>
+                            <a href="{% url 'admin_website_requests' %}?status=in_progress" 
+                               class="btn {% if status_filter == 'in_progress' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                In Progress
+                            </a>
+                            <a href="{% url 'admin_website_requests' %}?status=completed" 
+                               class="btn {% if status_filter == 'completed' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                Completed
+                            </a>
+                            <a href="{% url 'admin_website_requests' %}?status=rejected" 
+                               class="btn {% if status_filter == 'rejected' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                Rejected
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Website Requests Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card" style="border-radius: 12px;">
+                <div class="card-body">
+                    {% if website_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Vendor</th>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in website_requests %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ request.vendor.company_name }}</strong>
+                                                <div class="text-muted small">{{ request.vendor.email }}</div>
+                                            </td>
+                                            <td>
+                                                <strong>{{ request.title }}</strong>
+                                                <div class="text-muted small">{{ request.description|truncatewords:10 }}</div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ request.get_request_type_display }}</span>
+                                            </td>
+                                            <td>
+                                                {% if request.status == 'pending' %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                {% elif request.status == 'in_progress' %}
+                                                    <span class="badge bg-primary">In Progress</span>
+                                                {% elif request.status == 'completed' %}
+                                                    <span class="badge bg-success">Completed</span>
+                                                {% elif request.status == 'rejected' %}
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ request.created_at|date:"M d, Y H:i" }}</td>
+                                            <td>
+                                                <a href="{% url 'admin_website_request_update' request.id %}" 
+                                                   class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i> Update
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No website requests found.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
